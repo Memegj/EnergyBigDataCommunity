@@ -20,7 +20,7 @@
 
           <el-sub-menu index="2">
             <template #title>
-              <span>代码3</span>
+              <span>代码4</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
