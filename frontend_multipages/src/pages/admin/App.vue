@@ -16,17 +16,11 @@
             :default-openeds="state.defaultOpen"
             :default-active='state.currentPath'
         >
-          <el-sub-menu index="1">
-            <template #title>
-              <span>常用功能</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/index"><el-icon><Odometer /></el-icon>首页</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
+          <el-menu-item index="/admin/index"><el-icon><Odometer /></el-icon>首页</el-menu-item>
+
           <el-sub-menu index="2">
             <template #title>
-              <span>信息查询</span>
+              <span>代码</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
@@ -34,7 +28,7 @@
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <span>模块管理</span>
+              <span>数据集</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/file_upload"><el-icon><Menu /></el-icon>文件上传下载</el-menu-item>
@@ -44,15 +38,15 @@
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>
-              <span>系统管理</span>
+              <span>文献资料</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/account"><el-icon><Lock /></el-icon>修改密码</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
-          <el-sub-menu index="4">
+          <el-sub-menu index="5">
             <template #title>
-              <span>个人练习</span>
+              <span>教学视频</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/gettable"><el-icon><Lock /></el-icon>表格练习</el-menu-item>
@@ -62,6 +56,14 @@
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="/admin/getchart"><el-icon><Lock /></el-icon>图表练习</el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+          <el-sub-menu index="6">
+            <template #title>
+              <span>我的</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/admin/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
