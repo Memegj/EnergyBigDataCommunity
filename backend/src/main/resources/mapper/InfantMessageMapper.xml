@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.InfantMessageMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.InfantMessage">
+        <id column="infantmessageid" jdbcType="INTEGER" property="infantmessageid" />
+        <result column="infantname" jdbcType="VARCHAR" property="infantname" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="age" jdbcType="VARCHAR" property="age" />
+        <result column="dateof" jdbcType="VARCHAR" property="dateof" />
+        <result column="infantidnumber" jdbcType="VARCHAR" property="infantidnumber" />
+        <result column="nation" jdbcType="VARCHAR" property="nation" />
+        <result column="birthplace" jdbcType="VARCHAR" property="birthplace" />
+        <result column="currentdate" jdbcType="TIMESTAMP" property="currentdate" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        infantmessageid, infantname, nickname, sex, age, dateof, infantidnumber, nation, birthplace, currentdate
+    </sql>
+    <select id="listAllInfantMessage" parameterType="Map" resultMap="BaseResultMap">
+        select * from t_infantmessage
+    </select>
+    <select id="findAllInfantList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_infantmessage
+        order by currentdate desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <select id="getNumOfTotalInfants" parameterType="Map" resultType="int">
+        select count(*) from t_infantmessage
+    </select>
+    <insert id="insert" parameterType="upc.backend.entity.InfantMessage">
+        insert into t_infantmessage (infantmessageid, infantname, nickname, sex, age, dateof, infantidnumber, nation, birthplace,currentdate)
+        values (#{infantmessageid,jdbcType=INTEGER}, #{infantname,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR},
+                #{sex,jdbcType=VARCHAR}, #{age,jdbcType=VARCHAR}, #{dateof,jdbcType=VARCHAR}, #{infantidnumber,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{birthplace,jdbcType=VARCHAR}, #{currentdate,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.InfantMessage">
+        insert into t_infantmessage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="infantmessageid != null">
+                infantmessageid,
+            </if>
+            <if test="infantname != null">
+                infantname,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="dateof != null">
+                dateof,
+            </if>
+            <if test="infantidnumber != null">
+                infantidnumber,
+            </if>
+            <if test="nation != null">
+                nation,
+            </if>
+            <if test="birthplace != null">
+                birthplace,
+            </if>
+            <if test="currentdate != null">
+                currentdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="infantmessageid!= null">
+                #{infantmessageid,jdbcType=INTEGER},
+            </if>
+            <if test="infantname != null">
+                #{infantname,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=VARCHAR},
+            </if>
+            <if test="dateof != null">
+                #{dateof,jdbcType=VARCHAR},
+            </if>
+            <if test="infantidnumber != null">
+                #{infantidnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="birthplace != null">
+                #{birthplace,jdbcType=VARCHAR},
+            </if>
+            <if test="currentdate != null">
+                #{currentdate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+</mapper>

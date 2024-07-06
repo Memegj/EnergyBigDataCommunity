@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.User">
+        <id column="userid" jdbcType="INTEGER" property="userid" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="locked" jdbcType="TINYINT" property="locked" />
+        <result column="deleted" jdbcType="TINYINT" property="deleted" />
+        <result column="user_role" jdbcType="VARCHAR" property="user_role" />
+        <result column="team" jdbcType="VARCHAR" property="team" />
+        <result column="register_time" jdbcType="TIMESTAMP" property="register_time" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        userid, username, password, nickname, locked, deleted, user_role, team, register_time
+    </sql>
+
+    <select id="login" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where username = #{username,jdbcType=VARCHAR} AND password=#{password,jdbcType=VARCHAR} AND locked = 0 AND deleted = 0
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where userid = #{userid,jdbcType=INTEGER}
+    </select>
+
+    <select id="findAllUserList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        order by register_time desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="getNumOfTotalUsers" parameterType="Map" resultType="int">
+        select count(*) from user
+    </select>
+
+    <insert id="insert" parameterType="upc.backend.entity.User">
+        insert into user (userid, username, password, nickname, locked, deleted, user_role, team, register_time)
+        values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{nickname,jdbcType=VARCHAR}, #{locked,jdbcType=TINYINT}, #{deleted,jdbcType=TINYINT}, #{user_role,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, #{register_time,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="locked != null">
+                locked,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="user_role != null">
+                user_role,
+            </if>
+            <if test="team != null">
+                team,
+            </if>
+            <if test="register_time != null">
+                register_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid!= null">
+                #{userid,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="locked != null">
+                #{locked,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=TINYINT},
+            </if>
+            <if test="user_role != null">
+                #{user_role,jdbcType=VARCHAR},
+            </if>
+            <if test="team != null">
+                #{team,jdbcType=VARCHAR},
+            </if>
+            <if test="register_time != null">
+                #{register_time,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.User">
+        update user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="locked != null">
+                locked = #{locked,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+            <if test="user_role != null">
+                user_role = #{user_role,jdbcType=VARCHAR},
+            </if>
+            <if test="team != null">
+                team = #{team,jdbcType=VARCHAR},
+            </if>
+            <if test="register_time != null">
+                register_time = #{register_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.User">
+        update user
+        set username = #{username,jdbcType=VARCHAR},
+            password = #{password,jdbcType=VARCHAR},
+            nickname = #{nickname,jdbcType=VARCHAR},
+            locked = #{locked,jdbcType=TINYINT},
+            deleted = #{deleted,jdbcType=TINYINT},
+            user_role = #{user_role,jdbcType=VARCHAR},
+            team = #{team,jdbcType=VARCHAR},
+            register_time = #{register_time,jdbcType=TIMESTAMP}
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+    <update id="lockUserBatch">
+        update user
+        set locked=#{lockStatus} where userid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

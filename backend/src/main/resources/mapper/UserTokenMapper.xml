@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.UserTokenMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.UserToken">
+        <id column="userid" jdbcType="INTEGER" property="userid" />
+        <result column="token" jdbcType="VARCHAR" property="token" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+        <result column="expire_time" jdbcType="TIMESTAMP" property="expire_time" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        userid, token, update_time, expire_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user_token
+        where userid = #{userid,jdbcType=INTEGER}
+    </select>
+    <select id="selectByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_token
+        where token = #{token,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from user_token
+        where userid = #{userid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="upc.backend.entity.UserToken">
+        insert into user_token (userid, token, update_time, expire_time)
+        values (#{userid,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR}, #{update_time,jdbcType=TIMESTAMP},
+                #{expire_time,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.UserToken">
+        insert into user_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="token != null">
+                token,
+            </if>
+            <if test="update_time != null">
+                update_time,
+            </if>
+            <if test="expire_time != null">
+                expire_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid,jdbcType=INTEGER},
+            </if>
+            <if test="token != null">
+                #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="update_time != null">
+                #{update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expire_time != null">
+                #{expire_time,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.UserToken">
+        update user_token
+        <set>
+            <if test="token != null">
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="update_time != null">
+                update_time = #{update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expire_time != null">
+                expire_time = #{expire_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.UserToken">
+        update user_token
+        set token = #{token,jdbcType=VARCHAR},
+            update_time = #{update_time,jdbcType=TIMESTAMP},
+            expire_time = #{expire_time,jdbcType=TIMESTAMP}
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+</mapper>
