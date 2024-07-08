@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="energybigdatacommunity@localhost" uuid="89d51293-fa6c-48b2-97d5-d2b5d16947a4">
+    <data-source source="LOCAL" name="energybigdatacommunity@localhost" uuid="626fc1c2-9506-41bf-9258-72baaeb220d6">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
