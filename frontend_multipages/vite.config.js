@@ -43,9 +43,9 @@ export default defineConfig({
     rollupOptions: {
       input:{
         student: resolve(__dirname, 'student.html'),
-        admin: resolve(__dirname, 'admin.html'),
         teacher: resolve(__dirname, 'teacher.html'),
-
+        index: resolve(__dirname, 'index.html'),
+        admin: resolve(__dirname, 'admin.html'),
       }
 
     }},

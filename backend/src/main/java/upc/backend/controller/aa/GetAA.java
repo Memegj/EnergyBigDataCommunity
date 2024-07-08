@@ -26,7 +26,7 @@ public class GetAA {
         User userA = userA_Service.selectByID(3);
         if (userA != null) {
             Result result= ResultGenerator.genSuccessResult();
-            result.setData(userA.getUsername());
+            result.setData(userA.getUserName());
             return result;
         } else {
             return ResultGenerator.genFailResult(ServiceResultEnum.DB_ERROR.getResult());

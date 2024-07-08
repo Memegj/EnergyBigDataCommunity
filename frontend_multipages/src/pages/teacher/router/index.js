@@ -1,53 +1,55 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import Login from '@/pages/index/views/Login.vue'
+import Home from '@/pages/index/views/HomeView.vue'
+import About from '@/pages/index/views/ExcelExample.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/teacher',
-      redirect: '/teacher/index'
+      path: '/',
+      redirect: '/admin/index'
     },
     {
-      path: '/teacher/index',
+      path: '/admin/index',
       name: 'index',
-      component: () => import( '@/pages/teacher/views/Index.vue')
+      component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/teacher/mycharts',
+      path: '/admin/mycharts',
       name: 'mycharts',
-      component: () => import( '@/pages/teacher/views/Chart_Example.vue')
+      component: () => import( '@/pages/admin/views/Chart_Example.vue')
     },
     {
-      path: '/teacher/file_upload',
+      path: '/admin/file_upload',
       name: 'file_upload',
-      component: () => import( '@/pages/teacher/views/FileUpload.vue'),
+      component: () => import( '@/pages/admin/views/FileUpload.vue'),
 
     },
     {
-      path: '/teacher/references',
+      path: '/admin/references',
       name: 'references',
-      component: () => import( '@/pages/teacher/views/References.vue')
+      component: () => import( '@/pages/admin/views/References.vue')
     },
     {
-      path: '/teacher/user_manage',
+      path: '/admin/user_manage',
       name: 'user_manage',
-      component: () => import('@/pages/teacher/views/UserManage.vue')
+      component: () => import('@/pages/admin/views/UserManage.vue')
     },
     {
-      path: '/teacher/gettable',
-      name: 'gettable',
-      component: () => import( '@/pages/teacher/views/GetTable.vue')
+      path: '/admin/gettable',
+      name: 'table',
+      component: () => import( '@/pages/admin/views/GetTable.vue')
     },
     {
-      path: '/teacher/getfile',
-      name: 'getfile',
-      component: () => import( '@/pages/teacher/views/GetFile.vue')
+      path: '/admin/getfile',
+      name: 'file',
+      component: () => import( '@/pages/admin/views/GetFile.vue')
     },
     {
-      path: '/teacher/getchart',
-      name: 'getchart',
-      component: () => import( '@/pages/teacher/views/GetChart.vue')
+      path: '/admin/getchart',
+      name: 'chart',
+      component: () => import( '@/pages/admin/views/GetChart.vue')
     }
   ],
 })

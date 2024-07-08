@@ -10,15 +10,15 @@ import java.util.Date;
 @Getter
 @Data
 public class User {
-    private Integer userid;
-    private String username;
-    private String password;
-    private String nickname;
-    private Byte locked;
-    private Byte deleted;
+    private Integer UserId;
+    private String UserName;
+    private String UserPassword;
+    private String NickName;
+    private Byte UserLocked;
     private String user_role;
-    private String team;
+    private String UserEmail;
+    private String UserCollege;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date register_time;
+    private Date RegisterTime;
 }

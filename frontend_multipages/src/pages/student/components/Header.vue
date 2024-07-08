@@ -59,7 +59,7 @@ onMounted(() => {
 const getUserInfo = ()=>{
   axios.get('/user/profile').then(res => {
     state.userInfo = res
-    if(res.user_role !='student') {
+    if(res.user_role !='admin') {
       // 回到登录页
       window.location.href = '/login'
       //router.push({ path: '/login' })
@@ -129,7 +129,7 @@ const back = () => {
 
 <style>
   .popper-user-box {
-    background: url('@/assets/account-banner-bg.png') 50% 50% no-repeat!important;
+    background: url('src/assets/account-banner-bg.png') 50% 50% no-repeat!important;
     background-size: cover!important;
     border-radius: 0!important;
   }

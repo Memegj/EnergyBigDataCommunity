@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserToken {
-    private Integer userid;
+    private Integer UserId;
     private String token;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

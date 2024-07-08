@@ -130,10 +130,10 @@ public class FileUpload {
                 return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
             }
             else {
-                User user = userService.getUserDetailById(userToken.getUserid());
+                User user = userService.getUserDetailById(userToken.getUserId());
                 UploadFile upload_file = new UploadFile();
                 BeanUtil.copyProperties(fileAddParam, upload_file);
-                upload_file.setUpload_user(user.getUsername());
+                upload_file.setUpload_user(user.getUserName());
                 upload_file.setUpload_time(new Date());
                 Boolean fileUpload_flag = fileUploadService.add_file(upload_file);
                 if (fileUpload_flag) {

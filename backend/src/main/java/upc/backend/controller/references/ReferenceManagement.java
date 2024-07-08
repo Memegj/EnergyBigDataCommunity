@@ -77,10 +77,10 @@ public class ReferenceManagement {
                 return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
             }
             else {
-                User user = userService.getUserDetailById(userToken.getUserid());
+                User user = userService.getUserDetailById(userToken.getUserId());
                 Reference reference = new Reference();
                 BeanUtil.copyProperties(referenceAddParam, reference);
-                reference.setUpload_user(user.getUsername());
+                reference.setUpload_user(user.getUserName());
                 reference.setUpload_time(new Date());
                 Boolean result_state = referenceService.add_reference(reference);
                 if (result_state) {
@@ -107,10 +107,10 @@ public class ReferenceManagement {
                 return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
             }
             else {
-                User user = userService.getUserDetailById(userToken.getUserid());
+                User user = userService.getUserDetailById(userToken.getUserId());
                 Reference reference = new Reference();
                 BeanUtil.copyProperties(referenceUpdateParam, reference);
-                reference.setUpload_user(user.getUsername());
+                reference.setUpload_user(user.getUserName());
                 reference.setUpload_time(new Date());
                 referenceService.updateReferenceInfo(reference);
                 Result result = new ResultGenerator().genSuccessResult();

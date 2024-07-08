@@ -31,5 +31,8 @@ export const pathMap = {
   account: '修改账户',
   table: '表格练习',
   file: '文件上传练习',
-  chart: '图表练习'
+  chart: '图表练习',
+  gettable: '表格练习',
+  getfile: '文件上传练习',
+  getchart: '图表练习'
 }

@@ -1,11 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import Login from '@/pages/index/views/Login.vue'
+import Home from '@/pages/index/views/HomeView.vue'
+import About from '@/pages/index/views/ExcelExample.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/student',
+      path: '/',
       redirect: '/student/index'
     },
     {
@@ -36,17 +38,17 @@ const router = createRouter({
     },
     {
       path: '/student/gettable',
-      name: 'gettable',
+      name: 'table',
       component: () => import( '@/pages/student/views/GetTable.vue')
     },
     {
       path: '/student/getfile',
-      name: 'getfile',
+      name: 'file',
       component: () => import( '@/pages/student/views/GetFile.vue')
     },
     {
       path: '/student/getchart',
-      name: 'getchart',
+      name: 'chart',
       component: () => import( '@/pages/student/views/GetChart.vue')
     }
   ],

@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import Login from '@/pages/index/views/Login.vue'
+import Home from '@/pages/index/views/HomeView.vue'
+import About from '@/pages/index/views/ExcelExample.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -36,17 +38,17 @@ const router = createRouter({
     },
     {
       path: '/admin/gettable',
-      name: 'gettable',
+      name: 'table',
       component: () => import( '@/pages/admin/views/GetTable.vue')
     },
     {
       path: '/admin/getfile',
-      name: 'getfile',
+      name: 'file',
       component: () => import( '@/pages/admin/views/GetFile.vue')
     },
     {
       path: '/admin/getchart',
-      name: 'getchart',
+      name: 'chart',
       component: () => import( '@/pages/admin/views/GetChart.vue')
     }
   ],

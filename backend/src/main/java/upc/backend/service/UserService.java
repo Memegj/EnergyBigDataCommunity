@@ -22,20 +22,20 @@ public class UserService {
     @Resource
     private UserTokenMapper userTokenMapper;
     //用户登录
-    public HashMap<String, String> login(String username, String password){
-        User loginUser = userMapper.login(username, password);
+    public HashMap<String, String> login(String UserName, String UserPassword){
+        User loginUser = userMapper.login(UserName, UserPassword);
         HashMap<String, String> map = new HashMap<>();
         if (loginUser != null) {
             //登录后即执行修改token的操作
-            String token = getNewToken(System.currentTimeMillis() + "", loginUser.getUserid());
-            UserToken userToken = userTokenMapper.selectByPrimaryKey(loginUser.getUserid());
+            String token = getNewToken(System.currentTimeMillis() + "", loginUser.getUserId());
+            UserToken userToken = userTokenMapper.selectByPrimaryKey(loginUser.getUserId());
             //当前时间
             Date now = new Date();
             //过期时间
             Date expireTime = new Date(now.getTime() + 2 * 24 * 3600 * 1000);//过期时间 48 小时
             if (userToken == null) {
                 userToken = new UserToken();
-                userToken.setUserid(loginUser.getUserid());
+                userToken.setUserId(loginUser.getUserId());
                 userToken.setToken(token);
                 userToken.setUpdate_time(now);
                 userToken.setExpire_time(expireTime);
@@ -66,25 +66,25 @@ public class UserService {
         map.put("roleStr", null);
         return map;
     }
-    private String getNewToken(String timeStr, Integer userid) {
-        String src = timeStr + userid + NumberUtil.genRandomNum(6);
+    private String getNewToken(String timeStr, Integer UserId) {
+        String src = timeStr + UserId + NumberUtil.genRandomNum(6);
         return SystemUtil.genToken(src);
     }
     // 获取用户信息
-    public User getUserDetailById(Integer userid){
-        return userMapper.selectByPrimaryKey(userid);
+    public User getUserDetailById(Integer UserId){
+        return userMapper.selectByPrimaryKey(UserId);
     }
 
     //修改当前登录用户的密码
-    public Boolean updatePassword(Integer userid, String originalPassword, String newPassword) {
-        User user = userMapper.selectByPrimaryKey(userid);
+    public Boolean updatePassword(Integer UserId, String originalPassword, String newPassword) {
+        User user = userMapper.selectByPrimaryKey(UserId);
         //当前用户非空才可以进行更改
         if (user != null) {
             //比较原密码是否正确
-            if (originalPassword.equals(user.getPassword())) {
+            if (originalPassword.equals(user.getUserPassword())) {
                 //设置新密码并修改
-                user.setPassword(newPassword);
-                if (userMapper.updateByPrimaryKeySelective(user) > 0 && userTokenMapper.deleteByPrimaryKey(userid) > 0) {
+                user.setUserPassword(newPassword);
+                if (userMapper.updateByPrimaryKeySelective(user) > 0 && userTokenMapper.deleteByPrimaryKey(UserId) > 0) {
                     //修改成功且清空当前token则返回true
                     return true;
                 }
@@ -94,13 +94,13 @@ public class UserService {
     }
 
     //修改当前登录用户的名称信息
-    public Boolean updateName(Integer userid, String username, String nickname){
-        User user = userMapper.selectByPrimaryKey(userid);
+    public Boolean updateName(Integer UserId, String UserName, String NickName){
+        User user = userMapper.selectByPrimaryKey(UserId);
         //当前用户非空才可以进行更改
         if (user != null) {
             //设置新名称并修改
-            user.setUsername(username);
-            user.setNickname(nickname);
+            user.setUserName(UserName);
+            user.setNickName(NickName);
             if (userMapper.updateByPrimaryKeySelective(user) > 0) {
                 //修改成功则返回true
                 return true;
@@ -110,8 +110,8 @@ public class UserService {
     }
 
     //退出
-    public Boolean logout(Integer userid) {
-        return userTokenMapper.deleteByPrimaryKey(userid) > 0;
+    public Boolean logout(Integer UserId) {
+        return userTokenMapper.deleteByPrimaryKey(UserId) > 0;
     }
     //注册
     public String register(String username, String password) {

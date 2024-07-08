@@ -15,14 +15,14 @@
           <div class="author">
             <el-link type="primary">
               <i class="icon el-icon-s-custom" />
-              {{ state.userInfo && state.userInfo.nickname ||''}}
+              {{ state.userInfo && state.userInfo.NickName ||''}}
               <i class="el-icon-caret-bottom" />
             </el-link>
           </div>
         </template>
         <div class="nickname">
-          <p>登录名：{{state.userInfo && state.userInfo.username ||'' }}</p>
-          <p>昵称：{{ state.userInfo && state.userInfo.nickname ||'' }}</p>
+          <p>登录名：{{state.userInfo && state.userInfo.UserName ||'' }}</p>
+          <p>昵称：{{ state.userInfo && state.userInfo.NickName ||'' }}</p>
 
         </div>
       </el-popover>
@@ -58,8 +58,8 @@ onMounted(() => {
 //获取当前用户信息
 const getUserInfo = ()=>{
   axios.get('/user/profile').then(res => {
-    state.userInfo = res
-    if(res.user_role !='admin') {
+    state.userInfo = res.data
+    if(res.data.user_role !='admin') {
       // 回到登录页
       window.location.href = '/login'
       //router.push({ path: '/login' })

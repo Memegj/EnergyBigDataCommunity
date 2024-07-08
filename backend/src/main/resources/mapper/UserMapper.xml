@@ -3,39 +3,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="upc.backend.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="upc.backend.entity.User">
-        <id column="userid" jdbcType="INTEGER" property="userid" />
-        <result column="username" jdbcType="VARCHAR" property="username" />
-        <result column="password" jdbcType="VARCHAR" property="password" />
-        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-        <result column="locked" jdbcType="TINYINT" property="locked" />
-        <result column="deleted" jdbcType="TINYINT" property="deleted" />
+        <id column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="UserName" jdbcType="VARCHAR" property="UserName" />
+        <result column="UserPassword" jdbcType="VARCHAR" property="UserPassword" />
+        <result column="NickName" jdbcType="VARCHAR" property="NickName" />
+        <result column="UserLocked" jdbcType="TINYINT" property="UserLocked" />
         <result column="user_role" jdbcType="VARCHAR" property="user_role" />
-        <result column="team" jdbcType="VARCHAR" property="team" />
-        <result column="register_time" jdbcType="TIMESTAMP" property="register_time" />
+        <result column="UserEmail" jdbcType="VARCHAR" property="UserEmail" />
+        <result column="UserCollege" jdbcType="VARCHAR" property="UserCollege" />
+        <result column="RegisterTime" jdbcType="TIMESTAMP" property="RegisterTime" />
     </resultMap>
     <sql id="Base_Column_List">
-        userid, username, password, nickname, locked, deleted, user_role, team, register_time
+        UserId, UserName, UserPassword, NickName, UserLocked, user_role, UserEmail, UserCollege, RegisterTime
     </sql>
 
     <select id="login" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from user
-        where username = #{username,jdbcType=VARCHAR} AND password=#{password,jdbcType=VARCHAR} AND locked = 0 AND deleted = 0
+        where UserName = #{UserName,jdbcType=VARCHAR} AND UserPassword=#{UserPassword,jdbcType=VARCHAR} AND UserLocked = 0
     </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from user
-        where userid = #{userid,jdbcType=INTEGER}
+        where UserId = #{UserId,jdbcType=INTEGER}
     </select>
 
     <select id="findAllUserList" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from user
-        order by register_time desc
+        order by RegisterTime desc
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>
@@ -46,116 +46,116 @@
     </select>
 
     <insert id="insert" parameterType="upc.backend.entity.User">
-        insert into user (userid, username, password, nickname, locked, deleted, user_role, team, register_time)
-        values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-                #{nickname,jdbcType=VARCHAR}, #{locked,jdbcType=TINYINT}, #{deleted,jdbcType=TINYINT}, #{user_role,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, #{register_time,jdbcType=TIMESTAMP})
+        insert into user (UserId, UserName, UserPassword, NickName, UserLocked, user_role, UserEmail, UserCollege, RegisterTime)
+        values (#{UserId,jdbcType=INTEGER}, #{UserName,jdbcType=VARCHAR}, #{UserPassword,jdbcType=VARCHAR},
+                #{NickName,jdbcType=VARCHAR}, #{UserLocked,jdbcType=TINYINT}, #{user_role,jdbcType=VARCHAR}, #{UserEmail,jdbcType=VARCHAR}, #{UserCollege,jdbcType=VARCHAR}, #{RegisterTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="upc.backend.entity.User">
         insert into user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userid != null">
-                userid,
+            <if test="UserId != null">
+                UserId,
             </if>
-            <if test="username != null">
-                username,
+            <if test="UserName != null">
+                UserName,
             </if>
-            <if test="password != null">
-                password,
+            <if test="UserPassword != null">
+                UserPassword,
             </if>
-            <if test="nickname != null">
-                nickname,
+            <if test="NickName != null">
+                NickName,
             </if>
-            <if test="locked != null">
-                locked,
-            </if>
-            <if test="deleted != null">
-                deleted,
+            <if test="UserLocked != null">
+                UserLocked,
             </if>
             <if test="user_role != null">
                 user_role,
             </if>
-            <if test="team != null">
-                team,
+            <if test="UserEmail != null">
+                UserEmail,
             </if>
-            <if test="register_time != null">
-                register_time,
+            <if test="UserCollege != null">
+                UserCollege,
+            </if>
+            <if test="RegisterTime != null">
+                RegisterTime,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userid!= null">
-                #{userid,jdbcType=INTEGER},
+            <if test="UserId!= null">
+                #{UserId,jdbcType=INTEGER},
             </if>
-            <if test="username != null">
-                #{username,jdbcType=VARCHAR},
+            <if test="UserName != null">
+                #{UserName,jdbcType=VARCHAR},
             </if>
-            <if test="password != null">
-                #{password,jdbcType=VARCHAR},
+            <if test="UserPassword != null">
+                #{UserPassword,jdbcType=VARCHAR},
             </if>
-            <if test="nickname != null">
-                #{nickname,jdbcType=VARCHAR},
+            <if test="NickName != null">
+                #{NickName,jdbcType=VARCHAR},
             </if>
-            <if test="locked != null">
-                #{locked,jdbcType=TINYINT},
-            </if>
-            <if test="deleted != null">
-                #{deleted,jdbcType=TINYINT},
+            <if test="UserLocked != null">
+                #{UserLocked,jdbcType=TINYINT},
             </if>
             <if test="user_role != null">
                 #{user_role,jdbcType=VARCHAR},
             </if>
-            <if test="team != null">
-                #{team,jdbcType=VARCHAR},
+            <if test="UserEmail != null">
+                #{UserEmail,jdbcType=VARCHAR},
             </if>
-            <if test="register_time != null">
-                #{register_time,jdbcType=TIMESTAMP},
+            <if test="UserCollege != null">
+                #{UserCollege,jdbcType=VARCHAR},
+            </if>
+            <if test="RegisterTime != null">
+                #{RegisterTime,jdbcType=TIMESTAMP},
             </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.User">
         update user
         <set>
-            <if test="username != null">
-                username = #{username,jdbcType=VARCHAR},
+            <if test="UserName != null">
+                UserName = #{UserName,jdbcType=VARCHAR},
             </if>
-            <if test="password != null">
-                password = #{password,jdbcType=VARCHAR},
+            <if test="UserPassword != null">
+                UserPassword = #{UserPassword,jdbcType=VARCHAR},
             </if>
-            <if test="nickname != null">
-                nickname = #{nickname,jdbcType=VARCHAR},
+            <if test="NickName != null">
+                NickName = #{NickName,jdbcType=VARCHAR},
             </if>
-            <if test="locked != null">
-                locked = #{locked,jdbcType=TINYINT},
-            </if>
-            <if test="deleted != null">
-                deleted = #{deleted,jdbcType=TINYINT},
+            <if test="UserLocked != null">
+                UserLocked = #{UserLocked,jdbcType=TINYINT},
             </if>
             <if test="user_role != null">
                 user_role = #{user_role,jdbcType=VARCHAR},
             </if>
-            <if test="team != null">
-                team = #{team,jdbcType=VARCHAR},
+            <if test="UserEmail != null">
+                UserEmail = #{UserEmail,jdbcType=VARCHAR},
             </if>
-            <if test="register_time != null">
-                register_time = #{register_time,jdbcType=TIMESTAMP},
+            <if test="UserCollege != null">
+                UserCollege = #{UserCollege,jdbcType=VARCHAR},
+            </if>
+            <if test="RegisterTime != null">
+                RegisterTime = #{RegisterTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where userid = #{userid,jdbcType=INTEGER}
+        where UserId = #{UserId,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="upc.backend.entity.User">
         update user
-        set username = #{username,jdbcType=VARCHAR},
-            password = #{password,jdbcType=VARCHAR},
-            nickname = #{nickname,jdbcType=VARCHAR},
-            locked = #{locked,jdbcType=TINYINT},
-            deleted = #{deleted,jdbcType=TINYINT},
+        set UserName = #{UserName,jdbcType=VARCHAR},
+            UserPassword = #{UserPassword,jdbcType=VARCHAR},
+            NickName = #{NickName,jdbcType=VARCHAR},
+            UserLocked = #{UserLocked,jdbcType=TINYINT},
             user_role = #{user_role,jdbcType=VARCHAR},
-            team = #{team,jdbcType=VARCHAR},
-            register_time = #{register_time,jdbcType=TIMESTAMP}
-        where userid = #{userid,jdbcType=INTEGER}
+            UserEmail = #{UserEmail,jdbcType=VARCHAR},
+            UserCollege = #{UserCollege,jdbcType=VARCHAR},
+            RegisterTime = #{RegisterTime,jdbcType=TIMESTAMP}
+        where UserId = #{UserId,jdbcType=INTEGER}
     </update>
     <update id="lockUserBatch">
         update user
-        set locked=#{lockStatus} where userid in
+        set UserLocked=#{lockStatus} where UserId in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>

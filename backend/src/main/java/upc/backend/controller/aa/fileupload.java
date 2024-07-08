@@ -128,10 +128,10 @@ public class fileupload {
             } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
                 return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult()); // token过期错误
             } else {
-                User user = userService.getUserDetailById(userToken.getUserid()); // 获取用户详情
+                User user = userService.getUserDetailById(userToken.getUserId()); // 获取用户详情
                 UploadFile upload_file = new UploadFile(); // 创建上传文件对象
                 BeanUtil.copyProperties(fileAddParam, upload_file); // 复制属性
-                upload_file.setUpload_user(user.getUsername()); // 设置上传用户
+                upload_file.setUpload_user(user.getUserName()); // 设置上传用户
                 upload_file.setUpload_time(new Date()); // 设置上传时间
                 Boolean fileUpload_flag = fileUploadService.add_file(upload_file); // 添加文件信息
                 if (fileUpload_flag) {

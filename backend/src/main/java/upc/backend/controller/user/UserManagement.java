@@ -60,19 +60,18 @@ public class UserManagement {
     }
     @RequestMapping(value = "/users/user_add", method = RequestMethod.POST)
     public Result user_add(@RequestBody UserAddParam userAddParam) {
-        logger.info("username:{}", userAddParam.getUsername());
-        if (userAddParam.getUsername()==null || userAddParam.getNickname()==null || userAddParam.getPassword()==null) {
+        logger.info("username:{}", userAddParam.getUserName());
+        if (userAddParam.getUserName()==null || userAddParam.getNickName()==null || userAddParam.getUserPassword()==null) {
             return ResultGenerator.genFailResult("参数异常！");
         }
         else {
             User user = new User();
-            user.setUsername(userAddParam.getUsername());
-            user.setNickname(userAddParam.getNickname());
-            user.setPassword(userAddParam.getPassword());
+            user.setUserName(userAddParam.getUserName());
+            user.setNickName(userAddParam.getNickName());
+            user.setUserPassword(userAddParam.getUserPassword());
             user.setUser_role(userAddParam.getUser_role());
-            user.setLocked((byte) 0);
-            user.setDeleted((byte) 0);
-            user.setRegister_time(new Date());
+            user.setUserLocked((byte) 0);
+            user.setRegisterTime(new Date());
             if (userService.add_User(user)) {
                 Result result = new ResultGenerator().genSuccessResult();
                 result.setData(true);

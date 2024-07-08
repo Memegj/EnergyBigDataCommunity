@@ -58,7 +58,7 @@ public class UserLogin {
                 return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
             }
             else {
-                User user = userService.getUserDetailById(userToken.getUserid());
+                User user = userService.getUserDetailById(userToken.getUserId());
                 Result result = ResultGenerator.genSuccessResult();
                 result.setData(user);
                 return result;
@@ -80,7 +80,7 @@ public class UserLogin {
     public Result passwordUpdate(@RequestBody UpdateUserPasswordParam passwordParam) {
         //log.info("user token:{}", passwordParam.getToken());
         UserToken userToken = userTokenService.selectByToken(passwordParam.getToken());
-        if (userService.updatePassword(userToken.getUserid(), passwordParam.getOriginalPassword(), passwordParam.getNewPassword())) {
+        if (userService.updatePassword(userToken.getUserId(), passwordParam.getOriginalPassword(), passwordParam.getNewPassword())) {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult(ServiceResultEnum.DB_ERROR.getResult());
@@ -91,7 +91,7 @@ public class UserLogin {
     public Result nameUpdate(@RequestBody UpdateUserNameParam nameParam) {
         //log.info("user:{}", nameParam.getUsername());
         UserToken userToken = userTokenService.selectByToken(nameParam.getToken());
-        if (userService.updateName(userToken.getUserid(), nameParam.getUsername(), nameParam.getNickname())) {
+        if (userService.updateName(userToken.getUserId(), nameParam.getUsername(), nameParam.getNickname())) {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult(ServiceResultEnum.DB_ERROR.getResult());
@@ -101,7 +101,7 @@ public class UserLogin {
     @RequestMapping(value = "/user/logout", method = RequestMethod.DELETE)
     public Result logout(@TokenToUser UserToken user) {
         //log.info("user:{}", user.toString());
-        userService.logout(user.getUserid());
+        userService.logout(user.getUserId());
         return ResultGenerator.genSuccessResult();
     }
 }

@@ -16,54 +16,52 @@
             :default-openeds="state.defaultOpen"
             :default-active='state.currentPath'
         >
-          <el-menu-item index="/teacher/index"><el-icon><Odometer /></el-icon>首页</el-menu-item>
-
-          <el-sub-menu index="2">
+          <el-sub-menu index="1">
             <template #title>
-              <span>代码</span>
+              <span>常用功能</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
+              <el-menu-item index="/admin/index"><el-icon><Odometer /></el-icon>首页</el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+          <el-sub-menu index="2">
+            <template #title>
+              <span>信息查询</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/admin/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <span>数据集</span>
+              <span>模块管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/file_upload"><el-icon><Menu /></el-icon>文件上传下载</el-menu-item>
-              <el-menu-item index="/teacher/references"><el-icon><Document-copy /></el-icon>参考文献</el-menu-item>
-              <el-menu-item index="/teacher/user_manage"><el-icon><User /></el-icon>用户管理</el-menu-item>
+              <el-menu-item index="/admin/file_upload"><el-icon><Menu /></el-icon>文件上传下载</el-menu-item>
+              <el-menu-item index="/admin/references"><el-icon><Document-copy /></el-icon>参考文献</el-menu-item>
+              <el-menu-item index="/admin/user_manage"><el-icon><User /></el-icon>用户管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>
-              <span>文献资料</span>
+              <span>系统管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/account"><el-icon><Lock /></el-icon>修改密码</el-menu-item>
+              <el-menu-item index="/admin/account"><el-icon><Lock /></el-icon>修改密码</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
-          <el-sub-menu index="5">
+          <el-sub-menu index="4">
             <template #title>
-              <span>教学视频</span>
+              <span>个人练习</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/gettable"><el-icon><Lock /></el-icon>表格练习</el-menu-item>
+              <el-menu-item index="/admin/gettable"><el-icon><Lock /></el-icon>表格练习</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/getfile"><el-icon><Lock /></el-icon>文件练习</el-menu-item>
+              <el-menu-item index="/admin/getfile"><el-icon><Lock /></el-icon>文件练习</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/getchart"><el-icon><Lock /></el-icon>图表练习</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
-          <el-sub-menu index="6">
-            <template #title>
-              <span>我的</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/teacher/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
+              <el-menu-item index="/admin/getchart"><el-icon><Lock /></el-icon>图表练习</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
@@ -87,7 +85,7 @@
 import {onMounted, reactive} from 'vue'
 import { useRouter } from 'vue-router'
 
-import Header from '@/pages/teacher/components/Header.vue'
+import Header from '@/pages/admin/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import { localGet, pathMap } from '@/utils'
 
@@ -96,7 +94,7 @@ const router = useRouter()
 const state = reactive({
   showMenu: true,
   defaultOpen: ['1', '2', '3', '4'],
-  currentPath: '/teacher',
+  currentPath: '/',
 })
 
 router.afterEach((to, from) => {
