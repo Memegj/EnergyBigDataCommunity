@@ -16,52 +16,59 @@
             :default-openeds="state.defaultOpen"
             :default-active='state.currentPath'
         >
+          <el-menu-item index="/admin/index">
+            <el-icon><House /></el-icon>
+            首页
+          </el-menu-item>
           <el-sub-menu index="1">
             <template #title>
-              <span>常用功能</span>
+              <span><el-icon><Menu /></el-icon>代码</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/index"><el-icon><Odometer /></el-icon>首页</el-menu-item>
+              <el-menu-item index="/admin/mycharts" >代码检索</el-menu-item>
             </el-menu-item-group>
+            <el-menu-item index="/admin/mycharts" >代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
-              <span>信息查询</span>
+              <span><el-icon><el-icon-coin /></el-icon>数据集</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
+              <el-menu-item index="/admin/file_upload">数据集检索</el-menu-item>
+              <el-menu-item index="/admin/references">数据集管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <span>模块管理</span>
+              <span><el-icon><Document-copy /></el-icon>文献资料</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/file_upload"><el-icon><Menu /></el-icon>文件上传下载</el-menu-item>
-              <el-menu-item index="/admin/references"><el-icon><Document-copy /></el-icon>参考文献</el-menu-item>
-              <el-menu-item index="/admin/user_manage"><el-icon><User /></el-icon>用户管理</el-menu-item>
+              <el-menu-item index="/admin/account">文献资料检索</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/admin/account">文献资料管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>
-              <span>系统管理</span>
+              <span><el-icon><el-icon-video-camera /></el-icon>教学视频</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/account"><el-icon><Lock /></el-icon>修改密码</el-menu-item>
+              <el-menu-item index="/admin/gettable">教学视频检索</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/admin/getfile">教学视频管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
-          <el-sub-menu index="4">
+          <el-sub-menu index="5">
             <template #title>
-              <span>个人练习</span>
+              <span><el-icon><User /></el-icon>我的</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/gettable"><el-icon><Lock /></el-icon>表格练习</el-menu-item>
+              <el-menu-item index="/admin/gettable">个人信息修改</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/admin/getfile"><el-icon><Lock /></el-icon>文件练习</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/getchart"><el-icon><Lock /></el-icon>图表练习</el-menu-item>
+              <el-menu-item index="/admin/getfile">用户管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
@@ -81,7 +88,6 @@
 </template>
 
 <script setup>
-
 import {onMounted, reactive} from 'vue'
 import { useRouter } from 'vue-router'
 

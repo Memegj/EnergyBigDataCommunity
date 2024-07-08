@@ -16,52 +16,65 @@
             :default-openeds="state.defaultOpen"
             :default-active='state.currentPath'
         >
+          <el-menu-item index="/teacher/index">
+            <el-icon><House /></el-icon>
+            首页
+          </el-menu-item>
           <el-sub-menu index="1">
             <template #title>
-              <span>常用功能</span>
+              <span><el-icon><Menu /></el-icon>代码</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/index"><el-icon><Odometer /></el-icon>首页</el-menu-item>
+              <el-menu-item index="/teacher/mycharts" >代码检索</el-menu-item>
             </el-menu-item-group>
+            <el-menu-item index="/teacher/mycharts" >代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
-              <span>信息查询</span>
+              <span><el-icon><el-icon-coin /></el-icon>数据集</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/mycharts" ><el-icon><Picture /></el-icon>Echarts</el-menu-item>
+              <el-menu-item index="/teacher/file_upload">数据集检索</el-menu-item>
+              <el-menu-item index="/teacher/references">数据集管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <span>模块管理</span>
+              <span><el-icon><Document-copy /></el-icon>文献资料</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/file_upload"><el-icon><Menu /></el-icon>文件上传下载</el-menu-item>
-              <el-menu-item index="/admin/references"><el-icon><Document-copy /></el-icon>参考文献</el-menu-item>
-              <el-menu-item index="/admin/user_manage"><el-icon><User /></el-icon>用户管理</el-menu-item>
+              <el-menu-item index="/teacher/account">文献资料检索</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/teacher/account">文献资料管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>
-              <span>系统管理</span>
+              <span><el-icon><el-icon-video-camera /></el-icon>教学视频</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/account"><el-icon><Lock /></el-icon>修改密码</el-menu-item>
+              <el-menu-item index="/teacher/gettable">教学视频检索</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/teacher/getfile">教学视频管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
-          <el-sub-menu index="4">
+          <el-sub-menu index="5">
             <template #title>
-              <span>个人练习</span>
+              <span><el-icon><User /></el-icon>我的</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/admin/gettable"><el-icon><Lock /></el-icon>表格练习</el-menu-item>
+              <el-menu-item index="/teacher/gettable">我的收藏</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/admin/getfile"><el-icon><Lock /></el-icon>文件练习</el-menu-item>
+              <el-menu-item index="/teacher/getfile">个人信息修改</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/admin/getchart"><el-icon><Lock /></el-icon>图表练习</el-menu-item>
+              <el-menu-item index="/teacher/getfile">团队管理</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/teacher/getfile">学生管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
@@ -81,13 +94,12 @@
 </template>
 
 <script setup>
-
 import {onMounted, reactive} from 'vue'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 
-import Header from '@/pages/admin/components/Header.vue'
+import Header from '@/pages/teacher/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import { localGet, pathMap } from '@/utils'
+import {localGet, pathMap} from '@/utils'
 
 const noMenu = ['/login']
 const router = useRouter()
@@ -105,12 +117,11 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     // 如果路径是 /login 则正常执行
     next()
-  }
-  else {
+  } else {
     // 如果不是 /login，判断是否有 token
     if (!localGet('token')) {
       // 如果没有，则跳至登录页面
-      next({ path: '/login' })
+      next({path: '/login'})
     } else {
       // 否则继续执行
       next()
@@ -127,19 +138,23 @@ router.beforeEach((to, from, next) => {
   min-height: 100vh;
   background-color: #ffffff;
 }
+
 .container {
   height: 100vh;
 }
+
 .aside {
-  width: 220px!important;
+  width: 220px !important;
   background-color: #e4e6ea;
 }
+
 .head {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 50px;
 }
+
 .head > div {
   display: flex;
   align-items: center;
@@ -150,20 +165,24 @@ router.beforeEach((to, from, next) => {
   height: 20px;
   margin-right: 10px;
 }
+
 .head span {
   font-size: 15px;
   color: #01374d;
 }
+
 .line {
-  border-top: 1px solid hsla(0,0%,100%,.05);
-  border-bottom: 1px solid rgba(0,0,0,.2);
+  border-top: 1px solid hsla(0, 0%, 100%, .05);
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
 }
+
 .content {
   display: flex;
   flex-direction: column;
   max-height: 100vh;
   overflow: hidden;
 }
+
 .main {
   height: calc(100vh - 100px);
   overflow: auto;
@@ -177,36 +196,46 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
 .el-menu {
-  border-right: none!important;
+  border-right: none !important;
 }
+
 .el-sub-menu {
   border-top: 1px solid hsla(0, 0%, 100%, .05);
   border-bottom: 1px solid rgba(0, 0, 0, .2);
-  .el-menu-item{
+
+  .el-menu-item {
     height: 40px;
   }
-  .el-menu-item:first-child{
+
+  .el-menu-item:first-child {
     margin-top: -10px;
   }
 }
+
 .el-sub-menu:first-child {
   border-top: none;
 }
+
 .el-sub-menu [class^="el-icon-"] {
-  vertical-align: -1px!important;
+  vertical-align: -1px !important;
 }
-.el-sub-menu__title{
+
+.el-sub-menu__title {
   height: 40px;
 }
+
 a {
   color: #409eff;
   text-decoration: none;
 }
+
 .el-pagination {
   text-align: center;
   margin-top: 20px;
 }
+
 .el-popper__arrow {
   display: none;
 }

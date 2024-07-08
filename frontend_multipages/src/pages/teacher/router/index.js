@@ -8,48 +8,48 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/admin/index'
+      redirect: '/teacher/index'
     },
     {
-      path: '/admin/index',
+      path: '/teacher/index',
       name: 'index',
-      component: () => import( '@/pages/admin/views/Index.vue')
+      component: () => import( '@/pages/teacher/views/Index.vue')
     },
     {
-      path: '/admin/mycharts',
+      path: '/teacher/mycharts',
       name: 'mycharts',
-      component: () => import( '@/pages/admin/views/Chart_Example.vue')
+      component: () => import( '@/pages/teacher/views/Chart_Example.vue')
     },
     {
-      path: '/admin/file_upload',
+      path: '/teacher/file_upload',
       name: 'file_upload',
-      component: () => import( '@/pages/admin/views/FileUpload.vue'),
+      component: () => import( '@/pages/teacher/views/FileUpload.vue'),
 
     },
     {
-      path: '/admin/references',
+      path: '/teacher/references',
       name: 'references',
-      component: () => import( '@/pages/admin/views/References.vue')
+      component: () => import( '@/pages/teacher/views/References.vue')
     },
     {
-      path: '/admin/user_manage',
+      path: '/teacher/user_manage',
       name: 'user_manage',
-      component: () => import('@/pages/admin/views/UserManage.vue')
+      component: () => import('@/pages/teacher/views/UserManage.vue')
     },
     {
-      path: '/admin/gettable',
+      path: '/teacher/gettable',
       name: 'table',
-      component: () => import( '@/pages/admin/views/GetTable.vue')
+      component: () => import( '@/pages/teacher/views/GetTable.vue')
     },
     {
-      path: '/admin/getfile',
+      path: '/teacher/getfile',
       name: 'file',
-      component: () => import( '@/pages/admin/views/GetFile.vue')
+      component: () => import( '@/pages/teacher/views/GetFile.vue')
     },
     {
-      path: '/admin/getchart',
+      path: '/teacher/getchart',
       name: 'chart',
-      component: () => import( '@/pages/admin/views/GetChart.vue')
+      component: () => import( '@/pages/teacher/views/GetChart.vue')
     }
   ],
 })

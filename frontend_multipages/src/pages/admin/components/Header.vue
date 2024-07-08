@@ -6,23 +6,23 @@
     </div>
     <div class="right">
       <el-popover
-        placement="bottom"
-        :width="320"
-        trigger="click"
-        popper-class="popper-user-box"
+          placement="bottom"
+          :width="320"
+          trigger="click"
+          popper-class="popper-user-box"
       >
         <template #reference>
           <div class="author">
             <el-link type="primary">
               <i class="icon el-icon-s-custom" />
-              {{ state.userInfo && state.userInfo.NickName ||''}}
+              {{ state.userInfo && state.userInfo.nickName ||''}}
               <i class="el-icon-caret-bottom" />
             </el-link>
           </div>
         </template>
         <div class="nickname">
-          <p>登录名：{{state.userInfo && state.userInfo.UserName ||'' }}</p>
-          <p>昵称：{{ state.userInfo && state.userInfo.NickName ||'' }}</p>
+          <p>登录名：{{state.userInfo && state.userInfo.userName ||'' }}</p>
+          <p>昵称：{{ state.userInfo && state.userInfo.nickName ||'' }}</p>
 
         </div>
       </el-popover>
@@ -58,8 +58,9 @@ onMounted(() => {
 //获取当前用户信息
 const getUserInfo = ()=>{
   axios.get('/user/profile').then(res => {
-    state.userInfo = res.data
-    if(res.data.user_role !='admin') {
+    state.userInfo = res
+    console.log('User Info:', res)
+    if (res.user_role != 'admin') {
       // 回到登录页
       window.location.href = '/login'
       //router.push({ path: '/login' })
@@ -79,7 +80,7 @@ const logout = () => {
 }
 
 router.afterEach((to) => {
-  const { id } = to.query
+  const {id} = to.query
   state.name = pathMap[to.name]
   // level2 和 level3 需要展示返回icon
   console.log('to.name', to.name)
@@ -95,52 +96,59 @@ const back = () => {
 </script>
 
 <style scoped>
-  .header {
-    height: 50px;
-    border-bottom: 1px solid #e9e9e9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-  }
-  .header .left .back {
-    border: 1px solid #e9e9e9;
-    padding: 5px;
-    border-radius: 50%;
-    margin-right: 5px;
-    cursor: pointer;
-  }
-  .right{
-    display: flex;
-  }
-  .right > div > .icon{
-    font-size: 18px;
-    margin-right: 6px;
-  }
-  .author {
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  .lgout{
-    cursor: pointer;
-    margin-left: 10px;
-  }
+.header {
+  height: 50px;
+  border-bottom: 1px solid #e9e9e9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.header .left .back {
+  border: 1px solid #e9e9e9;
+  padding: 5px;
+  border-radius: 50%;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.right {
+  display: flex;
+}
+
+.right > div > .icon {
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+.author {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.lgout {
+  cursor: pointer;
+  margin-left: 10px;
+}
 </style>
 
 <style>
-  .popper-user-box {
-    background: url('@/assets/account-banner-bg.png') 50% 50% no-repeat!important;
-    background-size: cover!important;
-    border-radius: 0!important;
-  }
-   .popper-user-box .nickname {
-    position: relative;
-    color: #ffffff;
-  }
-  .popper-user-box .nickname .logout {
-    position: absolute;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-  }
+.popper-user-box {
+  background: url('@/assets/account-banner-bg.png') 50% 50% no-repeat !important;
+  background-size: cover !important;
+  border-radius: 0 !important;
+}
+
+.popper-user-box .nickname {
+  position: relative;
+  color: #ffffff;
+}
+
+.popper-user-box .nickname .logout {
+  position: absolute;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+}
 </style>

@@ -35,9 +35,22 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/admin/mycharts',
-      name: 'mycharts',
-      component: () => import( '@/pages/admin/views/Chart_Example.vue')
+      path: '/student',
+      redirect: '/student/index'
+    },
+    {
+      path: '/student/index',
+      name: 'index',
+      component: () => import( '@/pages/student/views/Index.vue')
+    },
+    {
+      path: '/teacher',
+      redirect: '/teacher/index'
+    },
+    {
+      path: '/teacher/index',
+      name: 'index',
+      component: () => import( '@/pages/teacher/views/Index.vue')
     },
     {
       path: '/admin/file_upload',
