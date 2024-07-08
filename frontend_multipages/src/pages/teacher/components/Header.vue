@@ -59,7 +59,7 @@ onMounted(() => {
 const getUserInfo = ()=>{
   axios.get('/user/profile').then(res => {
     state.userInfo = res
-    if(res.user_role !='admin') {
+    if(res.user_role !='teacher') {
       // 回到登录页
       window.location.href = '/login'
       //router.push({ path: '/login' })

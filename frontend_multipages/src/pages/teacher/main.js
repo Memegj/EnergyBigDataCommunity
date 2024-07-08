@@ -27,7 +27,7 @@ import {
     ElOption
 } from 'element-plus'
 import App from './App.vue'
-import router from '@/pages/index/router'
+import router from '@/pages/teacher/router'
 //import router from '@/router'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //import * as echarts from 'echarts'  //引入Echarts，

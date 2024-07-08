@@ -7,18 +7,9 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      redirect: '/home'
-    },
-    {
       path: '/login',
       name: 'login',
       component: Login,
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: Home,
     },
     {
       path: '/about',
@@ -33,6 +24,24 @@ const router = createRouter({
       path: '/admin/index',
       name: 'index',
       component: () => import( '@/pages/admin/views/Index.vue')
+    },
+    {
+      path: '/student',
+      redirect: '/student/index'
+    },
+    {
+      path: '/student/index',
+      name: 'student',
+      component: () => import( '@/pages/student/views/Index.vue')
+    },
+    {
+      path: '/teacher',
+      redirect: '/teacher/index'
+    },
+    {
+      path: '/teacher/index',
+      name: 'teacher',
+      component: () => import( '@/pages/teacher/views/Index.vue')
     },
     {
       path: '/admin/mycharts',
