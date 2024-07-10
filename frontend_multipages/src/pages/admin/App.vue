@@ -35,7 +35,7 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/admin/file_upload">数据集检索</el-menu-item>
-              <el-menu-item index="/admin/references">数据集管理</el-menu-item>
+              <el-menu-item index="/admin/dataset_manage">数据集管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">

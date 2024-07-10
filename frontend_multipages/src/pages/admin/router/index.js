@@ -16,9 +16,9 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/admin/mycharts',
-      name: 'mycharts',
-      component: () => import( '@/pages/admin/views/Chart_Example.vue')
+      path: '/admin/dataset_manage',
+      name: 'dataset_manage',
+      component: () => import( '@/pages/admin/views/Datasets_management.vue')
     },
     {
       path: '/admin/file_upload',
@@ -50,6 +50,11 @@ const router = createRouter({
       path: '/admin/getchart',
       name: 'chart',
       component: () => import( '@/pages/admin/views/GetChart.vue')
+    },
+    {
+      path: '/admin/datasetupload',
+      name: 'datasetupload',
+      component: () => import( '@/pages/admin/views/Datasetupload.vue')
     }
   ],
 })
