@@ -44,27 +44,44 @@ public class DatasetsUpload {
     private UserService userService;
 
     @RequestMapping(value = "/datasets/files", method = RequestMethod.POST)
-    //@ApiOperation(value = "单图上传", notes = "file Name \"file\"")
-    public Result upload(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) throws URISyntaxException, FileNotFoundException {
-        String fileName = file.getOriginalFilename();
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        //生成文件名称通用方法
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        Random r = new Random();
-        StringBuilder tempName = new StringBuilder();
-        tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName);
-        String newFileName = tempName.toString();
-        //创建文件
-        File destFile = new File(Constants.FILES_UPLOAD_DIC + newFileName);
-        try {
-            file.transferTo(destFile);
-            Result resultSuccess = ResultGenerator.genSuccessResult();
-            resultSuccess.setData(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/files/" + newFileName);
-            return resultSuccess;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResultGenerator.genFailResult("文件上传失败");
+    public Result uploadFile(HttpServletRequest httpServletRequest) throws URISyntaxException, FileNotFoundException {
+
+        List<MultipartFile> multipartFiles = new ArrayList<>();
+        if (standardServletMultipartResolver.isMultipart(httpServletRequest)) {
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) httpServletRequest;
+            Iterator<String> iter = multiRequest.getFileNames();
+            while (iter.hasNext()) {
+                MultipartFile file = multiRequest.getFile(iter.next());
+                multipartFiles.add(file);
+            }
         }
+
+        if (CollectionUtils.isEmpty(multipartFiles)) {
+            return ResultGenerator.genFailResult("参数异常");
+        }
+
+        List<String> fileNames = new ArrayList<>(multipartFiles.size());
+        for (MultipartFile multipartFile : multipartFiles) {
+            String fileName = multipartFile.getOriginalFilename();
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            Random r = new Random();
+            StringBuilder tempName = new StringBuilder();
+            tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName);
+            String newFileName = tempName.toString();
+            File destFile = new File(Constants.DATASETS_UPLOAD_DIC + newFileName);
+            try {
+                multipartFile.transferTo(destFile);
+                fileNames.add(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/files/" + newFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResultGenerator.genFailResult("文件上传失败");
+            }
+        }
+
+        Result resultSuccess = ResultGenerator.genSuccessResult();
+        resultSuccess.setData(fileNames);
+        return resultSuccess;
     }
 
     /**

@@ -9,18 +9,17 @@
           <el-upload
               class="file-uploader"
               :action="state.uploadFileServer"
-              accept="jpg,jpeg,png,pdf,rar,zip"
+              accept=".zip,.rar"
               :headers="{ token: state.token }"
               :show-file-list="false"
               :before-upload="handleBeforeUpload"
               :on-success="handleUrlSuccess"
               :on-progress="handleUploadProgress"
           >
-          <a v-if="state.fileParams.file_path" :href="state.fileParams.file_path" download="state.fileParams.filename"
-             class="file-uploader">文件下载</a>
-          <el-icon v-else class="file-uploader-icon"><Plus /></el-icon>
+            <a v-if="state.fileParams.file_path" :href="state.fileParams.file_path" download="state.fileParams.filename"
+               class="file-uploader">文件下载</a>
+            <el-icon v-else class="file-uploader-icon"><Plus /></el-icon>
           </el-upload>
-          <!-- 添加上传进度条 -->
           <el-progress v-if="state.uploadProgress !== null" :percentage="state.uploadProgress"/>
         </el-form-item>
         <el-form-item label="文件详情">
@@ -38,14 +37,14 @@
 import {reactive, ref, onMounted, onBeforeUnmount, getCurrentInstance} from 'vue'
 import axios from '@/utils/axios'
 import WangEditor from 'wangeditor'
-import {ElMessage, ElProgress} from 'element-plus' // 导入 ElProgress 组件
+import {ElMessage, ElProgress} from 'element-plus'
 import {localGet} from '@/utils'
 
 const editor = ref(null)
 const {proxy} = getCurrentInstance()
 const fileRef = ref(null)
 const state = reactive({
-  uploadFileServer: 'api/file_upload/files',
+  uploadFileServer: 'api/datasets/files',
   token: localGet('token') || '',
   fileParams: {
     filename: '',
@@ -58,7 +57,7 @@ const state = reactive({
       {required: true, message: '请填写文件名称', trigger: ['blur']}
     ]
   },
-  uploadProgress: null // 上传进度
+  uploadProgress: null
 })
 
 let instance
@@ -102,7 +101,7 @@ const submitAdd = () => {
         file_path: state.fileParams.file_path,
         file_info: instance.txt.html()
       }
-      axios.post('/file_upload/file_save', params).then(res => {
+      axios.post('/datasets/file_save', params).then(res => {
         if (res) {
           ElMessage.success('添加成功')
         } else {
@@ -114,21 +113,23 @@ const submitAdd = () => {
 }
 
 const handleBeforeUpload = (file) => {
-  const suffix = file.name.split('.')[1] || ''
-  if (!['jpg', 'jpeg', 'png', 'zip', 'rar'].includes(suffix)) {
-    ElMessage.error('请上传 jpg、jpeg、png、zip、rar 格式的文件')
+  const allowedTypes = ['zip', 'rar']
+  const suffix = file.name.split('.').pop().toLowerCase()
+  if (!allowedTypes.includes(suffix)) {
+    ElMessage.error('请上传 zip、rar 格式的文件')
     return false
   }
+  return true
 }
 
-const handleUrlSuccess = (val) => {
-  state.fileParams.file_path = val.data || ''
+const handleUrlSuccess = (response) => {
+  state.fileParams.file_path = response.data || ''
+  state.uploadProgress = null // 上传成功后重置进度条
 }
 
 const handleUploadProgress = (event, file) => {
   state.uploadProgress = event.percent
 }
-
 </script>
 
 <style scoped>
