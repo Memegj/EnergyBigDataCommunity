@@ -71,14 +71,15 @@ public class TeamManagement {
                 return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
             }
             else {
+                Integer userId = userToken.getUserId();
                // User user = userService.getUserDetailById(userToken.getUserId());
                 Team team= new Team();
 
                 BeanUtil.copyProperties(teamAddParam,team);
-             //   team.setUpload_user(user.getUsername());
+
                 team.setRegisterTime(new Date());
 
-                Boolean result_state = teamService.add_reference(team);
+                Boolean result_state = teamService.addTeamAndUserTeam(team, userId);
                 if (result_state) {
                     Result result = new ResultGenerator().genSuccessResult();
                     result.setData(true);

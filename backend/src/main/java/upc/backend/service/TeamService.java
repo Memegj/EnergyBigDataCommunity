@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import upc.backend.entity.Team;
 import upc.backend.entity.UserTeam;
 import upc.backend.mapper.TeamMapper;
+import upc.backend.mapper.UserTeamMapper;
 import upc.backend.util.PageQueryUtil;
 import upc.backend.util.PageResult;
 
@@ -15,6 +16,8 @@ public class TeamService {
     @Resource
     private TeamMapper teamMapper;
 
+    @Resource
+    private UserTeamMapper userTeamMapper;
 
     // 获取文献信息
     public Team getReferenceById(Integer teamId){
@@ -26,7 +29,21 @@ public class TeamService {
         if (radd > 0){return true;}
         else {return false;}
     }
-
+    public Boolean addTeamAndUserTeam(Team team, Integer UserId) {
+        // 插入团队信息
+        int result = teamMapper.insertSelective(team);
+        if (result > 0) {
+            // 获取插入后的团队ID
+            Integer TeamId = team.getTeamId();
+            // 插入 user_team 记录
+            UserTeam userTeam = new UserTeam();
+            userTeam.setUserId(UserId);
+            userTeam.setTeamId(TeamId);
+            userTeamMapper.insert(userTeam);
+            return true;
+        }
+        return false;
+    }
     public PageResult getReferencesPage(PageQueryUtil pageUtil){
         List<Team> excel = teamMapper.findAllReferenceList(pageUtil);
         int total = teamMapper.getNumOfTotalReferences(pageUtil);

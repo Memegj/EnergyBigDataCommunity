@@ -46,21 +46,21 @@
         insert into team( TeamId,TeamName,RegisterTime,TeamIntro)
         values (#{TeamId,jdbcType=INTEGER}, #{TeamName,jdbcType=VARCHAR}, #{RegisterTime,jdbcType=TIMESTAMP}, #{TeamIntro,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="upc.backend.entity.Team">
+    <insert id="insertSelective" parameterType="upc.backend.entity.Team" useGeneratedKeys="true" keyProperty="teamId">
         insert into team
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="TeamId != null">
                 TeamId,
             </if>
             <if test="TeamName != null">
-                teamname,
+                TeamName,
             </if>
 
             <if test="RegisterTime != null">
-                registertime,
+                RegisterTime,
             </if>
             <if test="TeamIntro!= null">
-                teamintro,
+                TeamIntro,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
