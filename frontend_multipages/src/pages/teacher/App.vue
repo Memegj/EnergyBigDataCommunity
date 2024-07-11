@@ -71,7 +71,7 @@
               <el-menu-item index="/teacher/gettable">个人信息修改</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/getfile">团队管理</el-menu-item>
+              <el-menu-item index="/teacher/team">团队管理</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="/teacher/getfile">学生管理</el-menu-item>

@@ -53,9 +53,26 @@ const router = createRouter({
       component: () => import( '@/pages/teacher/views/Index.vue')
     },
     {
+      path: '/teacher/team',
+      name: 'team',
+      component: () => import( '@/pages/teacher/views/Team.vue')
+    },
+    {
       path: '/admin/file_upload',
       name: 'file_upload',
       component: () => import( '@/pages/admin/views/FileUpload.vue'),
+
+    },
+    {
+      path: '/admin/code',
+      name: 'code',
+      component: () => import( '@/pages/admin/views/Code.vue'),
+
+    },
+    {
+      path: '/admin/codeview',
+      name: 'codeview',
+      component: () => import( '@/pages/admin/views/CodeView.vue'),
 
     },
     {

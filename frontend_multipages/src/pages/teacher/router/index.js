@@ -21,6 +21,11 @@ const router = createRouter({
       component: () => import( '@/pages/teacher/views/Chart_Example.vue')
     },
     {
+      path: '/teacher/team',
+      name: 'team',
+      component: () => import( '@/pages/teacher/views/Team.vue')
+    },
+    {
       path: '/teacher/file_upload',
       name: 'file_upload',
       component: () => import( '@/pages/teacher/views/FileUpload.vue'),

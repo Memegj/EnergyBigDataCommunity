@@ -16,9 +16,14 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/admin/mycharts',
-      name: 'mycharts',
-      component: () => import( '@/pages/admin/views/Chart_Example.vue')
+      path: '/admin/code',
+      name: 'code',
+      component: () => import( '@/pages/admin/views/Code.vue')
+    },
+    {
+      path: '/admin/codeview',
+      name: 'codeview',
+      component: () => import( '@/pages/admin/views/CodeView.vue')
     },
     {
       path: '/admin/file_upload',

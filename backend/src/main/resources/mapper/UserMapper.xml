@@ -13,6 +13,8 @@
         <result column="UserCollege" jdbcType="VARCHAR" property="UserCollege" />
         <result column="RegisterTime" jdbcType="TIMESTAMP" property="RegisterTime" />
     </resultMap>
+
+
     <sql id="Base_Column_List">
         UserId, UserName, UserPassword, NickName, UserLocked, user_role, UserEmail, UserCollege, RegisterTime
     </sql>
