@@ -30,7 +30,7 @@
                 @click="handleCollect"
                 v-else
             >
-              <el-icon><Star /></el-icon> 收藏
+              <el-icon><Star /></el-icon> 添加收藏
             </el-button>
           </div>
         </div>
