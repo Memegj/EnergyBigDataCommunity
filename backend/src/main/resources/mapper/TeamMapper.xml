@@ -32,12 +32,29 @@
         where TeamName = #{TeamName,jdbcType=VARCHAR}
     </select>
     <select id="getNumOfTotalReferences" parameterType="Map" resultType="int">
+        select count(*) from team t
+                                 join user_team ut on t.TeamId = ut.teamId
+        where ut.userId = #{UserId}
+    </select>
+
+    <select id="findAllReferenceList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT t.TeamName, t.TeamIntro, t.RegisterTime,t.TeamId
+        FROM team t
+        JOIN user_team ut ON t.TeamId = ut.teamId
+        WHERE ut.userId = #{UserId}
+        <if test="start!=null and limit!=null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+    <select id="getNumOfTotalTeam" parameterType="Map" resultType="int">
         select count(*) from team
     </select>
-    <select id="findAllReferenceList" parameterType="Map" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from team
+
+    <select id="findAllTeamList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT  t.TeamName, t.TeamIntro, t.RegisterTime,t.TeamId
+        FROM team t
+        JOIN user_team ut ON t.TeamId = ut.teamId
+        WHERE ut.userId = #{UserId}
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>
@@ -108,5 +125,9 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+
+    </delete>
+    <delete id="deleteTeamById" parameterType="long">
+        delete from team where TeamId = #{teamId}
     </delete>
 </mapper>

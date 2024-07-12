@@ -9,7 +9,9 @@ import upc.backend.mapper.UserTeamMapper;
 import upc.backend.util.PageQueryUtil;
 import upc.backend.util.PageResult;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TeamService {
@@ -44,11 +46,21 @@ public class TeamService {
         }
         return false;
     }
-    public PageResult getReferencesPage(PageQueryUtil pageUtil){
-        List<Team> excel = teamMapper.findAllReferenceList(pageUtil);
+//    public PageResult getReferencesPage(PageQueryUtil pageUtil){
+//        List<Team> team = teamMapper.findAllReferenceList(pageUtil);
+//        int total = teamMapper.getNumOfTotalReferences(pageUtil);
+//       // PageResult pageResult = new PageResult(excel, total, pageUtil.getLimit(), pageUtil.getPage());
+//        return new pageResult(team, total, pageUtil.getLimit(), pageUtil.getPage());
+//    }
+    public PageResult getReferencesPage(PageQueryUtil pageUtil) {
+        List<Team> team = teamMapper.findAllReferenceList(pageUtil);
         int total = teamMapper.getNumOfTotalReferences(pageUtil);
-        PageResult pageResult = new PageResult(excel, total, pageUtil.getLimit(), pageUtil.getPage());
-        return pageResult;
+        return new PageResult(team, total, pageUtil.getLimit(), pageUtil.getPage());
+    }
+    public PageResult getTeamPage(PageQueryUtil pageUtil) {
+        List<Team> team = teamMapper.findAllTeamList(pageUtil);
+        int total = teamMapper.getNumOfTotalTeam(pageUtil);
+        return new PageResult(team, total, pageUtil.getLimit(), pageUtil.getPage());
     }
     public Boolean add_reference(Team team){
         int radd = teamMapper.insertSelective(team);
@@ -62,11 +74,24 @@ public class TeamService {
         else {return false;}
     }
 
-    public Boolean deleteBatch(Integer[] ids) {
+    public Boolean deleteBatch1(Integer[] ids) {
         if (ids.length < 1) {
             return false;
         }
         //删除分类数据
         return teamMapper.deleteBatch(ids) > 0;
+    }
+    public boolean deleteBatch(Long[] teamIds, Integer userId) {
+        for (Long teamId : teamIds) {
+            // 删除 user_team 表中与指定 teamId 和 userId 相关的记录
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", userId);
+            params.put("teamId", teamId);
+            userTeamMapper.deleteByTeamIdAndUserId(params);
+
+            // 删除 team 表中的记录
+            teamMapper.deleteTeamById(teamId);
+        }
+        return true;
     }
 }

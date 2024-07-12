@@ -1,4 +1,5 @@
 package upc.backend.mapper;
+import org.apache.ibatis.annotations.Delete;
 import upc.backend.entity.Team;
 import upc.backend.entity.UserTeam;
 import upc.backend.util.PageQueryUtil;
@@ -22,9 +23,11 @@ public interface TeamMapper {
     int getNumOfTotalReferences(PageQueryUtil pageUtil);
     int deleteBatch(Integer[] ids);
 
+    List<Team> findAllTeamList(PageQueryUtil pageUtil);
+    int getNumOfTotalTeam(PageQueryUtil pageUtil);
 
 
-
-
+ //   @Delete("delete from team where TeamId = #{TeamId}")
+    void deleteTeamById(Long teamId);
 
 }

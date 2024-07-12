@@ -16,14 +16,15 @@
         values (#{userId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER})
     </insert>
     <!-- 根据团队ID删除关系记录 -->
-    <delete id="deleteByTeamId" parameterType="java.lang.Integer">
-        delete from user_team
-        where teamId = #{teamId}
-    </delete>
 
     <delete id="deleteByTeamIds" parameterType="map">
         delete from user_team
-        where userId = #{UserId}
-          and teamId = #{TeamId}
+        where userId = #{userId}
+          and teamId = #{teamId}
+    </delete>
+    <delete id="deleteByTeamIdAndUserId" parameterType="map">
+        delete from user_team
+        where userId = #{userId}
+          and teamId = #{teamId}
     </delete>
 </mapper>
