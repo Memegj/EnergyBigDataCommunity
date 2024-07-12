@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.CodeMapper">
+
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Code">
+        <id column="CodeId" jdbcType="INTEGER" property="codeId"/>
+        <result column="CodeName" jdbcType="VARCHAR" property="codeName"/>
+        <result column="UploadTime" jdbcType="TIMESTAMP" property="uploadTime"/>
+        <result column="CodeAbstract" jdbcType="VARCHAR" property="codeAbstract"/>
+        <result column="CodeDetails" jdbcType="VARCHAR" property="codeDetails"/>
+        <result column="isPublic" jdbcType="INTEGER" property="isPublic"/>
+        <result column="DownLoadTimes" jdbcType="INTEGER" property="downLoadTimes"/>
+        <result column="UserId" jdbcType="INTEGER" property="userId"/>
+        <result column="Url" jdbcType="VARCHAR" property="url"/>
+        <result column="TeamId" jdbcType="INTEGER" property="teamId"/>
+        <result column="TeamName" jdbcType="VARCHAR" property="teamName"/>
+        <result column="UserName" jdbcType="VARCHAR" property="userName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CodeId, CodeName, UploadTime, CodeAbstract, CodeDetails, isPublic, DownLoadTimes, UserId, TeamId, Url
+    </sql>
+
+    <select id="selectByCodeId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM code
+        WHERE CodeId = #{codeId, jdbcType=INTEGER}
+    </select>
+
+    <select id="getNumOfTotalCode" resultType="int">
+        SELECT COUNT(*) FROM code
+    </select>
+
+    <select id="findAllCodeList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        code.CodeName,
+        code.UploadTime,
+        code.CodeAbstract,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        team.TeamId AS teamId,
+        team.TeamName AS teamName
+        FROM code
+        JOIN user ON code.UserId = user.UserId
+        JOIN team ON code.TeamId = team.TeamId
+        <if test="start != null and limit != null">
+            LIMIT #{start}, #{limit}
+        </if>
+    </select>
+
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        DELETE FROM code
+        WHERE CodeId IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

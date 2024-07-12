@@ -91,7 +91,7 @@ public class UserLogin {
     public Result nameUpdate(@RequestBody UpdateUserNameParam nameParam) {
         //log.info("user:{}", nameParam.getUsername());
         UserToken userToken = userTokenService.selectByToken(nameParam.getToken());
-        if (userService.updateName(userToken.getUserId(), nameParam.getUsername(), nameParam.getNickname())) {
+        if (userService.updateName(userToken.getUserId(),nameParam.getNickname(),nameParam.getUseremail(),nameParam.getUsercollege())) {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult(ServiceResultEnum.DB_ERROR.getResult());
