@@ -30,7 +30,11 @@
             limit #{start},#{limit}
         </if>
     </select>
-
+    <select id="getTeamNameByTeamId" >
+        select TeamName
+        from team
+        where TeamId = #{TeamId,jdbcType=INTEGER}
+    </select>
     <insert id="insert" parameterType="upc.backend.entity.Team">
         insert into team (TeamId, TeamName, TeamIntro, RegisterTime)
         values (#{TeamId,jdbcType=INTEGER}, #{TeamName,jdbcType=VARCHAR}, #{TeamIntro,jdbcType=VARCHAR},

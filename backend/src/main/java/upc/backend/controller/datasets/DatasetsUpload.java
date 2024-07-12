@@ -10,13 +10,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import upc.backend.common.Constants;
 import upc.backend.common.ServiceResultEnum;
+import upc.backend.controller.datasets.Param.DatasetsAddParam;
 import upc.backend.controller.file.param.FileAddParam;
-import upc.backend.entity.UploadFile;
-import upc.backend.entity.User;
-import upc.backend.entity.UserToken;
-import upc.backend.service.FileUploadService;
-import upc.backend.service.UserService;
-import upc.backend.service.UserTokenService;
+import upc.backend.entity.*;
+import upc.backend.service.*;
 import upc.backend.util.BeanUtil;
 import upc.backend.util.Result;
 import upc.backend.util.ResultGenerator;
@@ -37,57 +34,45 @@ public class DatasetsUpload {
     private StandardServletMultipartResolver standardServletMultipartResolver;
 
     @Resource
-    private FileUploadService fileUploadService;
+    private DatasetsService datasetsService;
+    @Resource
+    private UserteamService userteamService;
+    @Resource
+    private TeamService teamService;
     @Resource
     private UserTokenService userTokenService;
     @Resource
     private UserService userService;
 
-    @RequestMapping(value = "/datasets/files", method = RequestMethod.POST)
-    public Result uploadFile(HttpServletRequest httpServletRequest) throws URISyntaxException, FileNotFoundException {
-
-        List<MultipartFile> multipartFiles = new ArrayList<>();
-        if (standardServletMultipartResolver.isMultipart(httpServletRequest)) {
-            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) httpServletRequest;
-            Iterator<String> iter = multiRequest.getFileNames();
-            while (iter.hasNext()) {
-                MultipartFile file = multiRequest.getFile(iter.next());
-                multipartFiles.add(file);
-            }
+    @RequestMapping(value = "/dataset/files", method = RequestMethod.POST)
+    public Result upload(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) throws URISyntaxException, FileNotFoundException {
+        List<String> multipartData = new ArrayList<>(2);
+        String fileName = file.getOriginalFilename(); // 获取上传文件的原始文件名
+        String suffixName = fileName.substring(fileName.lastIndexOf(".")); // 提取文件的后缀名
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss"); // 日期格式化，用于生成唯一文件名
+        Random r = new Random(); // 随机数生成器
+        StringBuilder tempName = new StringBuilder();
+        tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName); // 生成唯一文件名
+        String newFileName = tempName.toString(); // 转换为字符串
+        File destFile = new File(Constants.DATASETS_UPLOAD_DIC + newFileName); // 创建目标文件
+        try {
+            file.transferTo(destFile); // 将上传的文件保存到目标文件
+            Result resultSuccess = ResultGenerator.genSuccessResult(); // 生成成功结果
+            multipartData.add(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")).toString());
+            multipartData.add("/upload/datasets/" + newFileName);
+            resultSuccess.setData(multipartData);
+            //resultSuccess.setData(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/files/" + newFileName); // 设置返回的数据
+            return resultSuccess; // 返回成功结果
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("文件上传失败"); // 返回失败结果
         }
-
-        if (CollectionUtils.isEmpty(multipartFiles)) {
-            return ResultGenerator.genFailResult("参数异常");
-        }
-
-        List<String> fileNames = new ArrayList<>(multipartFiles.size());
-        for (MultipartFile multipartFile : multipartFiles) {
-            String fileName = multipartFile.getOriginalFilename();
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            Random r = new Random();
-            StringBuilder tempName = new StringBuilder();
-            tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName);
-            String newFileName = tempName.toString();
-            File destFile = new File(Constants.DATASETS_UPLOAD_DIC + newFileName);
-            try {
-                multipartFile.transferTo(destFile);
-                fileNames.add(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/files/" + newFileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ResultGenerator.genFailResult("文件上传失败");
-            }
-        }
-
-        Result resultSuccess = ResultGenerator.genSuccessResult();
-        resultSuccess.setData(fileNames);
-        return resultSuccess;
     }
 
     /**
      * 图片上传
      */
-    @RequestMapping(value = "/datasets/images", method = RequestMethod.POST)
+    @RequestMapping(value = "/dataset/images", method = RequestMethod.POST)
     //@ApiOperation(value = "多图上传", notes = "wangEditor图片上传")
     public Result uploadV2(HttpServletRequest httpServletRequest) throws URISyntaxException, FileNotFoundException {
 
@@ -135,9 +120,9 @@ public class DatasetsUpload {
         resultSuccess.setData(fileNames);
         return resultSuccess;
     }
-    @RequestMapping(value = "/datasets/file_save", method = RequestMethod.POST)
+    @RequestMapping(value = "/dataset/file_save", method = RequestMethod.POST)
     //@ApiOperation(value = "新增商品信息", notes = "新增商品信息")
-    public Result save(@RequestBody FileAddParam fileAddParam, @RequestHeader("token") String str_token) {
+    public Result save(@RequestBody DatasetsAddParam datasetsAddParam, @RequestHeader("token") String str_token) {
         if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
             UserToken userToken = userTokenService.selectByToken(str_token);
             if (userToken == null) {
@@ -147,12 +132,12 @@ public class DatasetsUpload {
             }
             else {
                 User user = userService.getUserDetailById(userToken.getUserId());
-                UploadFile upload_file = new UploadFile();
-                BeanUtil.copyProperties(fileAddParam, upload_file);
-                upload_file.setUpload_user(user.getUserName());
-                upload_file.setUpload_time(new Date());
-                Boolean fileUpload_flag = fileUploadService.add_file(upload_file);
-                if (fileUpload_flag) {
+                Datasets datasets = new Datasets();
+                BeanUtil.copyProperties(datasetsAddParam, datasets);
+                datasets.setUserId(user.getUserId());
+                datasets.setUploadTime(new Date());
+                Boolean datasetsUpload_flag = datasetsService.add_file(datasets);
+                if (datasetsUpload_flag) {
                     Result result = new ResultGenerator().genSuccessResult();
                     result.setData(true);
                     return result;
@@ -168,6 +153,39 @@ public class DatasetsUpload {
 
 
 
+
     }
 
+    @RequestMapping(value = "/dataset/teamlist", method = RequestMethod.GET)
+    public Result list(@RequestHeader("token") String str_token) {
+        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            } else {
+                User user = userService.getUserDetailById(userToken.getUserId());
+                List<Userteam> userteams = userteamService.getTeamByUserId(user.getUserId());
+
+                List<Integer> teamIds = new ArrayList<>();
+                // 遍历Userteam对象列表，取出每个对象的TeamName放入teamNames列表
+                for (Userteam userteam : userteams) {
+                    teamIds.add(userteam.getTeamId());
+                }
+                List<Team> teams = new ArrayList<>();
+                for (Integer teamId : teamIds) {
+                    Team team = teamService.getTeamByTeamId(teamId);
+                    if (team != null) {
+                        teams.add(team);
+                    }
+                }
+
+                    return ResultGenerator.genSuccessResult(teams);
+
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+        }
+    }
 }

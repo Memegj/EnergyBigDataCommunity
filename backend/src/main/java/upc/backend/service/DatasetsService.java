@@ -14,6 +14,8 @@ import java.util.List;
 public class DatasetsService {
     @Resource
     private DatasetsMapper datasetsMapper;
+    @Resource
+    private TeamService teamService;
 
 
     // 获取文献信息
@@ -34,6 +36,54 @@ public class DatasetsService {
         PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
+    public PageResult getDatasetsPageByUserId(PageQueryUtil pageUtil){
+        List<Datasets> datasets = datasetsMapper.findAllDatasetsListByUserId(pageUtil);
+        int total = datasetsMapper.getNumOfTotalDatasetsByUserId(pageUtil);
+        for (Datasets dataset : datasets) {
+            Integer teamId = dataset.getTeamId();
+            if (teamId == null) {
+                dataset.setTeamName("公开");
+            } else {
+                String teamName = teamService.getTeamNameByTeamId(teamId);
+                dataset.setTeamName(teamName); // 假设 Datasets 类有 setTeamName 方法用于设置团队名称
+            }
+        }
+        PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+
+    public PageResult getDatasetsPageByUserIdOrderByTime(PageQueryUtil pageUtil){
+        List<Datasets> datasets = datasetsMapper.findAllDatasetsListByUserIdOrderByTime(pageUtil);
+        int total = datasetsMapper.getNumOfTotalDatasetsByUserId(pageUtil);
+        for (Datasets dataset : datasets) {
+            Integer teamId = dataset.getTeamId();
+            if (teamId == null) {
+                dataset.setTeamName("公开");
+            } else {
+                String teamName = teamService.getTeamNameByTeamId(teamId);
+                dataset.setTeamName(teamName);
+            }
+        }
+        PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+
+    public PageResult getDatasetsPageByUserIdOrderByTeamId(PageQueryUtil pageUtil){
+        List<Datasets> datasets = datasetsMapper.findAllDatasetsListByUserIdOrderByTeamId(pageUtil);
+        int total = datasetsMapper.getNumOfTotalDatasetsByUserId(pageUtil);
+        for (Datasets dataset : datasets) {
+            Integer teamId = dataset.getTeamId();
+            if (teamId == null) {
+                dataset.setTeamName("公开");
+            } else {
+                String teamName = teamService.getTeamNameByTeamId(teamId);
+                dataset.setTeamName(teamName); // 假设 Datasets 类有 setTeamName 方法用于设置团队名称
+            }
+        }
+        PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+
     public Boolean add_datasets(Datasets datasets){
         int radd = datasetsMapper.insertSelective(datasets);
         if (radd > 0){return true;}

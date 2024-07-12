@@ -10,6 +10,7 @@ public interface UserMapper {
 
     int insertSelective(User record);
 
+    String getUserNameByUserId(Integer UserId);
     User login(@Param("UserName") String UsernName, @Param("UserPassword") String UserPassword);
 
     User selectByPrimaryKey(Integer UserId);

@@ -8,13 +8,14 @@
             <span>能源大数据教学科研平台</span>
           </div>
         </div>
-        <div class="line" />
+        <div class="line"></div>
         <el-menu
             background-color="#e4e6ea"
             text-color="#000"
             :router="true"
             :default-openeds="state.defaultOpen"
-            :default-active='state.currentPath'
+            :default-active="state.currentPath"
+            class="compact-menu"
         >
           <el-menu-item index="/admin/index">
             <el-icon><House /></el-icon>
@@ -24,52 +25,36 @@
             <template #title>
               <span><el-icon><Menu /></el-icon>代码</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/mycharts" >代码检索</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item index="/admin/mycharts" >代码管理</el-menu-item>
+            <el-menu-item index="/admin/mycharts">代码检索</el-menu-item>
+            <el-menu-item index="/admin/mycharts">代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
               <span><el-icon><el-icon-coin /></el-icon>数据集</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/file_upload">数据集检索</el-menu-item>
-              <el-menu-item index="/admin/dataset_manage">数据集管理</el-menu-item>
-            </el-menu-item-group>
+            <el-menu-item index="/admin/file_upload">数据集检索</el-menu-item>
+            <el-menu-item index="/admin/dataset_manage">数据集管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
               <span><el-icon><Document-copy /></el-icon>文献资料</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/account">文献资料检索</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/account">文献资料管理</el-menu-item>
-            </el-menu-item-group>
+            <el-menu-item index="/admin/account">文献资料检索</el-menu-item>
+            <el-menu-item index="/admin/account">文献资料管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>
               <span><el-icon><el-icon-video-camera /></el-icon>教学视频</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/gettable">教学视频检索</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/getfile">教学视频管理</el-menu-item>
-            </el-menu-item-group>
+            <el-menu-item index="/admin/gettable">教学视频检索</el-menu-item>
+            <el-menu-item index="/admin/getfile">教学视频管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="5">
             <template #title>
               <span><el-icon><User /></el-icon>我的</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/gettable">个人信息修改</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="/admin/getfile">用户管理</el-menu-item>
-            </el-menu-item-group>
+            <el-menu-item index="/admin/gettable">个人信息修改</el-menu-item>
+            <el-menu-item index="/admin/getfile">用户管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>
@@ -88,7 +73,7 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 import Header from '@/pages/admin/components/Header.vue'
@@ -111,8 +96,7 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     // 如果路径是 /login 则正常执行
     next()
-  }
-  else {
+  } else {
     // 如果不是 /login，判断是否有 token
     if (!localGet('token')) {
       // 如果没有，则跳至登录页面
@@ -137,7 +121,7 @@ router.beforeEach((to, from, next) => {
   height: 100vh;
 }
 .aside {
-  width: 220px!important;
+  width: 220px !important;
   background-color: #e4e6ea;
 }
 .head {
@@ -157,12 +141,12 @@ router.beforeEach((to, from, next) => {
   margin-right: 10px;
 }
 .head span {
-  font-size: 15px;
+  font-size: 14px; /* 调整字体大小为14px */
   color: #01374d;
 }
 .line {
-  border-top: 1px solid hsla(0,0%,100%,.05);
-  border-bottom: 1px solid rgba(0,0,0,.2);
+  border-top: 1px solid hsla(0, 0%, 100%, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 .content {
   display: flex;
@@ -175,6 +159,13 @@ router.beforeEach((to, from, next) => {
   overflow: auto;
   padding: 10px;
 }
+.compact-menu .el-sub-menu {
+  margin-top: 0; /* 减少子菜单之间的顶部间距 */
+}
+.compact-menu .el-menu-item {
+  height: 32px; /* 减少菜单项的高度 */
+  line-height: 32px; /* 使菜单项垂直居中 */
+}
 </style>
 
 <style>
@@ -184,26 +175,23 @@ body {
   box-sizing: border-box;
 }
 .el-menu {
-  border-right: none!important;
+  border-right: none !important;
 }
 .el-sub-menu {
-  border-top: 1px solid hsla(0, 0%, 100%, .05);
-  border-bottom: 1px solid rgba(0, 0, 0, .2);
-  .el-menu-item{
-    height: 40px;
-  }
-  .el-menu-item:first-child{
-    margin-top: -10px;
-  }
+  border-top: 1px solid hsla(0, 0%, 100%, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
-.el-sub-menu:first-child {
-  border-top: none;
+.el-sub-menu .el-menu-item {
+  height: 36px; /* 调整子菜单项的高度 */
+}
+.el-sub-menu .el-menu-item:first-child {
+  margin-top: -8px; /* 调整第一个子菜单项的顶部间距 */
 }
 .el-sub-menu [class^="el-icon-"] {
-  vertical-align: -1px!important;
+  vertical-align: -1px !important;
 }
-.el-sub-menu__title{
-  height: 40px;
+.el-sub-menu__title {
+  height: 50px; /* 调整子菜单标题的高度 */
 }
 a {
   color: #409eff;

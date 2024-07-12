@@ -23,7 +23,11 @@
         from user
         where UserName = #{UserName,jdbcType=VARCHAR} AND UserPassword=#{UserPassword,jdbcType=VARCHAR} AND UserLocked = 0
     </select>
-
+    <select id="getUserNameByUserId" >
+        select UserName
+        from user
+        where UserId = #{UserId,jdbcType=INTEGER}
+    </select>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />

@@ -9,7 +9,9 @@ public interface TeamMapper {
 
     int insertSelective(Team team);
 
-    List<Team> selectByTeamIds(List<Integer> teamIds);
+    String getTeamNameByTeamId(Integer TeamId);
+
+    List<Team> selectByTeamIds(List<Integer> TeamIds);
 
     Team selectByTeamId(Integer TeamId);
 

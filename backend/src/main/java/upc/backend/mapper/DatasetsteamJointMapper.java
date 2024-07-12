@@ -4,7 +4,7 @@ import upc.backend.util.PageQueryUtil;
 
 import java.util.List;
 
-public interface DatasetsMapper {
+public interface DatasetsteamJointMapper {
     int insert(Datasets datasets);
 
     int insertSelective(Datasets datasets);
@@ -12,18 +12,15 @@ public interface DatasetsMapper {
     List<Datasets> selectByDataName(String DataName);
     List<Datasets> selectByisPublic(Integer isPublic);
     Datasets selectByDataId(Integer DataId);
-    Datasets selectByDataIdAndUserId(Integer DataId);
 
     int updateByPrimaryKeySelective(Datasets datasets);
 
     int updateByPrimaryKey(Datasets datasets);
 
     List<Datasets> findAllDatasetsList(PageQueryUtil pageUtil);
-    List<Datasets> findAllDatasetsListByUserId(PageQueryUtil pageUtil);
-    List<Datasets> findAllDatasetsListByUserIdOrderByTime(PageQueryUtil pageUtil);
-    List<Datasets> findAllDatasetsListByUserIdOrderByTeamId(PageQueryUtil pageUtil);
+    List<Datasets> findAllDatasets_teamListByUserId(PageQueryUtil pageUtil);
     int getNumOfTotalDatasets(PageQueryUtil pageUtil);
-    int getNumOfTotalDatasetsByUserId(PageQueryUtil pageUtil);
+    int getNumOfTotalDatasets_teamByUserId(PageQueryUtil pageUtil);
     int deleteBatch(Integer[] ids);
 
 }

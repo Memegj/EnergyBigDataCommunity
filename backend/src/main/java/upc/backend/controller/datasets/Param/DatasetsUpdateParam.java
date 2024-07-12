@@ -8,6 +8,7 @@ public class DatasetsUpdateParam {
     private String DataName;
     private String DataAbstract;
     private String DataDetails;
-    private Integer isPublic;
     private String Url;
+    private Integer DownloadTimes;
+    private Integer TeamId;
 }

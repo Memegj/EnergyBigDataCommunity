@@ -75,6 +75,9 @@ public class UserService {
         return userMapper.selectByPrimaryKey(UserId);
     }
 
+    public String getUserNameByUserId(Integer UserId){
+        return userMapper.getUserNameByUserId(UserId);
+    }
     //修改当前登录用户的密码
     public Boolean updatePassword(Integer UserId, String originalPassword, String newPassword) {
         User user = userMapper.selectByPrimaryKey(UserId);

@@ -40,6 +40,10 @@ public class TeamService {
         else {return false;}
     }
 
+    public String getTeamNameByTeamId(Integer TeamId){
+        return teamMapper.getTeamNameByTeamId(TeamId);
+    }
+
     public List<Team> getTeamByTeamIds(List<Integer> teamIds) {
         return teamMapper.selectByTeamIds(teamIds);
     }
