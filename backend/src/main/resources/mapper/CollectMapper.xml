@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.CollectMapper">
+        <!-- Collect 实体的结果映射 -->
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Collect">
+        <id column="CollectId" jdbcType="INTEGER" property="CollectId" />
+        <result column="CollectType" jdbcType="VARCHAR" property="CollectType" />
+        <result column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="CodeId" jdbcType="INTEGER" property="CodeId" />
+        <result column="LiterId" jdbcType="INTEGER" property="LiterId" />
+        <result column="DataId" jdbcType="INTEGER" property="DataId" />
+        <result column="VideoId" jdbcType="INTEGER" property="VideoId" />
+    </resultMap>
+    <select id="getCollectionByUserId" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        c.CollectId,
+        c.CollectType,
+        c.UserId,
+        c.CodeId,
+        c.LiterId,
+        c.DataId,
+        c.VideoId,
+        CASE
+        WHEN c.CodeId IS NOT NULL THEN co.CodeName
+        WHEN c.LiterId IS NOT NULL THEN li.LiterName
+        WHEN c.DataId IS NOT NULL THEN da.DataName
+        WHEN c.VideoId IS NOT NULL THEN vi.VideoName
+        END AS DataName,
+        CASE
+        WHEN c.CodeId IS NOT NULL THEN co.UploadTime
+        WHEN c.LiterId IS NOT NULL THEN li.UploadTime
+        WHEN c.DataId IS NOT NULL THEN da.UploadTime
+        WHEN c.VideoId IS NOT NULL THEN vi.UploadTime
+        END AS UploadTime,
+        -- 获取与收藏相关的团队名称
+        (SELECT TeamName FROM team WHERE TeamId =
+        CASE
+        WHEN c.CodeId IS NOT NULL THEN co.TeamId
+        WHEN c.DataId IS NOT NULL THEN da.TeamId
+        WHEN c.VideoId IS NOT NULL THEN vi.TeamId
+        WHEN c.LiterId IS NOT NULL THEN li.TeamId
+        END
+        ) AS TeamName
+        FROM
+        collect c
+        LEFT JOIN code co ON c.CodeId = co.CodeId
+        LEFT JOIN literature li ON c.LiterId = li.LiterId
+        LEFT JOIN datasets da ON c.DataId = da.DataId
+        LEFT JOIN video vi ON c.VideoId = vi.VideoId
+        WHERE
+        c.UserId = #{userId}
+        AND (#{selectedCategory} IS NULL OR c.CollectType = #{selectedCategory})
+        <if test="start != null and limit != null">
+            LIMIT #{start}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="getNumOfTotalCollect" parameterType="Map" resultType="int">
+        SELECT COUNT(*) FROM collect WHERE UserId = #{userId} AND (#{selectedCategory} IS NULL OR CollectType = #{selectedCategory})
+    </select>
+
+    <select id="getCollectionByUserId1" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        c.CollectId,
+        c.CollectType,
+        c.UserId,
+        c.CodeId,
+        c.LiterId,
+        c.DataId,
+        c.VideoId,
+        CASE
+        WHEN c.CodeId IS NOT NULL THEN co.CodeName
+        WHEN c.LiterId IS NOT NULL THEN li.LiterName
+        WHEN c.DataId IS NOT NULL THEN da.DataName
+        WHEN c.VideoId IS NOT NULL THEN vi.VideoName
+        END AS DataName,
+        CASE
+        WHEN c.CodeId IS NOT NULL THEN co.UploadTime
+        WHEN c.LiterId IS NOT NULL THEN li.UploadTime
+        WHEN c.DataId IS NOT NULL THEN da.UploadTime
+        WHEN c.VideoId IS NOT NULL THEN vi.UploadTime
+        END AS UploadTime,
+        -- 获取与收藏相关的团队名称
+        (SELECT TeamName FROM team WHERE TeamId =
+        CASE
+        WHEN c.CodeId IS NOT NULL THEN co.TeamId
+        WHEN c.DataId IS NOT NULL THEN da.TeamId
+        WHEN c.VideoId IS NOT NULL THEN vi.TeamId
+        WHEN c.LiterId IS NOT NULL THEN li.TeamId
+        END
+        ) AS TeamName
+        FROM
+        collect c
+        LEFT JOIN code co ON c.CodeId = co.CodeId
+        LEFT JOIN literature li ON c.LiterId = li.LiterId
+        LEFT JOIN datasets da ON c.DataId = da.DataId
+        LEFT JOIN video vi ON c.VideoId = vi.VideoId
+        WHERE
+        c.UserId = #{userId}
+        AND  c.CollectType = #{selectedCategory})
+        <if test="start != null and limit != null">
+            LIMIT #{start}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="getNumOfTotalCollect1" parameterType="Map" resultType="int">
+        SELECT COUNT(*) FROM collect WHERE UserId = #{userId} AND (#{selectedCategory} IS NULL OR CollectType = #{selectedCategory})
+    </select>
+
+    <delete id="deleteCollectById" parameterType="map">
+        DELETE FROM collect
+        WHERE CollectId = #{collectId} AND UserId = #{userId}
+    </delete>
+
+</mapper>

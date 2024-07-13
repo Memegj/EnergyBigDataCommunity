@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.UserTeamMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.UserTeam">
+        <id column="User_teamId" jdbcType="INTEGER" property="User_teamId" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <result column="teamId" jdbcType="INTEGER" property="teamId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        User_teamId, userId, teamId
+    </sql>
+    <insert id="insert" parameterType="upc.backend.entity.UserTeam">
+        insert into user_team (userId, teamId)
+        values (#{userId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER})
+    </insert>
+    <!-- 根据团队ID删除关系记录 -->
+
+    <delete id="deleteByTeamIds" parameterType="map">
+        delete from user_team
+        where userId = #{userId}
+          and teamId = #{teamId}
+    </delete>
+    <delete id="deleteByTeamIdAndUserId" parameterType="map">
+        delete from user_team
+        where userId = #{userId}
+          and teamId = #{teamId}
+    </delete    >
+</mapper>

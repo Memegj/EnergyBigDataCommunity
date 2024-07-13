@@ -61,7 +61,7 @@ onMounted(() => {
   instance.config.showLinkImg = false
   instance.config.showLinkImgAlt = false
   instance.config.showLinkImgHref = false
-  instance.config.uploadImgMaxSize = 2 * 1024 * 1024 // 2M
+  instance.config.uploadImgMaxSize = 100 * 1024 * 1024 // 100M
   instance.config.uploadFileName = 'file'
   instance.config.uploadImgHeaders = {
     token: state.token

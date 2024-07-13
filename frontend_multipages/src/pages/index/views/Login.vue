@@ -61,6 +61,8 @@ const submitForm = async () => {
         localSet('token', res.tokenStr)
         if(res.roleStr == 'admin') window.location.href = '/admin'
         //router.push('/admin')
+        else if(res.roleStr == 'teacher') window.location.href = '/teacher'
+        else if(res.roleStr == 'student') window.location.href = '/student'
         else if(res.roleStr == 'guest') window.location.href = '/'
         //router.push('/home')
         else if(res.roleStr == 'student') window.location.href = '/student'

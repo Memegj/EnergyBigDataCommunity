@@ -65,13 +65,13 @@
               <span><el-icon><User /></el-icon>我的</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/gettable">我的收藏</el-menu-item>
+              <el-menu-item index="/teacher/collect">我的收藏</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="/teacher/gettable">个人信息修改</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/getfile">团队管理</el-menu-item>
+              <el-menu-item index="/teacher/team">团队管理</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="/teacher/stu_manage">学生管理</el-menu-item>

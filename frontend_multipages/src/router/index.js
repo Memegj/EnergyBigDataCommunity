@@ -39,6 +39,11 @@ const router = createRouter({
       redirect: '/student/index'
     },
     {
+      path: '/teacher/collect',
+      name: 'collect',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
+    },
+    {
       path: '/student/index',
       name: 'index',
       component: () => import( '@/pages/student/views/Index.vue')
@@ -53,9 +58,26 @@ const router = createRouter({
       component: () => import( '@/pages/teacher/views/Index.vue')
     },
     {
+      path: '/teacher/team',
+      name: 'team',
+      component: () => import( '@/pages/teacher/views/Team.vue')
+    },
+    {
       path: '/admin/file_upload',
       name: 'file_upload',
       component: () => import( '@/pages/admin/views/FileUpload.vue'),
+
+    },
+    {
+      path: '/admin/code',
+      name: 'code',
+      component: () => import( '@/pages/admin/views/Code.vue'),
+
+    },
+    {
+      path: '/admin/codeview',
+      name: 'codeview',
+      component: () => import( '@/pages/admin/views/CodeView.vue'),
 
     },
     {

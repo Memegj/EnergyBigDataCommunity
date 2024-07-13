@@ -16,9 +16,19 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/admin/mycharts',
-      name: 'mycharts',
-      component: () => import( '@/pages/admin/views/Chart_Example.vue')
+      path: '/admin/dataset_manage',
+      name: 'dataset_manage',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
+    },
+    {
+      path: '/admin/code',
+      name: 'code',
+      component: () => import( '@/pages/admin/views/Code.vue')
+    },
+    {
+      path: '/admin/codeview',
+      name: 'codeview',
+      component: () => import( '@/pages/admin/views/CodeView.vue')
     },
     {
       path: '/admin/file_upload',
@@ -40,6 +50,11 @@ const router = createRouter({
       path: '/admin/gettable',
       name: 'table',
       component: () => import( '@/pages/admin/views/GetTable.vue')
+    },
+    {
+      path: '/admin/collect',
+      name: 'collect',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
     },
     {
       path: '/admin/getfile',

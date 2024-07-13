@@ -11,6 +11,11 @@ const router = createRouter({
       redirect: '/teacher/index'
     },
     {
+      path: '/teacher/collect',
+      name: 'collect',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
+    },
+    {
       path: '/teacher/index',
       name: 'index',
       component: () => import( '@/pages/teacher/views/Index.vue')
@@ -19,6 +24,11 @@ const router = createRouter({
       path: '/teacher/mycharts',
       name: 'mycharts',
       component: () => import( '@/pages/teacher/views/Chart_Example.vue')
+    },
+    {
+      path: '/teacher/team',
+      name: 'team',
+      component: () => import( '@/pages/teacher/views/Team.vue')
     },
     {
       path: '/teacher/file_upload',
