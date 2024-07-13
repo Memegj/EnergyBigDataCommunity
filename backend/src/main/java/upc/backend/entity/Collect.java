@@ -18,6 +18,7 @@ public class Collect {
     private Integer VideoId;
     private String DataName;
     private String UploadTime;
-    private String TeamName;
+
     private Integer TeamId;
+    private String  UserName;
 }

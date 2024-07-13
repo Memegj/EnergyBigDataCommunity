@@ -55,7 +55,7 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="dataName" label="名称" width="300" header-align="center" align="center"></el-table-column>
         <el-table-column prop="collectType" label="类别" width="200" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="teamName" label="上传团队" width="200" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="userName" label="上传人" width="200" header-align="center" align="center"></el-table-column>
         <el-table-column prop="uploadTime" label="上传时间" width="250" header-align="center" align="center"></el-table-column>
         <el-table-column label="操作" width="200" header-align="center" align="center">
           <template #default="scope">
