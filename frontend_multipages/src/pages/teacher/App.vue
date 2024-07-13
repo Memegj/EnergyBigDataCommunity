@@ -65,7 +65,7 @@
               <span><el-icon><User /></el-icon>我的</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/gettable">我的收藏</el-menu-item>
+              <el-menu-item index="/teacher/collect">我的收藏</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="/teacher/gettable">个人信息修改</el-menu-item>

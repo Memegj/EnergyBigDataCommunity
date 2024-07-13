@@ -16,6 +16,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
+      path: '/admin/dataset_manage',
+      name: 'dataset_manage',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
+    },
+    {
       path: '/admin/code',
       name: 'code',
       component: () => import( '@/pages/admin/views/Code.vue')
@@ -45,6 +50,11 @@ const router = createRouter({
       path: '/admin/gettable',
       name: 'table',
       component: () => import( '@/pages/admin/views/GetTable.vue')
+    },
+    {
+      path: '/admin/collect',
+      name: 'collect',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
     },
     {
       path: '/admin/getfile',

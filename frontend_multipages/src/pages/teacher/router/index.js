@@ -11,6 +11,11 @@ const router = createRouter({
       redirect: '/teacher/index'
     },
     {
+      path: '/teacher/collect',
+      name: 'collect',
+      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
+    },
+    {
       path: '/teacher/index',
       name: 'index',
       component: () => import( '@/pages/teacher/views/Index.vue')

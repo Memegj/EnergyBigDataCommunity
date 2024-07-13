@@ -26,5 +26,5 @@
         delete from user_team
         where userId = #{userId}
           and teamId = #{teamId}
-    </delete>
+    </delete    >
 </mapper>
