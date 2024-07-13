@@ -1,5 +1,6 @@
 package upc.backend.mapper;
 import org.apache.ibatis.annotations.Param;
+import upc.backend.entity.Team;
 import upc.backend.entity.User;
 import upc.backend.util.PageQueryUtil;
 
@@ -22,4 +23,9 @@ public interface UserMapper {
     List<User> findAllUserList(PageQueryUtil pageUtil);
     int getNumOfTotalUsers(PageQueryUtil pageUtil);
     int lockUserBatch(@Param("ids") Integer[] ids, @Param("lockStatus") int lockStatus);
+
+    int deleteBatch(Integer[] ids);
+
+
+    User selectByUserId(Integer userId);
 }

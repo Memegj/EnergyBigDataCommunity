@@ -3,7 +3,8 @@ import lombok.Data;
 
 @Data
 public class UpdateUserNameParam {
-    private String username;
     private String nickname;
+    private String useremail;
+    private String usercollege;
     private String token;
 }

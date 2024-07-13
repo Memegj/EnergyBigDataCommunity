@@ -2,6 +2,7 @@ package upc.backend.service;
 import jakarta.annotation.Resource;
 import upc.backend.common.ServiceResultEnum;
 import upc.backend.controller.user.param.UserUpdateParam;
+import upc.backend.entity.Team;
 import upc.backend.entity.User;
 import upc.backend.entity.UserToken;
 import upc.backend.mapper.UserMapper;
@@ -97,13 +98,14 @@ public class UserService {
     }
 
     //修改当前登录用户的名称信息
-    public Boolean updateName(Integer UserId, String UserName, String NickName){
+    public Boolean updateName(Integer UserId, String NickName,String UerEmail, String UerCollege){
         User user = userMapper.selectByPrimaryKey(UserId);
         //当前用户非空才可以进行更改
         if (user != null) {
             //设置新名称并修改
-            user.setUserName(UserName);
             user.setNickName(NickName);
+            user.setUserEmail(UerEmail);
+            user.setUserCollege(UerCollege);
             if (userMapper.updateByPrimaryKeySelective(user) > 0) {
                 //修改成功则返回true
                 return true;
@@ -139,4 +141,18 @@ public class UserService {
     public Boolean add_User(User user){
         return userMapper.insertSelective(user) > 0;
     }
+
+
+    public Boolean deleteBatch(Integer[] ids) {
+        if (ids.length < 1) {
+            return false;
+        }
+        //删除分类数据
+        return userMapper.deleteBatch(ids) > 0;
+    }
+
+    public User getUserByUserId(Integer UserId){
+        return userMapper.selectByUserId(UserId);
+    }
 }
+

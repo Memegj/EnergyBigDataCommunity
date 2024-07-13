@@ -52,6 +52,16 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/GetChart.vue')
     },
     {
+      path: '/admin/account',
+      name: 'chart',
+      component: () => import( '@/pages/admin/views/Account.vue')
+    },
+    {
+      path: '/admin/code',
+      name: 'chart',
+      component: () => import( '@/pages/admin/views/Code.vue')
+    },
+    {
       path: '/admin/datasetupload',
       name: 'datasetupload',
       component: () => import( '@/pages/admin/views/Datasetupload.vue')

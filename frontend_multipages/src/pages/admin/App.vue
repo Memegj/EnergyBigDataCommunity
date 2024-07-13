@@ -25,7 +25,7 @@
             <template #title>
               <span><el-icon><Menu /></el-icon>代码</span>
             </template>
-            <el-menu-item index="/admin/mycharts">代码检索</el-menu-item>
+            <el-menu-item index="/admin/code">代码检索</el-menu-item>
             <el-menu-item index="/admin/mycharts">代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
@@ -53,7 +53,7 @@
             <template #title>
               <span><el-icon><User /></el-icon>我的</span>
             </template>
-            <el-menu-item index="/admin/gettable">个人信息修改</el-menu-item>
+            <el-menu-item index="/admin/account">个人信息修改</el-menu-item>
             <el-menu-item index="/admin/getfile">用户管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
