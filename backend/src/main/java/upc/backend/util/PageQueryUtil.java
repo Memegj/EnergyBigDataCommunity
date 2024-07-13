@@ -8,25 +8,26 @@ public class PageQueryUtil extends LinkedHashMap<String, Object> {
     private int page;
     //每页条数
     private int limit;
-    private int userid;
-    private String searchQuery;
+    //private int userid;
+    //private String searchQuery;
 
     public PageQueryUtil(Map<String, Object> params) {
         this.putAll(params);
         //分页参数
         this.page = Integer.parseInt(params.get("page").toString());
         this.limit = Integer.parseInt(params.get("limit").toString());
-        if (params.get("userid") != null) {
+        /*if (params.get("userid") != null) {
             this.userid = Integer.parseInt(params.get("userid").toString());
         }
-        if (params.get("userid") != null) {
+        if (params.get("searchQuery") != null) {
             this.searchQuery = params.get("searchQuery").toString();
         }
+         */
         this.put("start", (page - 1) * limit);
         this.put("page", page);
         this.put("limit", limit);
-        this.put("userid",userid);
-        this.put("searchQuery",searchQuery);
+        //this.put("userid",userid);
+        //this.put("searchQuery",searchQuery);
     }
 
 

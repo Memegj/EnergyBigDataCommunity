@@ -2,12 +2,15 @@ package upc.backend.service;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import upc.backend.entity.Code;
 import upc.backend.entity.Datasets;
 import upc.backend.entity.UploadFile;
+import upc.backend.entity.Userteam;
 import upc.backend.mapper.DatasetsMapper;
 import upc.backend.util.PageQueryUtil;
 import upc.backend.util.PageResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +19,8 @@ public class DatasetsService {
     private DatasetsMapper datasetsMapper;
     @Resource
     private TeamService teamService;
+    @Resource
+    private UserteamService userteamService;
 
 
     // 获取文献信息
@@ -30,12 +35,6 @@ public class DatasetsService {
         else {return false;}
     }
 
-    public PageResult getDatasetsPage(PageQueryUtil pageUtil){
-        List<Datasets> datasets = datasetsMapper.findAllDatasetsList(pageUtil);
-        int total = datasetsMapper.getNumOfTotalDatasets(pageUtil);
-        PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());
-        return pageResult;
-    }
     public PageResult getDatasetsPageByUserId(PageQueryUtil pageUtil){
         List<Datasets> datasets = datasetsMapper.findAllDatasetsListByUserId(pageUtil);
         int total = datasetsMapper.getNumOfTotalDatasetsByUserId(pageUtil);
@@ -46,6 +45,34 @@ public class DatasetsService {
             } else {
                 String teamName = teamService.getTeamNameByTeamId(teamId);
                 dataset.setTeamName(teamName); // 假设 Datasets 类有 setTeamName 方法用于设置团队名称
+            }
+        }
+        PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+
+    public List<Datasets> getDatasetsByTeamId(PageQueryUtil pageUtil, Integer[] teamIdsArray){
+        return datasetsMapper.selectByTeamIds(pageUtil,teamIdsArray);
+    }
+
+    public PageResult getDatasetsPage(PageQueryUtil pageUtil){
+        List<Userteam> userteams = userteamService.getTeamByPageUtil(pageUtil);
+        List<Integer> teamIds = new ArrayList<>();
+
+        for (Userteam userteam : userteams) {
+            Integer teamId = userteam.getTeamId();
+            teamIds.add(teamId); // 将 teamId 存入 teamIds 列表
+        }
+        Integer[] teamIdsArray = teamIds.toArray(new Integer[0]);
+        List<Datasets> datasets = getDatasetsByTeamId(pageUtil,teamIdsArray);
+        int total = datasetsMapper.getNumOfUserDatasets(teamIdsArray);
+        for (Datasets dataset : datasets) {
+            Integer teamId = dataset.getTeamId();
+            if (teamId == null) {
+                dataset.setTeamName("公开");
+            } else {
+                String teamName = teamService.getTeamNameByTeamId(teamId);
+                dataset.setTeamName(teamName);
             }
         }
         PageResult pageResult = new PageResult(datasets, total, pageUtil.getLimit(), pageUtil.getPage());

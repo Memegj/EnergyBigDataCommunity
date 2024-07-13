@@ -13,10 +13,7 @@ import upc.backend.common.Constants;
 import upc.backend.common.ServiceResultEnum;
 import upc.backend.controller.datasets.Param.DatasetsUpdateParam;
 import upc.backend.controller.file.param.FileAddParam;
-import upc.backend.entity.Code;
-import upc.backend.entity.Team;
-import upc.backend.entity.User;
-import upc.backend.entity.UserToken;
+import upc.backend.entity.*;
 import upc.backend.service.*;
 import upc.backend.util.*;
 
@@ -43,25 +40,34 @@ public class CodeManagement {
     @Resource
     private UserTokenService userTokenService;
     @Resource
+    private CollectService collectService;
+    @Resource
     private UserService userService;
 
     @RequestMapping(value = "/code/list", method = RequestMethod.GET)
     public Result list(@RequestParam(required = false) Integer pageNumber,
                        @RequestParam(required = false) Integer pageSize,
-                       @RequestParam(required = false) Integer CodeId,
-                       @RequestParam(required = false) Integer UserId,
-                       @RequestParam(required = false) Integer TeamId) {
-        if (pageNumber == null || pageNumber < 1 || pageSize == null || pageSize < 5) {
-            return ResultGenerator.genFailResult("参数异常！");
+                       @RequestHeader("token") String str_token) {
+        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            } else {
+                if (pageNumber == null || pageNumber < 1 || pageSize == null || pageSize < 5) {
+                    return ResultGenerator.genFailResult("参数异常！");
+                }
+                Map<String, Object> params = new HashMap<>(8);
+                params.put("page", pageNumber);
+                params.put("limit", pageSize);
+                params.put("userid", userToken.getUserId());
+                PageQueryUtil pageUtil = new PageQueryUtil(params);
+                return ResultGenerator.genSuccessResult(codeService.getCodePage(pageUtil));
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
         }
-        Map<String, Object> params = new HashMap<>(8);
-        params.put("page", pageNumber);
-        params.put("limit", pageSize);
-        params.put("CodeId", CodeId);
-        params.put("UserId", UserId);
-        params.put("TeamId", TeamId);
-        PageQueryUtil pageUtil = new PageQueryUtil(params);
-        return ResultGenerator.genSuccessResult(codeService.getCodePage(pageUtil));
     }
 
 
@@ -81,6 +87,97 @@ public class CodeManagement {
         Code code = codeService.getCodeByCodeId(codeId);
         User user = userService.getUserByUserId(code.getUserId());
         return ResultGenerator.genSuccessResult(user);
+    }
+
+    @RequestMapping(value = "/codedetail/{codeId}", method = RequestMethod.GET)
+// "获取单条信息", "根据id查询"
+    public Result info(HttpServletRequest httpServletRequest , @PathVariable("codeId") Integer codeId,
+                       @RequestHeader("token") String str_token) {
+        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            }
+            else {
+                try {
+                    URI requestUrl = new URI(httpServletRequest.getRequestURL().toString());
+                    URI hostUrl = new URI(requestUrl.getScheme(), requestUrl.getUserInfo(), requestUrl.getHost(), requestUrl.getPort(), null, null, null);
+                    Code code = codeService.getCodeByCodeId(codeId);
+                    if (code == null) {
+                        return ResultGenerator.genFailResult("未查询到数据");
+                    }
+                    // 使用 DATASETS_UPLOAD_DIC 构造文件的本地路径
+                    String codeUrl = code.getUrl();
+                    if (codeUrl.startsWith("/upload/code/")) {
+                        codeUrl = codeUrl.substring("/upload/code/".length()); // 移除重复部分
+                    }
+                    String localFilePath = Constants.CODE_UPLOAD_DIC + codeUrl;
+                    File file = new File(localFilePath);
+                    // 获取文件大小
+                    long fileSize = file.exists() ? file.length() : 0; // 确保文件存在再获取大小
+                    code.setFileSize(fileSize);
+
+                    String userName = userService.getUserNameByUserId(code.getUserId());
+                    code.setUserName(userName);
+
+                    //获取CollectId
+                    Map<String, Object> params = new HashMap<>(10);
+                    params.put("userid", userToken.getUserId());
+                    params.put("codeid", code.getCodeId());
+                    CollectQueryUtil collectUtil = new CollectQueryUtil(params);
+                    Collect collect = collectService.getCollectByCodeId(collectUtil);
+                    if (collect != null) {
+                        code.setCollectId(collect.getCollectId());
+                    } else {
+                        code.setCollectId(null); // 或者可以选择其他处理方式
+                    }
+
+                    if (code == null) {
+                        return ResultGenerator.genFailResult("未查询到数据");
+                    }
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("code", code);
+                    result.put("hostUrl", hostUrl.toString()); // 将URI转换为字符串
+                    return ResultGenerator.genSuccessResult(result);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    return ResultGenerator.genFailResult("URI解析异常");
+                }
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+        }
+    }
+
+    @RequestMapping(value = "/code/listByTeam", method = RequestMethod.GET)
+    public Result listByTeam(@RequestParam(required = false) Integer pageNumber,
+                             @RequestParam(required = false) Integer pageSize,
+                             @RequestHeader("token") String str_token,
+                             @RequestParam(required = false) String searchQuery) {
+        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            }
+            else {
+                if (pageNumber == null || pageNumber < 1 || pageSize == null || pageSize < 5) {
+                    return ResultGenerator.genFailResult("参数异常！");
+                }
+                Map<String, Object> params = new HashMap<>(10);
+                params.put("page", pageNumber);
+                params.put("limit", pageSize);
+                params.put("userid", userToken.getUserId());
+                params.put("searchQuery", searchQuery); // 将搜索查询参数加入到参数列表中
+                PageQueryUtil pageUtil = new PageQueryUtil(params);
+                return ResultGenerator.genSuccessResult(codeService.getCodePageByUserIdOrderByTeamId(pageUtil));
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+        }
     }
 
     @RequestMapping(value = "/code/teamname/{codeId}", method = RequestMethod.GET)

@@ -11,6 +11,7 @@ public interface UserteamMapper {
 
 
     List<Userteam> selectByUserId(Integer UserId);
+    List<Userteam> selectByPageUtil(PageQueryUtil pageUtil);
 
     int updateByPrimaryKeySelective(Userteam userteam);
 

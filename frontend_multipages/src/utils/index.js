@@ -38,5 +38,6 @@ export const pathMap = {
   dataset_manage: '数据集',
   datasetupload: '数据集上传',
   datasetedit: '数据集修改',
-  datasetDetail: '数据集详情'
+  datasetDetail: '数据集详情',
+  code_manage: '代码集'
 }

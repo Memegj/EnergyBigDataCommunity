@@ -2,9 +2,9 @@
   <div>
     <!-- 上方 Card -->
     <el-card class="account-container">
-      <h2>代码集</h2>
+      <h2>数据集</h2>
       <div style="line-height: 30px">
-        探索、分析与共享代码集
+        探索、分析与共享数据集
       </div>
     </el-card>
 
@@ -23,19 +23,19 @@
       </el-row>
 
       <el-table
-          :data="pagedData"
+          :data="state.tableDatasets"
           tooltip-effect="dark"
           style="width: 100%"
           @row-click="handleRowClick">
         <el-table-column
-            prop="codeName"
+            prop="dataName"
             label="名称"
             width="250"
             header-align="center"
             align="center">
         </el-table-column>
         <el-table-column
-            prop="codeAbstract"
+            prop="dataAbstract"
             label="简介"
             width="350"
             header-align="center"
@@ -91,7 +91,7 @@ const route = useRoute() // 获取路由参数
 let addStu = ref(null)
 const state = reactive({
   loading: false,
-  allCode: [], // 所有数据列表
+  allDatasets: [], // 所有数据列表
   multipleSelection: [], // 选中项
   total: 0, // 总条数
   currentPage: 1, // 当前页
@@ -108,28 +108,31 @@ onMounted(() => {
 // 获取所有数据列表
 const getAllReferences = () => {
   state.loading = true
-  axios.get('/code/list', {
+  axios.get('/dataset/list', {
     params: {
       pageNumber: 1,
       pageSize: 10000, // 假设数据量不会超过10000条
     }
   }).then(res => {
-    state.allCode = res.list
+    state.allDatasets = res.list
     state.total = res.totalCount
     state.loading = false
-
-    // 遍历 allCode 获取 userName 和 teamName
-    state.allCode.forEach(row => {
-      getUserName(row)
-      getTeamName(row)
-    })
-    updateTableCode()
+    updateTableDatasets()
   })
 }
 
 const changePage = (val) => {
   state.currentPage = val
-  updateTableCode()
+  updateTableDatasets()
+}
+
+const handleRowClick = (row) => {
+  router.push({
+    name: 'datasetDetail',
+    params: {
+      dataId: row.dataId
+    }
+  })
 }
 
 const table_data_reload = () => {
@@ -140,7 +143,7 @@ const table_data_reload = () => {
 const search = () => {
   state.currentPage = 1
   searchTriggered.value = true
-  updateTableCode()
+  updateTableDatasets()
 }
 
 const formatUploadTime = (timestamp) => {
@@ -155,25 +158,16 @@ const formatUploadTime = (timestamp) => {
   return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
 
-const handleRowClick = (row) => {
-  router.push({
-    name: 'codeDetail',
-    params: {
-      codeId: row.codeId
-    }
-  })
-}
-
 // 更新当前页数据
-const updateTableCode = () => {
-  state.tableCode = pagedData.value
+const updateTableDatasets = () => {
+  state.tableDatasets = pagedData.value
 }
 
 // 过滤后的数据
 const filteredData = computed(() => {
-  if (!searchTriggered.value) return state.allCode
-  return state.allCode.filter(row => {
-    return ['codeName', 'codeAbstract', 'userName', 'teamName', 'codeId'].some(key => {
+  if (!searchTriggered.value) return state.allDatasets
+  return state.allDatasets.filter(row => {
+    return ['dataName', 'dataAbstract', 'userName', 'teamName', 'dataId'].some(key => {
       return String(row[key]).toLowerCase().includes(searchQuery.value.toLowerCase())
     })
   })
@@ -188,7 +182,7 @@ const pagedData = computed(() => {
 watch(searchQuery, (newVal) => {
   if (newVal === '') {
     searchTriggered.value = false
-    updateTableCode() // 清除搜索内容后，重新显示所有数据
+    updateTableDatasets() // 清除搜索内容后，重新显示所有数据
   }
 })
 

@@ -26,13 +26,13 @@
               <span><el-icon><Menu /></el-icon>代码</span>
             </template>
             <el-menu-item index="/admin/code">代码检索</el-menu-item>
-            <el-menu-item index="/admin/mycharts">代码管理</el-menu-item>
+            <el-menu-item index="/admin/code_manage">代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
               <span><el-icon><el-icon-coin /></el-icon>数据集</span>
             </template>
-            <el-menu-item index="/admin/file_upload">数据集检索</el-menu-item>
+            <el-menu-item index="/admin/dataset">数据集检索</el-menu-item>
             <el-menu-item index="/admin/dataset_manage">数据集管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="3">

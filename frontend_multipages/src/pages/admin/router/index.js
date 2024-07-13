@@ -21,6 +21,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Datasets_management.vue')
     },
     {
+      path: '/admin/code_manage',
+      name: 'code_manage',
+      component: () => import( '@/pages/admin/views/Code_management.vue')
+    },
+    {
       path: '/admin/file_upload',
       name: 'file_upload',
       component: () => import( '@/pages/admin/views/FileUpload.vue'),
@@ -58,8 +63,13 @@ const router = createRouter({
     },
     {
       path: '/admin/code',
-      name: 'chart',
+      name: 'code',
       component: () => import( '@/pages/admin/views/Code.vue')
+    },
+    {
+      path: '/admin/dataset',
+      name: 'dataset',
+      component: () => import( '@/pages/admin/views/Dataset.vue')
     },
     {
       path: '/admin/datasetupload',
@@ -76,6 +86,12 @@ const router = createRouter({
       path: '/admin/data_detail/:dataId',
       name: 'datasetDetail',
       component: () => import( '@/pages/admin/views/DatasetDetail.vue'),
+
+    },
+    {
+      path: '/admin/code_detail/:codeId',
+      name: 'codeDetail',
+      component: () => import( '@/pages/admin/views/CodeDetail.vue'),
 
     },
   ],

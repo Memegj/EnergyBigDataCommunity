@@ -1,4 +1,6 @@
 package upc.backend.mapper;
+import org.apache.ibatis.annotations.Param;
+import upc.backend.entity.Code;
 import upc.backend.entity.Datasets;
 import upc.backend.util.PageQueryUtil;
 
@@ -17,7 +19,8 @@ public interface DatasetsMapper {
     int updateByPrimaryKeySelective(Datasets datasets);
 
     int updateByPrimaryKey(Datasets datasets);
-
+    List<Datasets> selectByTeamIds(@Param("pageUtil") PageQueryUtil pageUtil, @Param("teamIdsArray") Integer[] teamIdsArray);
+    int getNumOfUserDatasets(Integer[] teamIdsArray);
     List<Datasets> findAllDatasetsList(PageQueryUtil pageUtil);
     List<Datasets> findAllDatasetsListByUserId(PageQueryUtil pageUtil);
     List<Datasets> findAllDatasetsListByUserIdOrderByTime(PageQueryUtil pageUtil);

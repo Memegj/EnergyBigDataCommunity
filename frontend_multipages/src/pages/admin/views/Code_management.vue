@@ -2,9 +2,9 @@
   <div>
     <!-- 上方 Card -->
     <el-card class="account-container">
-      <h2 style="line-height: 10px">数据集管理</h2>
+      <h2 style="line-height: 10px">代码集管理</h2>
       <div style="line-height: 30px">
-        这是您个人上传的数据集的私人视图。要查看其他人上传的内容，请前往相关内容搜索。
+        这是您个人上传的代码集的私人视图。要查看其他人上传的内容，请前往相关内容搜索。
       </div>
     </el-card>
 
@@ -58,7 +58,7 @@
         >
         </el-table-column>
         <el-table-column
-            prop="dataName"
+            prop="codeName"
             label="名称"
             width="140"
             header-align="center"
@@ -66,7 +66,7 @@
         >
         </el-table-column>
         <el-table-column
-            prop="dataAbstract"
+            prop="codeAbstract"
             label="简介"
             width="390"
             header-align="center"
@@ -97,12 +97,12 @@
             align="center"
         >
           <template #default="scope">
-            <a style="cursor: pointer; margin-right: 10px" @click.stop="handleEdit(scope.row.dataId)">修改</a>
+            <a style="cursor: pointer; margin-right: 10px" @click.stop="handleEdit(scope.row.codeId)">修改</a>
             <el-popconfirm
                 title="确定删除吗？"
                 confirmButtonText='确定'
                 cancelButtonText='取消'
-                @confirm="() => handleDeleteOne(scope.row.dataId)"
+                @confirm="() => handleDeleteOne(scope.row.codeId)"
             >
               <template #reference>
                 <a style="cursor: pointer" @click.stop>删除</a>
@@ -208,11 +208,11 @@ const handleAdd = () => {
   router.push('/admin/datasetupload')
 }
 
-const handleEdit = (dataId) => {
+const handleEdit = (codeId) => {
   router.push({
     name: 'datasetedit',
     params: {
-      dataId: dataId
+      codeId: codeId
     }
   })
 }
@@ -228,7 +228,7 @@ const handleDelete = () => {
   }
   axios.delete('/dataset', {
     data: {
-      ids: state.multipleSelection.map(i => i.dataId)
+      ids: state.multipleSelection.map(i => i.codeId)
     }
   }).then(() => {
     ElMessage.success('删除成功')
@@ -236,10 +236,10 @@ const handleDelete = () => {
   })
 }
 
-const handleDeleteOne = (dataId) => {
+const handleDeleteOne = (codeId) => {
   axios.delete('/dataset', {
     data: {
-      ids: [dataId]
+      ids: [codeId]
     }
   }).then(() => {
     ElMessage.success('删除成功')
@@ -255,7 +255,7 @@ const handleRowClick = (row, column, event) => {
   router.push({
     name: 'datasetDetail',
     params: {
-      dataId: row.dataId
+      codeId: row.codeId
     }
   })
 }

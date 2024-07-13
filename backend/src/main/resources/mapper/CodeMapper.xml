@@ -3,33 +3,94 @@
 <mapper namespace="upc.backend.mapper.CodeMapper">
 
     <resultMap id="BaseResultMap" type="upc.backend.entity.Code">
-        <id column="CodeId" jdbcType="INTEGER" property="codeId"/>
-        <result column="CodeName" jdbcType="VARCHAR" property="codeName"/>
-        <result column="UploadTime" jdbcType="TIMESTAMP" property="uploadTime"/>
-        <result column="CodeAbstract" jdbcType="VARCHAR" property="codeAbstract"/>
-        <result column="CodeDetails" jdbcType="VARCHAR" property="codeDetails"/>
-        <result column="isPublic" jdbcType="INTEGER" property="isPublic"/>
-        <result column="DownLoadTimes" jdbcType="INTEGER" property="downLoadTimes"/>
-        <result column="UserId" jdbcType="INTEGER" property="userId"/>
-        <result column="Url" jdbcType="VARCHAR" property="url"/>
-        <result column="TeamId" jdbcType="INTEGER" property="teamId"/>
-        <result column="TeamName" jdbcType="VARCHAR" property="teamName"/>
-        <result column="UserName" jdbcType="VARCHAR" property="userName"/>
+        <id column="CodeId" jdbcType="INTEGER" property="CodeId"/>
+        <result column="CodeName" jdbcType="VARCHAR" property="CodeName"/>
+        <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime"/>
+        <result column="CodeAbstract" jdbcType="VARCHAR" property="CodeAbstract"/>
+        <result column="CodeDetails" jdbcType="VARCHAR" property="CodeDetails"/>
+        <result column="DownLoadTimes" jdbcType="INTEGER" property="DownLoadTimes"/>
+        <result column="UserId" jdbcType="INTEGER" property="UserId"/>
+        <result column="Url" jdbcType="VARCHAR" property="Url"/>
+        <result column="TeamId" jdbcType="INTEGER" property="TeamId"/>
+        <result column="UserName" jdbcType="VARCHAR" property="UserName"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        CodeId, CodeName, UploadTime, CodeAbstract, CodeDetails, isPublic, DownLoadTimes, UserId, TeamId, Url
+        CodeId, CodeName, UploadTime, CodeAbstract, CodeDetails, DownLoadTimes, UserId, TeamId, Url
     </sql>
 
     <select id="selectByCodeId" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List" />
         FROM code
-        WHERE CodeId = #{codeId, jdbcType=INTEGER}
+        WHERE CodeId = #{CodeId, jdbcType=INTEGER}
     </select>
-
+    <select id="selectByTeamIds" resultMap="BaseResultMap">
+        SELECT
+        code.CodeId,
+        code.CodeName,
+        code.UploadTime,
+        code.CodeAbstract,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        code.TeamId AS teamId
+        FROM code
+        JOIN user ON code.UserId = user.UserId
+        WHERE
+        teamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR teamId IS NULL
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            LIMIT #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+    </select>
+    <select id="getNumOfTotalCodeByUserId" parameterType="Map" resultType="int">
+        select count(*) from code
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and CodeName like concat('%', #{searchQuery}, '%')
+        </if>
+    </select>
+    <select id="findAllCodeListByUserIdOrderByTime" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and CodeName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by UploadTime desc
+        <if test="start != null and limit != null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+    <select id="findAllCodeListByUserIdOrderByTeamId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and CodeName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by TeamId
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
     <select id="getNumOfTotalCode" resultType="int">
         SELECT COUNT(*) FROM code
+    </select>
+    <select id="getNumOfUserCode" resultType="int">
+        SELECT COUNT(*)
+        FROM code
+        WHERE
+        TeamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR TeamId IS NULL
     </select>
 
     <select id="findAllCodeList" parameterType="Map" resultMap="BaseResultMap">
@@ -39,11 +100,9 @@
         code.CodeAbstract,
         user.UserId AS userId,
         user.UserName AS userName,
-        team.TeamId AS teamId,
-        team.TeamName AS teamName
+        code.TeamId AS teamId
         FROM code
         JOIN user ON code.UserId = user.UserId
-        JOIN team ON code.TeamId = team.TeamId
         <if test="start != null and limit != null">
             LIMIT #{start}, #{limit}
         </if>

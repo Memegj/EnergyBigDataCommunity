@@ -10,18 +10,20 @@ import java.util.Date;
 @Getter
 @Data
 public class Code {
-    private Integer codeId;
-    private String codeName;
-    private Date uploadTime;
-    private String codeAbstract;
-    private String codeDetails;
+    private Integer CodeId;
+    private String CodeName;
+    private Date UploadTime;
+    private String CodeAbstract;
+    private String CodeDetails;
     private Integer isPublic;
-    private Integer downLoadTimes;
-    private Integer userId;
-    private String url;
-    private String userName;
-    private Integer teamId;
-    private String teamName;
+    private Integer DownLoadTimes;
+    private Integer UserId;
+    private String Url;
+    private String UserName;
+    private Integer TeamId;
+    private String TeamName;
+    private long FileSize;
+    private Integer CollectId;
     // 添加这个字段来存储用户名
 }
 

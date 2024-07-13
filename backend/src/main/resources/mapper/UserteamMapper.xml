@@ -24,6 +24,12 @@
         from user_team
         where UserId = #{UserId,jdbcType=INTEGER}
     </select>
+    <select id="selectByPageUtil" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user_team
+        where UserId = #{userid}
+    </select>
 
     <select id="selectByTeamId" resultMap="BaseResultMap">
         select

@@ -19,6 +19,10 @@ public class UserteamService {
 
         return userteamMapper.selectByUserId(UserId);
     }
+    public List<Userteam> getTeamByPageUtil(PageQueryUtil pageUtil){
+
+        return userteamMapper.selectByPageUtil(pageUtil);
+    }
 
     //更新文献信息
     public Boolean updateUserteamInfo(Userteam userteam){

@@ -12,6 +12,7 @@
         <result column="UserId" jdbcType="INTEGER" property="UserId" />
         <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
         <result column="Url" jdbcType="VARCHAR" property="Url" />
+        <result column="UserName" jdbcType="VARCHAR" property="UserName"/>
 
 
     </resultMap>
@@ -36,6 +37,37 @@
     <select id="selectByUploadTime" resultMap="BaseResultMap">
         select count(*) from datasets
         order by UploadTime desc
+    </select>
+    <select id="selectByTeamIds" resultMap="BaseResultMap">
+        SELECT
+        datasets.DataId,
+        datasets.DataName,
+        datasets.UploadTime,
+        datasets.DataAbstract,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        datasets.TeamId AS teamId
+        FROM datasets
+        JOIN user ON datasets.UserId = user.UserId
+        WHERE
+        teamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR teamId IS NULL
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            LIMIT #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+    </select>
+    <select id="getNumOfUserDatasets" resultType="int">
+        SELECT COUNT(*)
+        FROM datasets
+        WHERE
+        TeamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR TeamId IS NULL
     </select>
 
     <select id="getNumOfTotalDatasets" parameterType="Map" resultType="int">
