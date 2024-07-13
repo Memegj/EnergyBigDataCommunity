@@ -27,21 +27,24 @@
         select
         <include refid="Base_Column_List" />
         from collect
-        where CodeId = #{CodeId,jdbcType=INTEGER}
+        where CodeId = #{codeid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
     </select>
 
     <select id="selectByVideoId" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from collect
-        where VideoId = #{VideoId,jdbcType=INTEGER}
+        where VideoId = #{videoid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
     </select>
 
     <select id="selectByLiterId" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from collect
-        where LiterId = #{LiterId,jdbcType=INTEGER}
+        where LiterId = #{literid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
     </select>
 
     <select id="selectByCollectType" resultMap="BaseResultMap">

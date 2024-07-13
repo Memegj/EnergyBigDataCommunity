@@ -144,7 +144,6 @@ public class DatasetsManagement {
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
-        collectService.deleteBatchByDataId(batchIdParam.getIds());
         if (collectService.deleteBatch(batchIdParam.getIds())) {
             return ResultGenerator.genSuccessResult();
         } else {
@@ -302,7 +301,7 @@ public class DatasetsManagement {
                     Collect collect = new Collect();
                     collect.setDataId(collectAddParam.getDataId());
                     collect.setUserId(userToken.getUserId());
-                    collect.setCollectType("Datasets");
+                    collect.setCollectType("数据集");
                     if (collectService.add_collect(collect)) {
                         Result result = new ResultGenerator().genSuccessResult();
                         result.setData(true);

@@ -77,11 +77,22 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Datasetupload.vue')
     },
     {
+      path: '/admin/codeupload',
+      name: 'codeupload',
+      component: () => import( '@/pages/admin/views/Codeupload.vue')
+    },
+    {
       path: '/admin/datasetedit/:dataId', // 添加 dataId 参数
       name: 'datasetedit',
       component: () => import('@/pages/admin/views/Datasetedit.vue'),
       props: true // 通过 props 传递路由参数
     },
+      {
+          path: '/admin/codeedit/:codeId', // 添加 dataId 参数
+          name: 'codeedit',
+          component: () => import('@/pages/admin/views/Codeedit.vue'),
+          props: true // 通过 props 传递路由参数
+      },
     {
       path: '/admin/data_detail/:dataId',
       name: 'datasetDetail',

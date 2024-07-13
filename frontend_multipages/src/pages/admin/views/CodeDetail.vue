@@ -38,7 +38,7 @@
     </el-card>
 
     <el-card class="details-card">
-      <h3>关于数据集</h3>
+      <h3>关于代码集</h3>
       <div v-html="state.fileParams.CodeDetails"></div>
     </el-card>
   </div>
@@ -97,17 +97,17 @@ const getDetail = async (id) => {
     const res = await axios.get(`/codedetail/${id}`);
     console.log('Response:', res);
     state.fileParams = {
-      CodeName: res.datasets.codeName,
-      CodeAbstract: res.datasets.codeAbstract,
-      CodeDetails: res.datasets.codeDetails,
-      UserId: res.datasets.userId,
-      UserName: res.datasets.userName,
-      UploadTime: res.datasets.uploadTime,
-      DownloadTimes: res.datasets.downloadTimes,
-      file_path: res.hostUrl + res.datasets.url,
-      FileSize: res.datasets.fileSize,
-      TeamId: res.datasets.teamId,
-      CollectId: res.datasets.collectId
+      CodeName: res.code.codeName,
+      CodeAbstract: res.code.codeAbstract,
+      CodeDetails: res.code.codeDetails,
+      UserId: res.code.userId,
+      UserName: res.code.userName,
+      UploadTime: res.code.uploadTime,
+      DownloadTimes: res.code.downloadTimes,
+      file_path: res.hostUrl + res.code.url,
+      FileSize: res.code.fileSize,
+      TeamId: res.code.teamId,
+      CollectId: res.code.collectId
     };
   } catch (error) {
     console.error('Failed to fetch data:', error);
@@ -117,7 +117,7 @@ const getDetail = async (id) => {
 const handleDownload = async () => {
   try {
     const updatedDownloadTimes = state.fileParams.DownloadTimes + 1;
-    await axios.put('/dataset/detail', {
+    await axios.put('/code/detail', {
       codeId: codeId.value,
       downloadTimes: updatedDownloadTimes,
       teamId: state.fileParams.TeamId
@@ -140,7 +140,7 @@ const handleCollect = async () => {
   try {
     if (state.fileParams.CollectId) {
       // 取消收藏
-      await axios.delete('/dataset/collect', {
+      await axios.delete('/code/collect', {
         data: {ids: [state.fileParams.CollectId]},
         headers: {'token': state.token}
       });
@@ -150,7 +150,7 @@ const handleCollect = async () => {
       const params = {
         codeId: codeId.value,
       };
-      await axios.post('/dataset/collect', params, {
+      await axios.post('/code/collect', params, {
         headers: {'token': state.token}
       });
       ElMessage.success('已收藏');

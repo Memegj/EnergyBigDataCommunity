@@ -15,8 +15,7 @@ public class Code {
     private Date UploadTime;
     private String CodeAbstract;
     private String CodeDetails;
-    private Integer isPublic;
-    private Integer DownLoadTimes;
+    private Integer DownloadTimes;
     private Integer UserId;
     private String Url;
     private String UserName;

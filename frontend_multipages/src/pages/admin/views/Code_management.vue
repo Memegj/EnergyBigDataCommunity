@@ -40,7 +40,7 @@
         <el-col :span="8" style="text-align: right;">
           <el-select v-model="selectedCategory" placeholder="类别检索" class="category-select" @change="handleCategoryChange">
             <el-option label="按时间排序" value="time"></el-option>
-            <el-option label="按团队分组" value="team"></el-option>
+            <el-option label="按团队显示" value="team"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -75,7 +75,7 @@
         </el-table-column>
         <el-table-column
             prop="teamName"
-            label="是否公开"
+            label="团队"
             width="150"
             header-align="center"
             align="center"
@@ -161,7 +161,7 @@ const getReferences = (searchQuery = '') => {
   console.log('Selected Category:', selectedCategory.value) // Debug log
   if (selectedCategory.value === 'team') {
     // 按团队分组
-    axios.get('/dataset/listByTeam', {params}).then(res => {
+    axios.get('/code/listByTeam', {params}).then(res => {
       state.tableData = res.list
       state.total = res.totalCount
       state.currentPage = res.currPage
@@ -169,7 +169,7 @@ const getReferences = (searchQuery = '') => {
     })
   } else {
     // 按时间排序（默认）
-    axios.get('/dataset/listmanage', {params}).then(res => {
+    axios.get('/code/listmanage', {params}).then(res => {
       state.tableData = res.list
       state.total = res.totalCount
       state.currentPage = res.currPage
@@ -205,12 +205,12 @@ const changePage = (val) => {
 }
 
 const handleAdd = () => {
-  router.push('/admin/datasetupload')
+  router.push('/admin/codeupload')
 }
 
 const handleEdit = (codeId) => {
   router.push({
-    name: 'datasetedit',
+    name: 'codeedit',
     params: {
       codeId: codeId
     }
@@ -226,7 +226,7 @@ const handleDelete = () => {
     ElMessage.error('请选择项')
     return
   }
-  axios.delete('/dataset', {
+  axios.delete('/code', {
     data: {
       ids: state.multipleSelection.map(i => i.codeId)
     }
@@ -237,7 +237,7 @@ const handleDelete = () => {
 }
 
 const handleDeleteOne = (codeId) => {
-  axios.delete('/dataset', {
+  axios.delete('/code', {
     data: {
       ids: [codeId]
     }
@@ -253,7 +253,7 @@ const handleRowClick = (row, column, event) => {
     return
   }
   router.push({
-    name: 'datasetDetail',
+    name: 'codeDetail',
     params: {
       codeId: row.codeId
     }

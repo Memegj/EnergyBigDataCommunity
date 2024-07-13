@@ -40,7 +40,7 @@
         <el-col :span="8" style="text-align: right;">
           <el-select v-model="selectedCategory" placeholder="类别检索" class="category-select" @change="handleCategoryChange">
             <el-option label="按时间排序" value="time"></el-option>
-            <el-option label="按团队分组" value="team"></el-option>
+            <el-option label="按团队显示" value="team"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -75,7 +75,7 @@
         </el-table-column>
         <el-table-column
             prop="teamName"
-            label="是否公开"
+            label="团队"
             width="150"
             header-align="center"
             align="center"

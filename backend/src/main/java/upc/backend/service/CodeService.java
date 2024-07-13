@@ -49,7 +49,15 @@ public class CodeService {
         PageResult pageResult = new PageResult(codes, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
-
+    public Boolean add_file(Code code){
+        return codeMapper.insertSelective(code) > 0;
+    }
+    //更新文献信息
+    public Boolean updateCodeInfo(Code code){
+        int radd = codeMapper.updateByPrimaryKeySelective(code);
+        if (radd > 0){return true;}
+        else {return false;}
+    }
     public PageResult getCodePageByUserIdOrderByTeamId(PageQueryUtil pageUtil){
         List<Code> codes = codeMapper.findAllCodeListByUserIdOrderByTeamId(pageUtil);
         int total = codeMapper.getNumOfTotalCodeByUserId(pageUtil);

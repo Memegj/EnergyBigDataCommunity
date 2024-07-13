@@ -8,7 +8,7 @@
         <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime"/>
         <result column="CodeAbstract" jdbcType="VARCHAR" property="CodeAbstract"/>
         <result column="CodeDetails" jdbcType="VARCHAR" property="CodeDetails"/>
-        <result column="DownLoadTimes" jdbcType="INTEGER" property="DownLoadTimes"/>
+        <result column="DownloadTimes" jdbcType="INTEGER" property="DownloadTimes"/>
         <result column="UserId" jdbcType="INTEGER" property="UserId"/>
         <result column="Url" jdbcType="VARCHAR" property="Url"/>
         <result column="TeamId" jdbcType="INTEGER" property="TeamId"/>
@@ -16,7 +16,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        CodeId, CodeName, UploadTime, CodeAbstract, CodeDetails, DownLoadTimes, UserId, TeamId, Url
+        CodeId, CodeName, UploadTime, CodeAbstract, CodeDetails, DownloadTimes, UserId, TeamId, Url
     </sql>
 
     <select id="selectByCodeId" resultMap="BaseResultMap">
@@ -25,6 +25,7 @@
         FROM code
         WHERE CodeId = #{CodeId, jdbcType=INTEGER}
     </select>
+
     <select id="selectByTeamIds" resultMap="BaseResultMap">
         SELECT
         code.CodeId,
@@ -46,6 +47,100 @@
             LIMIT #{pageUtil.start}, #{pageUtil.limit}
         </if>
     </select>
+    <insert id="insertSelective" parameterType="upc.backend.entity.Code">
+        insert into code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="CodeId != null">
+                CodeId,
+            </if>
+            <if test="CodeName != null">
+                CodeName,
+            </if>
+            <if test="UploadTime != null">
+                UploadTime,
+            </if>
+            <if test="CodeAbstract != null">
+                CodeAbstract,
+            </if>
+            <if test="CodeDetails != null">
+                CodeDetails,
+            </if>
+            <if test="DownloadTimes != null">
+                DownloadTimes,
+            </if>
+            <if test="UserId != null">
+                UserId,
+            </if>
+            <if test="TeamId != null">
+                TeamId,
+            </if>
+            <if test="Url != null">
+                Url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="CodeId != null">
+                #{CodeId, jdbcType=INTEGER},
+            </if>
+            <if test="CodeName != null">
+                #{CodeName, jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                #{UploadTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="CodeAbstract != null">
+                #{CodeAbstract, jdbcType=VARCHAR},
+            </if>
+            <if test="CodeDetails != null">
+                #{CodeDetails, jdbcType=LONGVARCHAR},
+            </if>
+            <if test="DownloadTimes != null">
+                #{DownloadTimes, jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                #{UserId, jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                #{TeamId, jdbcType=INTEGER},
+            </if>
+            <if test="Url != null">
+                #{Url, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Code">
+        update code
+        <set>
+            <if test="CodeName != null">
+                CodeName = #{CodeName,jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="CodeAbstract != null">
+                CodeAbstract = #{CodeAbstract,jdbcType=VARCHAR},
+            </if>
+            <if test="CodeDetails != null">
+                CodeDetails = #{CodeDetails,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="DownloadTimes != null">
+                DownloadTimes = #{DownloadTimes,jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                UserId = #{UserId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                TeamId = #{TeamId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId == null">
+                TeamId = null,
+            </if>
+            <if test="Url != null">
+                Url = #{Url,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CodeId = #{CodeId,jdbcType=INTEGER}
+    </update>
     <select id="getNumOfTotalCodeByUserId" parameterType="Map" resultType="int">
         select count(*) from code
         where UserId = #{userid}

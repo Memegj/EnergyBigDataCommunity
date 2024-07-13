@@ -117,12 +117,6 @@ const getAllReferences = () => {
     state.allCode = res.list
     state.total = res.totalCount
     state.loading = false
-
-    // 遍历 allCode 获取 userName 和 teamName
-    state.allCode.forEach(row => {
-      getUserName(row)
-      getTeamName(row)
-    })
     updateTableCode()
   })
 }
