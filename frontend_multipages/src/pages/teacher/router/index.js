@@ -47,6 +47,11 @@ const router = createRouter({
       component: () => import( '@/pages/teacher/views/GetFile.vue')
     },
     {
+      path: '/teacher/account',
+      name: 'account',
+      component: () => import( '@/pages/teacher/views/Account.vue')
+    },
+    {
       path: '/teacher/getchart',
       name: 'chart',
       component: () => import( '@/pages/teacher/views/GetChart.vue')

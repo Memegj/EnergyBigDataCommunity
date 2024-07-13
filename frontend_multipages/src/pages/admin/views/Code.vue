@@ -151,7 +151,7 @@ const updateTableCode = () => {
 const filteredData = computed(() => {
   if (!searchTriggered.value) return state.allCode
   return state.allCode.filter(row => {
-    return Object.keys(row).some(key => {
+    return ['codeName', 'codeAbstract', 'userName', 'teamName'].some(key => {
       return String(row[key]).toLowerCase().includes(searchQuery.value.toLowerCase())
     })
   })
