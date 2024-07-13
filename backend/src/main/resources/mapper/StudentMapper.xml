@@ -3,99 +3,310 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="upc.backend.mapper.StudentMapper">
     <resultMap id="BaseResultMap" type="upc.backend.entity.Student">
-        <id column="id" jdbcType="INTEGER" property="id" />
-        <result column="stuname" jdbcType="VARCHAR" property="stuname" />
-        <result column="stuclass" jdbcType="VARCHAR" property="stuclass" />
+        <result column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="UserName" jdbcType="VARCHAR" property="UserName" />
+        <result column="UserPassword" jdbcType="VARCHAR" property="UserPassword" />
+        <result column="NickName" jdbcType="VARCHAR" property="NickName" />
+        <result column="UserLocked" jdbcType="TINYINT" property="UserLocked" />
+        <result column="user_role" jdbcType="VARCHAR" property="user_role" />
+        <result column="UserEmail" jdbcType="VARCHAR" property="UserEmail" />
+        <result column="UserCollege" jdbcType="VARCHAR" property="UserCollege" />
+        <result column="RegisterTime" jdbcType="TIMESTAMP" property="RegisterTime" />
+        <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
+        <result column="TeamName" jdbcType="VARCHAR" property="TeamName" />
+
     </resultMap>
     <sql id="Base_Column_List">
-        id, stuname, stuclass
+        UserId, UserName, UserPassword, NickName, UserLocked, user_role, UserEmail, UserCollege, RegisterTime,TeamId,TeamName
     </sql>
 
-    <select id="selectByStunum" resultMap="BaseResultMap">
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
-        from student
-        where id = #{id,jdbcType=INTEGER}
+            user.UserId,
+            UserName,
+            UserLocked,
+            user_role,
+            UserEmail,
+            UserCollege,
+            NickName,
+            user.RegisterTime,
+            user_team.TeamId,
+            TeamName,
+            User_teamId
+        from user
+        JOIN user_team ON user.UserId = user_team.UserId
+        JOIN
+             team ON user_team.TeamId = team.TeamId
+        WHERE
+            user_team.UserId = #{UserId}
+            and user_team.TeamId = #{TeamId,jdbcType=INTEGER}
     </select>
 
-    <select id="selectByName" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from student
-        where stuname = #{stuname,jdbcType=VARCHAR}
-    </select>
-
-    <select id="selectByClass" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from student
-        where stuclass = #{stuclass,jdbcType=VARCHAR}
-    </select>
-
-    <select id="getNumOfTotalStudent" parameterType="Map" resultType="int">
-        select count(*) from student
-    </select>
     <select id="findAllStudentList" parameterType="Map" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
-        from student
+        user.UserId,
+        UserName,
+        UserLocked,
+        user_role,
+        UserEmail,
+        UserCollege,
+        user.RegisterTime,
+        user_team.TeamId,
+        TeamName
+        FROM
+        user
+        JOIN
+        user_team ON user.UserId = user_team.UserId
+        JOIN
+        team ON user_team.TeamId = team.TeamId
+        WHERE
+        user_team.TeamId IN (
+        SELECT
+        user_team.TeamId
+        FROM
+        user_team
+        WHERE
+        user_team.UserId = #{userId})
+        AND user.user_role = 'student'
+
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>
+
+    </select>
+    <select id="findTeamAllStudentList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        user.UserId,
+        UserName,
+        UserLocked,
+        user_role,
+        UserEmail,
+        UserCollege,
+        user.RegisterTime,
+        user_team.TeamId,
+        TeamName
+        FROM
+        user
+        JOIN
+        user_team ON user.UserId = user_team.UserId
+        JOIN
+        team ON user_team.TeamId = team.TeamId
+        WHERE
+        user_team.TeamId =#{TeamId}
+        AND user.user_role = 'student'
+
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+
+    </select>
+
+    <select id="getNumOfTotalStudentByTeacherTeam" parameterType="Map" resultType="int">
+        SELECT COUNT(user.UserId)
+        FROM user
+        JOIN user_team ON user.UserId = user_team.UserId
+        JOIN team ON user_team.TeamId = team.TeamId
+        WHERE
+            user_team.TeamId IN (
+                SELECT
+                    user_team.TeamId
+                FROM
+                    user_team
+                WHERE
+                    user_team.UserId = #{userId}
+
+            )
+          AND user.user_role = 'student'
+    </select>
+    <select id="getNumOfTotalStudentBySelectTeam" parameterType="Map" resultType="int">
+        SELECT COUNT(user.UserId)
+        FROM user
+                 JOIN user_team ON user.UserId = user_team.UserId
+                 JOIN team ON user_team.TeamId = team.TeamId
+        WHERE
+            user_team.TeamId =#{TeamId}
+
+          AND user.user_role = 'student'
     </select>
 
     <insert id="insert" parameterType="upc.backend.entity.Student">
-        insert into student (id, stuname, stuclass)
-        values (#{id,jdbcType=INTEGER}, #{stuname,jdbcType=VARCHAR}, #{stuclass,jdbcType=VARCHAR})
+        insert into user (UserId, UserName, UserPassword, NickName, UserLocked, user_role, UserEmail, UserCollege, RegisterTime)
+        values (#{UserId,jdbcType=INTEGER}, #{UserName,jdbcType=VARCHAR}, #{UserPassword,jdbcType=VARCHAR},
+                #{NickName,jdbcType=VARCHAR}, #{UserLocked,jdbcType=TINYINT}, #{user_role,jdbcType=VARCHAR}, #{UserEmail,jdbcType=VARCHAR}, #{UserCollege,jdbcType=VARCHAR}, #{RegisterTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="upc.backend.entity.Student">
-        insert into student
+        insert into user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
+            <if test="UserId != null">
+                UserId,
             </if>
-            <if test="stuname != null">
-                stuname,
+            <if test="UserName != null">
+                UserName,
             </if>
-            <if test="stuclass != null">
-                stuclass,
+            <if test="UserPassword != null">
+                UserPassword,
+            </if>
+            <if test="NickName != null">
+                NickName,
+            </if>
+            <if test="UserLocked != null">
+                UserLocked,
+            </if>
+            <if test="user_role != null">
+                user_role,
+            </if>
+            <if test="UserEmail != null">
+                UserEmail,
+            </if>
+            <if test="UserCollege != null">
+                UserCollege,
+            </if>
+            <if test="RegisterTime != null">
+                RegisterTime,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id, jdbcType=INTEGER},
+            <if test="UserId!= null">
+                #{UserId,jdbcType=INTEGER},
             </if>
-            <if test="stuname != null">
-                #{stuname, jdbcType=VARCHAR},
+            <if test="UserName != null">
+                #{UserName,jdbcType=VARCHAR},
             </if>
-            <if test="stuclass != null">
-                #{stuclass, jdbcType=VARCHAR},
+            <if test="UserPassword != null">
+                #{UserPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="NickName != null">
+                #{NickName,jdbcType=VARCHAR},
+            </if>
+            <if test="UserLocked != null">
+                #{UserLocked,jdbcType=TINYINT},
+            </if>
+            <if test="user_role != null">
+                #{user_role,jdbcType=VARCHAR},
+            </if>
+            <if test="UserEmail != null">
+                #{UserEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="UserCollege != null">
+                #{UserCollege,jdbcType=VARCHAR},
+            </if>
+            <if test="RegisterTime != null">
+                #{RegisterTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertTeamFromStudent" parameterType="upc.backend.entity.Student">
+        insert into user_team
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="UserId != null">
+                UserId,
+            </if>
+
+            <if test="TeamId != null">
+                TeamId,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="UserId!= null">
+                #{UserId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                #{TeamId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Student">
-        update student
+        update user
         <set>
-            <if test="stuname != null">
-                stuname = #{stuname,jdbcType=VARCHAR},
+            <if test="UserName != null">
+                UserName = #{UserName,jdbcType=VARCHAR},
             </if>
-            <if test="stuclass != null">
-                stuclass = #{stuclass,jdbcType=VARCHAR},
+            <if test="UserPassword != null">
+                UserPassword = #{UserPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="NickName != null">
+                NickName = #{NickName,jdbcType=VARCHAR},
+            </if>
+            <if test="UserLocked != null">
+                UserLocked = #{UserLocked,jdbcType=TINYINT},
+            </if>
+            <if test="user_role != null">
+                user_role = #{user_role,jdbcType=VARCHAR},
+            </if>
+            <if test="UserEmail != null">
+                UserEmail = #{UserEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="UserCollege != null">
+                UserCollege = #{UserCollege,jdbcType=VARCHAR},
+            </if>
+            <if test="RegisterTime != null">
+                RegisterTime = #{RegisterTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where UserId = #{UserId,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.Student">
-        update student
-        set stuname = #{stuname,jdbcType=VARCHAR},
-            stuclass = #{stuclass,jdbcType=VARCHAR}
-        where id = #{id,jdbcType=INTEGER}
+    <update id="updateByUserTeamKeySelective" parameterType="upc.backend.entity.Student">
+        update user_team
+        <set>
+            <if test="UserId!= null">
+               UserId= #{UserId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId!= null">
+               TeamId= #{TeamId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where User_teamId = #{User_teamId,jdbcType=INTEGER}
     </update>
-    <delete id="deleteBatch" parameterType="java.lang.Integer">
-        delete from student
-        where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+
+
+    <update id="lockStudentBatch">
+        update user
+        set UserLocked=#{lockStatus} where UserId in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </update>
+
+    <select id="getNameOptions" parameterType="Map" resultMap="BaseResultMap">
+        select distinct TeamName,team.TeamId
+        from team
+        where
+            team.TeamId IN (
+            SELECT
+            user_team.TeamId
+            FROM
+            user_team
+            WHERE
+            user_team.UserId = #{UserId}
+            )
+    </select>
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from user_team
+        where UserId in
+        <foreach item="UserId" collection="ids" open="(" separator="," close=")">
+            #{UserId}
+        </foreach>
+        and TeamId in(
+            SELECT
+            team.TeamId
+            FROM
+            team
+            WHERE
+            team.TeamId= <foreach item="TeamId" collection="teamId" open="(" separator="," close=")">#{TeamId}
+            )
+        </foreach>
     </delete>
+    <select id="userIdExists" parameterType="Map" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM user
+        WHERE UserId = #{UserId}
+    </select>
+    <update id="resetPassword" parameterType="upc.backend.entity.Student">
+        update user
+        set UserPassword = #{UserPassword,jdbcType=VARCHAR}
+        where UserId = #{UserId,jdbcType=INTEGER}
+
+    </update>
 </mapper>

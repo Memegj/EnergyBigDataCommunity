@@ -4,6 +4,6 @@ import java.io.Serializable;
 
 @Data
 public class UserLoginParam implements Serializable {
-    private String username;
+    private Integer userid;
     private String password;
 }

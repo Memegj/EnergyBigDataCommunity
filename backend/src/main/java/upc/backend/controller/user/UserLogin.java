@@ -33,7 +33,7 @@ public class UserLogin {
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public Result<String> login(@RequestBody UserLoginParam loginParam) {
-        HashMap<String, String> loginResult = userService.login(loginParam.getUsername(), loginParam.getPassword());
+        HashMap<String, String> loginResult = userService.login(loginParam.getUserid(), loginParam.getPassword());
         //log.info("manage login api,username={},loginResult={}", loginParam.getUsername(), loginResult);
         //登录成功
         if (StringUtils.hasText(loginResult.get("tokenStr")) && loginResult.get("tokenStr").length() == Constants.TOKEN_LENGTH) {

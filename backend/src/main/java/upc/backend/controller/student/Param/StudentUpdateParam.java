@@ -6,7 +6,7 @@
  * Copyright (c) 2019-2021 十三 all rights reserved.
  * 版权所有，侵权必究！
  */
-package upc.backend.controller.user.param;
+package upc.backend.controller.student.Param;
 
 //import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.io.Serializable;
  * 用户修改param
  */
 @Data
-public class UserUpdateParam implements Serializable {
+public class StudentUpdateParam implements Serializable {
 
     private Integer UserId;
     private String UserName;
@@ -26,5 +26,8 @@ public class UserUpdateParam implements Serializable {
     private String user_role;
     private String UserEmail;
     private String UserCollege;
+    private Integer TeamId;
+    private String TeamName;
+    private Integer User_teamId;
 
 }

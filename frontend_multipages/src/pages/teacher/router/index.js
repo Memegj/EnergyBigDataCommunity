@@ -32,9 +32,9 @@ const router = createRouter({
       component: () => import( '@/pages/teacher/views/References.vue')
     },
     {
-      path: '/teacher/user_manage',
-      name: 'user_manage',
-      component: () => import('@/pages/teacher/views/UserManage.vue')
+      path: '/teacher/stu_manage',
+      name: 'stu_manage',
+      component: () => import('@/pages/teacher/views/StuManage.vue')
     },
     {
       path: '/teacher/gettable',

@@ -6,4 +6,5 @@ import java.io.Serializable;
 public class BatchIdParam implements Serializable {
     //id数组
     Integer[] ids;
+    Integer[] teamId;
 }

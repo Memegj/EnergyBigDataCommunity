@@ -88,7 +88,7 @@ const state = reactive({
   total: 0, // 总条数
   currentPage: 1, // 当前页
   pageSize: 10, // 分页大小
-  type: 'add' // 操作类型
+  type: 'add', // 操作类型
 })
 onMounted(() => {
   getReferences()
@@ -97,6 +97,7 @@ onMounted(() => {
 // 获取分类列表
 const getReferences = () => {
   state.loading = true
+
   axios.get('/references/list', {
     params: {
       pageNumber: state.currentPage,

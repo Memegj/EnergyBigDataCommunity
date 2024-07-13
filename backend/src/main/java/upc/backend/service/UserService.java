@@ -22,8 +22,8 @@ public class UserService {
     @Resource
     private UserTokenMapper userTokenMapper;
     //用户登录
-    public HashMap<String, String> login(String UserName, String UserPassword){
-        User loginUser = userMapper.login(UserName, UserPassword);
+    public HashMap<String, String> login(Integer UserId, String UserPassword){
+        User loginUser = userMapper.login(UserId, UserPassword);
         HashMap<String, String> map = new HashMap<>();
         if (loginUser != null) {
             //登录后即执行修改token的操作
@@ -93,7 +93,14 @@ public class UserService {
         return false;
     }
 
-    //修改当前登录用户的名称信息
+    public Boolean resetPassword(Integer UserId, String UserPassword) {
+
+
+        return userMapper.resetPassword(UserId,UserPassword) > 0;
+    }
+
+
+//修改当前登录用户的名称信息
     public Boolean updateName(Integer UserId, String UserName, String NickName){
         User user = userMapper.selectByPrimaryKey(UserId);
         //当前用户非空才可以进行更改
@@ -136,4 +143,17 @@ public class UserService {
     public Boolean add_User(User user){
         return userMapper.insertSelective(user) > 0;
     }
+    public Boolean deleteBatch(Integer[] ids) {
+        if (ids.length < 1) {
+            return false;
+        }
+        //删除分类数据
+        return userMapper.deleteBatch(ids) > 0;
+    }
+
+    //更新用户信息
+    public Boolean updateUserInfo(User user){
+        return userMapper.updateByPrimaryKeySelective(user) > 0;
+    }
+
 }

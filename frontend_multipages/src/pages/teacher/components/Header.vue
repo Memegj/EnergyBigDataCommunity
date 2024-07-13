@@ -2,7 +2,7 @@
   <div class="header">
     <div class="left">
       <el-icon class="back" v-if="state.hasBack" @click="back"><Back /></el-icon>
-      <span style="font-size: 20px">{{ state.name }}</span>
+      <span style="font-size: 25px;font-weight: bold">{{ state.name }}</span>
     </div>
     <div class="right">
       <el-popover

@@ -74,7 +74,7 @@
               <el-menu-item index="/teacher/getfile">团队管理</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/getfile">学生管理</el-menu-item>
+              <el-menu-item index="/teacher/stu_manage">学生管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>

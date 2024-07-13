@@ -68,7 +68,7 @@
               <el-menu-item index="/admin/gettable">个人信息修改</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/admin/getfile">用户管理</el-menu-item>
+              <el-menu-item index="/admin/user_manage">用户管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>

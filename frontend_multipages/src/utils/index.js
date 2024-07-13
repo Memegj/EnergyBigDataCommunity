@@ -27,7 +27,7 @@ export const pathMap = {
   mycharts: '统计图表',
   references: '文献管理',
   file_upload: '文件操作',
-  user_manage: '用户管理',
+  stu_manage: '学生管理',
   account: '修改账户',
   table: '表格练习',
   file: '文件上传练习',
