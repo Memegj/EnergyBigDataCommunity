@@ -13,7 +13,7 @@
       <!-- 搜索 Row -->
       <el-row class="search-row">
         <el-col :span="22">
-          <el-input placeholder="搜索你收藏的作品" v-model="searchQuery" class="search-input">
+          <el-input placeholder="搜索你收藏的作品(名字、类别、上传人)" v-model="searchQuery" class="search-input">
             <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
           </el-input>
         </el-col>
@@ -56,7 +56,7 @@
         <el-table-column prop="dataName" label="名称" width="300" header-align="center" align="center"></el-table-column>
         <el-table-column prop="collectType" label="类别" width="200" header-align="center" align="center"></el-table-column>
         <el-table-column prop="userName" label="上传人" width="200" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="uploadTime" label="上传时间" width="250" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="uploadTime" label="上传时间" width="200" header-align="center" align="center"></el-table-column>
         <el-table-column label="操作" width="200" header-align="center" align="center">
           <template #default="scope">
             <el-popconfirm
@@ -157,8 +157,8 @@ const filterData = () => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(item => {
-      return Object.values(item).some(value =>
-          String(value).toLowerCase().includes(query)
+      return ['dataName', 'collectType', 'userName'].some(key =>
+          String(item[key]).toLowerCase().includes(query)
       );
     });
   }
