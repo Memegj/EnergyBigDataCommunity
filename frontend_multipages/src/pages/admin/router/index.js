@@ -58,7 +58,7 @@ const router = createRouter({
     },
     {
       path: '/admin/account',
-      name: 'chart',
+      name: 'account',
       component: () => import( '@/pages/admin/views/Account.vue')
     },
     {

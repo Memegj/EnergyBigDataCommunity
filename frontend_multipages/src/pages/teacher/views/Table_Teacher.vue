@@ -40,21 +40,38 @@ onMounted(() => {
   getList()
 })
 
+
 const getList = () => {
   state.loading = true
-  axios.get(props.action, {
-    params: {
-      pageNumber: state.currentPage,
-      pageSize: state.pageSize,
-      str_token: localGet('token')
-    }
-  }).then(res => {
-    state.tableData = res.list
-    state.total = res.totalCount
-    state.currentPage = res.currPage
-    state.loading = false
-    goTop && goTop() // 回到顶部
-  })
+  if (state.TeamId) {
+    axios.get('/students/team', {
+      params: {
+        pageNumber: state.currentPage,
+        pageSize: state.pageSize,
+        teamId: state.TeamId
+      }
+    }).then(res => {
+      state.tableData = res.list
+      state.total = res.totalCount
+      state.currentPage = res.currPage
+      state.loading = false
+      goTop && goTop() // 回到顶部
+    })
+  } else {
+    axios.get(props.action, {
+      params: {
+        pageNumber: state.currentPage,
+        pageSize: state.pageSize,
+        str_token: localGet('token')
+      }
+    }).then(res => {
+      state.tableData = res.list
+      state.total = res.totalCount
+      state.currentPage = res.currPage
+      state.loading = false
+      goTop && goTop() // 回到顶部
+    })
+  }
 }
 
 const handleSelectionChange = (val) => {

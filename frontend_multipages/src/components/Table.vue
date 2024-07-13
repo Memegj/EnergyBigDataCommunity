@@ -21,6 +21,7 @@
 <script setup>
 import { onMounted, reactive, getCurrentInstance } from 'vue'
 import axios from '@/utils/axios'
+import {localGet} from "@/utils/index.js";
 
 const props = defineProps({
   action: String
@@ -34,42 +35,25 @@ const state = reactive({
   currentPage: 1, // 当前页
   pageSize: 10, // 分页大小
   multipleSelection: [],
-  TeamId:""
 })
 onMounted(() => {
   getList()
 })
 
 const getList = () => {
-          state.loading = true
-          if (state.TeamId) {
-            axios.get('/students/team', {
-              params: {
-                pageNumber: state.currentPage,
-                pageSize: state.pageSize,
-                teamId: state.TeamId
-              }
-            }).then(res => {
-              state.tableData = res.list
-              state.total = res.totalCount
-              state.currentPage = res.currPage
-              state.loading = false
-              goTop && goTop() // 回到顶部
-            })
-          } else {
-            axios.get(props.action, {
-              params: {
-                pageNumber: state.currentPage,
-                pageSize: state.pageSize
-      }
-            }).then(res => {
-              state.tableData = res.list
-              state.total = res.totalCount
-              state.currentPage = res.currPage
-              state.loading = false
-              goTop && goTop() // 回到顶部
-    })
-  }
+  state.loading = true
+  axios.get(props.action, {
+    params: {
+      pageNumber: state.currentPage,
+      pageSize: state.pageSize
+    }
+  }).then(res => {
+    state.tableData = res.list
+    state.total = res.totalCount
+    state.currentPage = res.currPage
+    state.loading = false
+    goTop && goTop() // 回到顶部
+  })
 }
 
 

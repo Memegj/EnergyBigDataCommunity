@@ -68,7 +68,7 @@
               <el-menu-item index="/teacher/collect">我的收藏</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/gettable">个人信息修改</el-menu-item>
+              <el-menu-item index="/teacher/account">个人信息修改</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="/teacher/team">团队管理</el-menu-item>

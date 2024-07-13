@@ -36,5 +36,6 @@ export const pathMap = {
   getfile: '文件上传练习',
   getchart: '图表练习',
   dataset_manage: '数据集',
-  datasetupload: '数据集上传'
+  datasetupload: '数据集上传',
+  user_manage:"用户管理"
 }

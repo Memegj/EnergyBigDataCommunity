@@ -65,10 +65,10 @@
               <span><el-icon><User /></el-icon>我的</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/student/gettable">我的收藏</el-menu-item>
+              <el-menu-item index="/student/collect">我的收藏</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/student/getfile">个人信息修改</el-menu-item>
+              <el-menu-item index="/student/account">个人信息修改</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>

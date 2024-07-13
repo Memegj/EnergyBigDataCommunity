@@ -128,7 +128,7 @@
 
 <script setup>
 import {onMounted, reactive, ref} from 'vue'
-import Table from '@/components/Table.vue'
+import Table from '@/pages/teacher/views/Table_Teacher.vue'
 import DialogAddStudent from "@/components/DialogAddStudent.vue";
 import { ElMessage } from 'element-plus'
 import { Plus, Delete, Check } from '@element-plus/icons-vue'
