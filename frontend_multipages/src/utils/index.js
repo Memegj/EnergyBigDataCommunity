@@ -34,5 +34,6 @@ export const pathMap = {
   chart: '图表练习',
   gettable: '表格练习',
   getfile: '文件上传练习',
-  getchart: '图表练习'
+  getchart: '图表练习',
+  studentvideo: '教学视频'
 }

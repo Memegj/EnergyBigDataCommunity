@@ -13,6 +13,7 @@
     "vite": "^5.2.11",
     "vite-plugin-babel-import": "^2.0.5",
     "vue-router": "^4.3.2",
+    "vue3-video-play": "^1.3.2",
     "wangeditor": "^4.7.15"
   },
   "devDependencies": {

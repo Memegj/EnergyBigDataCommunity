@@ -54,10 +54,10 @@
               <span><el-icon><el-icon-video-camera /></el-icon>教学视频</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/student/gettable">教学视频检索</el-menu-item>
+              <el-menu-item index="/student/studentvideo">教学视频检索</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/student/getfile">教学视频管理</el-menu-item>
+              <el-menu-item index="/student/videoManagement">教学视频管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="5">

@@ -34,6 +34,7 @@ const router = createRouter({
       name: 'index',
       component: () => import( '@/pages/admin/views/Index.vue')
     },
+
     {
       path: '/student',
       redirect: '/student/index'
@@ -43,6 +44,8 @@ const router = createRouter({
       name: 'index',
       component: () => import( '@/pages/student/views/Index.vue')
     },
+
+
     {
       path: '/teacher',
       redirect: '/teacher/index'
@@ -52,6 +55,7 @@ const router = createRouter({
       name: 'index',
       component: () => import( '@/pages/teacher/views/Index.vue')
     },
+
     {
       path: '/admin/file_upload',
       name: 'file_upload',
@@ -88,6 +92,7 @@ const router = createRouter({
       name: 'getchart',
       component: () => import( '@/pages/admin/views/GetChart.vue')
     },
+
   ],
 })
 

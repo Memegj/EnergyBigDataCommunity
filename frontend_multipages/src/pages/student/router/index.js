@@ -50,8 +50,23 @@ const router = createRouter({
       path: '/student/getchart',
       name: 'chart',
       component: () => import( '@/pages/student/views/GetChart.vue')
+    },
+    {
+      path: '/student/studentvideo',
+      name: 'studentvideo',
+      component: () => import( '@/pages/student/views/video/studentvideo.vue')
+    },
+    {
+      path: '/video/:VideoId',
+      name: 'videoDetaile',
+      component: () => import( '@/pages/student/views/video/VideoDetail.vue')
+    },
+    {
+      path: '/student/videoManagement',
+      name: 'videoManagement',
+      component: () => import( '@/pages/student/views/video/videoManagement.vue')
     }
   ],
 })
 
-export default router
+export default router;

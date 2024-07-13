@@ -15,7 +15,7 @@ public class StudentService {
     private StudentMapper studentMapper;
 
 
-    // 获取文献信息
+    // 获取学生信息
     public Student getStudentByStunum(Integer id){
         return studentMapper.selectByStunum(id);
     }
