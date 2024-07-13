@@ -9,6 +9,7 @@ public class Constants {
     public final static int TOKEN_LENGTH = 32;//token字段长度
     public final static String FILES_UPLOAD_DIC = getUploadDirectory("/upload/files");
     public final static String IMGS_UPLOAD_DIC = getUploadDirectory("/upload/images");
+    public final static String DATASETS_UPLOAD_DIC = getUploadDirectory("/upload/datasets");
 
     private static String getUploadDirectory(String filepath) {
         try {

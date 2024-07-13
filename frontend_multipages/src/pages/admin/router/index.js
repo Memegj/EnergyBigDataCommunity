@@ -16,19 +16,9 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/admin/dataset_manage',
-      name: 'dataset_manage',
-      component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
-    },
-    {
-      path: '/admin/code',
-      name: 'code',
-      component: () => import( '@/pages/admin/views/Code.vue')
-    },
-    {
-      path: '/admin/codeview',
-      name: 'codeview',
-      component: () => import( '@/pages/admin/views/CodeView.vue')
+      path: '/admin/mycharts',
+      name: 'mycharts',
+      component: () => import( '@/pages/admin/views/Chart_Example.vue')
     },
     {
       path: '/admin/file_upload',
@@ -65,6 +55,21 @@ const router = createRouter({
       path: '/admin/getchart',
       name: 'chart',
       component: () => import( '@/pages/admin/views/GetChart.vue')
+    },
+    {
+      path: '/admin/account',
+      name: 'chart',
+      component: () => import( '@/pages/admin/views/Account.vue')
+    },
+    {
+      path: '/admin/code',
+      name: 'chart',
+      component: () => import( '@/pages/admin/views/Code.vue')
+    },
+    {
+      path: '/admin/datasetupload',
+      name: 'datasetupload',
+      component: () => import( '@/pages/admin/views/Datasetupload.vue')
     }
   ],
 })
