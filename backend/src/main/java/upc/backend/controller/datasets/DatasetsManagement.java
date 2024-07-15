@@ -157,6 +157,7 @@ public class DatasetsManagement {
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+        collectService.deleteBatchByDataId(batchIdParam.getIds());
         if (datasetsService.deleteBatch(batchIdParam.getIds())) {
             return ResultGenerator.genSuccessResult();
         } else {

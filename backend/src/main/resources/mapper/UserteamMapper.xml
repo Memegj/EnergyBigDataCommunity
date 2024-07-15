@@ -79,6 +79,10 @@
             </if>
         </trim>
     </insert>
+    <insert id="insertUserTeam" parameterType="upc.backend.entity.Userteam">
+        INSERT INTO user_team(UserId, TeamId)
+        VALUES (#{UserId, jdbcType=INTEGER}, #{TeamId, jdbcType=INTEGER})
+    </insert>
     <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Userteam">
         update user_team
         <set>
@@ -103,5 +107,10 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+    <delete id="deleteByTeamIdAndUserId" parameterType="map">
+        delete from user_team
+        where userId = #{userId}
+          and teamId = #{teamId}
     </delete>
 </mapper>

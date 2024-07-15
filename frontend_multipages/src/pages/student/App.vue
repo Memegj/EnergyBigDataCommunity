@@ -25,17 +25,17 @@
               <span><el-icon><Menu /></el-icon>代码</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/student/mycharts" >代码检索</el-menu-item>
+              <el-menu-item index="/student/code" >代码检索</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item index="/student/mycharts" >代码管理</el-menu-item>
+            <el-menu-item index="/student/code_manage" >代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
               <span><el-icon><el-icon-coin /></el-icon>数据集</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/student/file_upload">数据集检索</el-menu-item>
-              <el-menu-item index="/student/references">数据集管理</el-menu-item>
+              <el-menu-item index="/student/dataset">数据集检索</el-menu-item>
+              <el-menu-item index="/student/dataset_manage">数据集管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">
@@ -43,10 +43,10 @@
               <span><el-icon><Document-copy /></el-icon>文献资料</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/student/account">文献资料检索</el-menu-item>
+              <el-menu-item index="/student/literature">文献资料检索</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="/student/account">文献资料管理</el-menu-item>
+              <el-menu-item index="/student/literature_manage">文献资料管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">

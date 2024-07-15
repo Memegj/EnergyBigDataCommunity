@@ -75,7 +75,7 @@ public class CollectService {
         }
         return true;
     }
-}
+
     public Boolean add_collect(Collect collect){
         int radd = collectMapper.insertSelective(collect);
         if (radd > 0){return true;}

@@ -19,18 +19,6 @@
         where TeamId = #{TeamId,jdbcType=INTEGER}
     </select>
 
-    <select id="selectByID" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from team
-        where TeamId = #{TeamId,jdbcType=INTEGER}
-    </select>
-
-
-    <insert id="insertUserTeam" parameterType="upc.backend.entity.UserTeam">
-        INSERT INTO user_team(UserId, TeamId)
-        VALUES (#{UserId, jdbcType=INTEGER}, #{TeamId, jdbcType=INTEGER})
-    </insert>
     <select id="selectByTitle" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />

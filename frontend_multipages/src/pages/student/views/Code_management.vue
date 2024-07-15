@@ -2,9 +2,9 @@
   <div>
     <!-- 上方 Card -->
     <el-card class="account-container">
-      <h2 style="line-height: 10px">数据集管理</h2>
+      <h2 style="line-height: 10px">代码集管理</h2>
       <div style="line-height: 30px">
-        这是您个人上传的数据集的私人视图。要查看其他人上传的内容，请前往相关内容搜索。
+        这是您个人上传的代码集的私人视图。要查看其他人上传的内容，请前往相关内容搜索。
       </div>
     </el-card>
 
@@ -58,7 +58,7 @@
         >
         </el-table-column>
         <el-table-column
-            prop="dataName"
+            prop="codeName"
             label="名称"
             width="140"
             header-align="center"
@@ -66,7 +66,7 @@
         >
         </el-table-column>
         <el-table-column
-            prop="dataAbstract"
+            prop="codeAbstract"
             label="简介"
             width="390"
             header-align="center"
@@ -97,12 +97,12 @@
             align="center"
         >
           <template #default="scope">
-            <a style="cursor: pointer; margin-right: 10px" @click.stop="handleEdit(scope.row.dataId)">修改</a>
+            <a style="cursor: pointer; margin-right: 10px" @click.stop="handleEdit(scope.row.codeId)">修改</a>
             <el-popconfirm
                 title="确定删除吗？"
                 confirmButtonText='确定'
                 cancelButtonText='取消'
-                @confirm="() => handleDeleteOne(scope.row.dataId)"
+                @confirm="() => handleDeleteOne(scope.row.codeId)"
             >
               <template #reference>
                 <a style="cursor: pointer" @click.stop>删除</a>
@@ -159,7 +159,7 @@ const getReferences = (searchQuery = '') => {
   console.log('Selected Category:', selectedCategory.value) // Debug log
   if (selectedCategory.value === 'team') {
     // 按团队分组
-    axios.get('/dataset/listByTeam', {params}).then(res => {
+    axios.get('/code/listByTeam', {params}).then(res => {
       state.tableData = res.list
       state.total = res.totalCount
       state.currentPage = res.currPage
@@ -167,7 +167,7 @@ const getReferences = (searchQuery = '') => {
     })
   } else {
     // 按时间排序（默认）
-    axios.get('/dataset/listmanage', {params}).then(res => {
+    axios.get('/code/listmanage', {params}).then(res => {
       state.tableData = res.list
       state.total = res.totalCount
       state.currentPage = res.currPage
@@ -203,14 +203,14 @@ const changePage = (val) => {
 }
 
 const handleAdd = () => {
-  router.push('/teacher/datasetupload')
+  router.push('/student/codeupload')
 }
 
-const handleEdit = (dataId) => {
+const handleEdit = (codeId) => {
   router.push({
-    name: 'datasetedit',
+    name: 'codeedit',
     params: {
-      dataId: dataId
+      codeId: codeId
     }
   })
 }
@@ -224,9 +224,9 @@ const handleDelete = () => {
     ElMessage.error('请选择项')
     return
   }
-  axios.delete('/dataset', {
+  axios.delete('/code', {
     data: {
-      ids: state.multipleSelection.map(i => i.dataId)
+      ids: state.multipleSelection.map(i => i.codeId)
     }
   }).then(() => {
     ElMessage.success('删除成功')
@@ -234,10 +234,10 @@ const handleDelete = () => {
   })
 }
 
-const handleDeleteOne = (dataId) => {
-  axios.delete('/dataset', {
+const handleDeleteOne = (codeId) => {
+  axios.delete('/code', {
     data: {
-      ids: [dataId]
+      ids: [codeId]
     }
   }).then(() => {
     ElMessage.success('删除成功')
@@ -251,9 +251,9 @@ const handleRowClick = (row, column, event) => {
     return
   }
   router.push({
-    name: 'datasetDetail',
+    name: 'codeDetail',
     params: {
-      dataId: row.dataId
+      codeId: row.codeId
     }
   })
 }

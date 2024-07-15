@@ -79,7 +79,7 @@ public class TeamManagement {
     @RequestMapping(value = "/team/{teamId}", method = RequestMethod.GET)
 // "获取单条信息", "根据excelid查询"
     public Result info(@PathVariable("teamId") Integer teamId) {
-        Team team = teamService.getReferenceById(teamId);
+        Team team = teamService.getTeamByTeamId(teamId);
         if (team == null) {
             return ResultGenerator.genFailResult("未查询到数据");
         }

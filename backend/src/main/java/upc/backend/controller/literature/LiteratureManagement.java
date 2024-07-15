@@ -146,6 +146,7 @@ public class LiteratureManagement {
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+        collectService.deleteBatchByLiterId(batchIdParam.getIds());
         if (literatureService.deleteBatch(batchIdParam.getIds())) {
             return ResultGenerator.genSuccessResult();
         } else {

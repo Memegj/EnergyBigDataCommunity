@@ -4,9 +4,9 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import upc.backend.entity.Student;
 import upc.backend.entity.Team;
-import upc.backend.entity.UserTeam;
+import upc.backend.entity.Userteam;
 import upc.backend.mapper.TeamMapper;
-import upc.backend.mapper.UserTeamMapper;
+import upc.backend.mapper.UserteamMapper;
 import upc.backend.util.PageQueryUtil;
 import upc.backend.util.PageResult;
 
@@ -20,15 +20,11 @@ public class TeamService {
     private TeamMapper teamMapper;
 
     @Resource
-    private UserTeamMapper userTeamMapper;
+    private UserteamMapper userteamMapper;
 
     // 获取文献信息
     public Team getTeamByTeamId(Integer TeamId){
         return teamMapper.selectByTeamId(TeamId);
-    }
-    // 获取文献信息
-    public Team getReferenceById(Integer teamId){
-        return teamMapper.selectByID(teamId);
     }
 
     //更新文献信息
@@ -54,13 +50,9 @@ public class TeamService {
         if (radd > 0){return true;}
         else {return false;}
     }
-    public Boolean add_reference(Team team){
-        int radd = teamMapper.insertSelective(team);
-        if (radd > 0){return true;}
-        else {return false;}
-    }
-    public Boolean insertUserTeamById(UserTeam userteam){
-        int radd = teamMapper.insertUserTeam(userteam);
+
+    public Boolean insertUserTeamById(Userteam userteam){
+        int radd = userteamMapper.insertUserTeam(userteam);
         if (radd > 0){return true;}
         else {return false;}
     }
@@ -71,10 +63,10 @@ public class TeamService {
             // 获取插入后的团队ID
             Integer TeamId = team.getTeamId();
             // 插入 user_team 记录
-            UserTeam userTeam = new UserTeam();
-            userTeam.setUserId(UserId);
-            userTeam.setTeamId(TeamId);
-            userTeamMapper.insert(userTeam);
+            Userteam userteam = new Userteam();
+            userteam.setUserId(UserId);
+            userteam.setTeamId(TeamId);
+            userteamMapper.insert(userteam);
             return true;
         }
         return false;
@@ -110,7 +102,7 @@ public class TeamService {
             Map<String, Object> params = new HashMap<>();
             params.put("userId", userId);
             params.put("teamId", teamId);
-            userTeamMapper.deleteByTeamIdAndUserId(params);
+            userteamMapper.deleteByTeamIdAndUserId(params);
 
             // 删除 team 表中的记录
             teamMapper.deleteTeamById(teamId);

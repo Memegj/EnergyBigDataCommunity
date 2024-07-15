@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '@/pages/index/views/Login.vue'
 import Home from '@/pages/index/views/HomeView.vue'
-import ExcelExample from '@/pages/index/views/ExcelExample.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -21,12 +20,6 @@ const router = createRouter({
       component: Home,
     },
 
-
-    {
-      path: '/excelExample',
-      name: 'excelExample',
-      component: ExcelExample,
-    },
   ],
 })
 

@@ -203,7 +203,7 @@ const changePage = (val) => {
 }
 
 const handleAdd = () => {
-  router.push('/teacher/datasetupload')
+  router.push('/student/datasetupload')
 }
 
 const handleEdit = (dataId) => {

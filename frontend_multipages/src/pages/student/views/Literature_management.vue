@@ -2,9 +2,9 @@
   <div>
     <!-- 上方 Card -->
     <el-card class="account-container">
-      <h2 style="line-height: 10px">数据集管理</h2>
+      <h2 style="line-height: 10px">文献管理</h2>
       <div style="line-height: 30px">
-        这是您个人上传的数据集的私人视图。要查看其他人上传的内容，请前往相关内容搜索。
+        这是您个人上传的文献的私人视图。要查看其他人上传的内容，请前往相关内容搜索。
       </div>
     </el-card>
 
@@ -58,17 +58,33 @@
         >
         </el-table-column>
         <el-table-column
-            prop="dataName"
+            prop="literName"
             label="名称"
-            width="140"
+            width="300"
             header-align="center"
             align="center"
         >
         </el-table-column>
         <el-table-column
-            prop="dataAbstract"
-            label="简介"
-            width="390"
+            prop="literAuthor"
+            label="作者"
+            width="80"
+            header-align="center"
+            align="center"
+        >
+        </el-table-column>
+        <el-table-column
+            prop="sources"
+            label="来源"
+            width="180"
+            header-align="center"
+            align="center"
+        >
+        </el-table-column>
+        <el-table-column
+            prop="literType"
+            label="类型"
+            width="80"
             header-align="center"
             align="center"
         >
@@ -76,7 +92,7 @@
         <el-table-column
             prop="teamName"
             label="团队"
-            width="150"
+            width="130"
             header-align="center"
             align="center"
         >
@@ -84,7 +100,7 @@
         <el-table-column
             prop="uploadTime"
             label="上传时间"
-            width="250"
+            width="170"
             header-align="center"
             align="center"
             :formatter="(row) => formatUploadTime(row.uploadTime)"
@@ -97,12 +113,12 @@
             align="center"
         >
           <template #default="scope">
-            <a style="cursor: pointer; margin-right: 10px" @click.stop="handleEdit(scope.row.dataId)">修改</a>
+            <a style="cursor: pointer; margin-right: 10px" @click.stop="handleEdit(scope.row.literId)">修改</a>
             <el-popconfirm
                 title="确定删除吗？"
                 confirmButtonText='确定'
                 cancelButtonText='取消'
-                @confirm="() => handleDeleteOne(scope.row.dataId)"
+                @confirm="() => handleDeleteOne(scope.row.literId)"
             >
               <template #reference>
                 <a style="cursor: pointer" @click.stop>删除</a>
@@ -159,7 +175,7 @@ const getReferences = (searchQuery = '') => {
   console.log('Selected Category:', selectedCategory.value) // Debug log
   if (selectedCategory.value === 'team') {
     // 按团队分组
-    axios.get('/dataset/listByTeam', {params}).then(res => {
+    axios.get('/literature/listByTeam', {params}).then(res => {
       state.tableData = res.list
       state.total = res.totalCount
       state.currentPage = res.currPage
@@ -167,7 +183,7 @@ const getReferences = (searchQuery = '') => {
     })
   } else {
     // 按时间排序（默认）
-    axios.get('/dataset/listmanage', {params}).then(res => {
+    axios.get('/literature/listmanage', {params}).then(res => {
       state.tableData = res.list
       state.total = res.totalCount
       state.currentPage = res.currPage
@@ -203,14 +219,14 @@ const changePage = (val) => {
 }
 
 const handleAdd = () => {
-  router.push('/teacher/datasetupload')
+  router.push('/student/literatureupload')
 }
 
-const handleEdit = (dataId) => {
+const handleEdit = (literId) => {
   router.push({
-    name: 'datasetedit',
+    name: 'literatureedit',
     params: {
-      dataId: dataId
+      literId: literId
     }
   })
 }
@@ -224,9 +240,9 @@ const handleDelete = () => {
     ElMessage.error('请选择项')
     return
   }
-  axios.delete('/dataset', {
+  axios.delete('/literature', {
     data: {
-      ids: state.multipleSelection.map(i => i.dataId)
+      ids: state.multipleSelection.map(i => i.literId)
     }
   }).then(() => {
     ElMessage.success('删除成功')
@@ -234,10 +250,10 @@ const handleDelete = () => {
   })
 }
 
-const handleDeleteOne = (dataId) => {
-  axios.delete('/dataset', {
+const handleDeleteOne = (literId) => {
+  axios.delete('/literature', {
     data: {
-      ids: [dataId]
+      ids: [literId]
     }
   }).then(() => {
     ElMessage.success('删除成功')
@@ -251,9 +267,9 @@ const handleRowClick = (row, column, event) => {
     return
   }
   router.push({
-    name: 'datasetDetail',
+    name: 'literatureDetail',
     params: {
-      dataId: row.dataId
+      literId: row.literId
     }
   })
 }

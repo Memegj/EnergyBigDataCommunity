@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '@/pages/index/views/Login.vue'
 import Home from '@/pages/index/views/HomeView.vue'
-import About from '@/pages/index/views/ExcelExample.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -16,14 +15,14 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Index.vue')
     },
     {
-      path: '/admin/mycharts',
-      name: 'mycharts',
-      component: () => import( '@/pages/admin/views/Chart_Example.vue')
-    },
-    {
       path: '/admin/code_manage',
       name: 'code_manage',
       component: () => import( '@/pages/admin/views/Code_management.vue')
+    },
+    {
+      path: '/admin/dataset_manage',
+      name: 'dataset_manage',
+      component: () => import( '@/pages/admin/views/Datasets_management.vue')
     },
     {
       path: '/admin/literature_manage',
@@ -31,40 +30,14 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Literature_management.vue')
     },
     {
-      path: '/admin/file_upload',
-      name: 'file_upload',
-      component: () => import( '@/pages/admin/views/FileUpload.vue'),
-
-    },
-    {
-      path: '/admin/references',
-      name: 'references',
-      component: () => import( '@/pages/admin/views/References.vue')
-    },
-    {
       path: '/admin/user_manage',
       name: 'user_manage',
       component: () => import('@/pages/admin/views/UserManage.vue')
     },
     {
-      path: '/admin/gettable',
-      name: 'table',
-      component: () => import( '@/pages/admin/views/GetTable.vue')
-    },
-    {
       path: '/admin/collect',
       name: 'collect',
       component: () => import( '@/pages/teacher/views/Collectmanagement.vue')
-    },
-    {
-      path: '/admin/getfile',
-      name: 'file',
-      component: () => import( '@/pages/admin/views/GetFile.vue')
-    },
-    {
-      path: '/admin/getchart',
-      name: 'chart',
-      component: () => import( '@/pages/admin/views/GetChart.vue')
     },
     {
       path: '/admin/account',
@@ -107,12 +80,12 @@ const router = createRouter({
       component: () => import('@/pages/admin/views/Datasetedit.vue'),
       props: true // 通过 props 传递路由参数
     },
-      {
-          path: '/admin/codeedit/:codeId', // 添加 codeId 参数
-          name: 'codeedit',
-          component: () => import('@/pages/admin/views/Codeedit.vue'),
-          props: true // 通过 props 传递路由参数
-      },
+    {
+      path: '/admin/codeedit/:codeId', // 添加 codeId 参数
+      name: 'codeedit',
+      component: () => import('@/pages/admin/views/Codeedit.vue'),
+      props: true // 通过 props 传递路由参数
+    },
     {
       path: '/admin/literatureedit/:literId', // 添加 codeId 参数
       name: 'literatureedit',

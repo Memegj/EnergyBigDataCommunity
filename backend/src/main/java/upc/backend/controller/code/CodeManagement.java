@@ -78,6 +78,7 @@ public class CodeManagement {
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+        collectService.deleteBatchByCodeId(batchIdParam.getIds());
         if (codeService.deleteBatch(batchIdParam.getIds())) {
             return ResultGenerator.genSuccessResult();
         } else {
