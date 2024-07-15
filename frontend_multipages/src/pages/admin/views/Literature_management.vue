@@ -219,7 +219,7 @@ const changePage = (val) => {
 }
 
 const handleAdd = () => {
-  router.push('/teacher/literatureupload')
+  router.push('/admin/literatureupload')
 }
 
 const handleEdit = (literId) => {

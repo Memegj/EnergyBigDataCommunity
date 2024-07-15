@@ -203,7 +203,7 @@ const changePage = (val) => {
 }
 
 const handleAdd = () => {
-  router.push('/teacher/codeupload')
+  router.push('/admin/codeupload')
 }
 
 const handleEdit = (codeId) => {

@@ -17,21 +17,6 @@
           <div class="download-info">
             <span class="download-label">下载量: {{ state.fileParams.DownloadTimes }}</span>
             <el-button type="primary" @click="handleDownload">下载 ({{ formattedFileSize }})</el-button>
-
-            <el-button
-                type="primary"
-                @click="handleCollect"
-                v-if="state.fileParams.CollectId"
-            >
-              <el-icon><StarFilled /></el-icon> 取消收藏
-            </el-button>
-            <el-button
-                type="primary"
-                @click="handleCollect"
-                v-else
-            >
-              <el-icon><Star /></el-icon> 添加收藏
-            </el-button>
           </div>
         </div>
       </div>
@@ -133,34 +118,6 @@ const handleDownload = async () => {
   }
 };
 
-const handleCollect = async () => {
-  console.log('CollectId:', state.fileParams.CollectId);
-  console.log('Token:', state.token);
-
-  try {
-    if (state.fileParams.CollectId) {
-      // 取消收藏
-      await axios.delete('/dataset/collect', {
-        data: {ids: [state.fileParams.CollectId]},
-        headers: {'token': state.token}
-      });
-      ElMessage.success('已取消收藏');
-    } else {
-      // 收藏
-      const params = {
-        dataId: dataId.value,
-      };
-      await axios.post('/dataset/collect', params, {
-        headers: {'token': state.token}
-      });
-      ElMessage.success('已收藏');
-    }
-    getDetail(dataId.value); // 重新获取详情以更新页面状态
-  } catch (error) {
-    console.error('Failed to update collect status:', error.response ? error.response.data : error);
-    ElMessage.error('操作失败: ' + (error.response ? error.response.data.message : error.message));
-  }
-};
 
 onMounted(() => {
   getDetail(dataId.value);

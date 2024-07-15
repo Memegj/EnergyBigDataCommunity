@@ -40,5 +40,8 @@ export const pathMap = {
   user_manage:"用户管理",
   datasetedit: '数据集修改',
   datasetDetail: '数据集详情',
-  code_manage: '代码集'
+  code_manage: '代码集',
+  literature_manage: '文献资料',
+  codeupload: '代码上传',
+  literatureupload: '文献资料上传',
 }
