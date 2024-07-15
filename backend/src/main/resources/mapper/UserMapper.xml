@@ -33,6 +33,11 @@
         where UserId = #{UserId,jdbcType=INTEGER}
     </select>
 
+    <select id="getUserNameByUserId" >
+        select UserName
+        from user
+        where UserId = #{UserId,jdbcType=INTEGER}
+    </select>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />

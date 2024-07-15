@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.CodeMapper">
+
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Code">
+        <id column="CodeId" jdbcType="INTEGER" property="CodeId"/>
+        <result column="CodeName" jdbcType="VARCHAR" property="CodeName"/>
+        <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime"/>
+        <result column="CodeAbstract" jdbcType="VARCHAR" property="CodeAbstract"/>
+        <result column="CodeDetails" jdbcType="LONGVARCHAR" property="CodeDetails"/>
+        <result column="DownloadTimes" jdbcType="INTEGER" property="DownloadTimes"/>
+        <result column="UserId" jdbcType="INTEGER" property="UserId"/>
+        <result column="Url" jdbcType="VARCHAR" property="Url"/>
+        <result column="TeamId" jdbcType="INTEGER" property="TeamId"/>
+        <result column="UserName" jdbcType="VARCHAR" property="UserName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CodeId, CodeName, UploadTime, CodeAbstract, CodeDetails, DownloadTimes, UserId, TeamId, Url
+    </sql>
+
+    <select id="selectByCodeId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM code
+        WHERE CodeId = #{CodeId, jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByTeamIds" resultMap="BaseResultMap">
+        SELECT
+        code.CodeId,
+        code.CodeName,
+        code.UploadTime,
+        code.CodeAbstract,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        code.TeamId AS teamId
+        FROM code
+        JOIN user ON code.UserId = user.UserId
+        WHERE
+        teamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR teamId IS NULL
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            LIMIT #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+    </select>
+    <insert id="insertSelective" parameterType="upc.backend.entity.Code">
+        insert into code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="CodeId != null">
+                CodeId,
+            </if>
+            <if test="CodeName != null">
+                CodeName,
+            </if>
+            <if test="UploadTime != null">
+                UploadTime,
+            </if>
+            <if test="CodeAbstract != null">
+                CodeAbstract,
+            </if>
+            <if test="CodeDetails != null">
+                CodeDetails,
+            </if>
+            <if test="DownloadTimes != null">
+                DownloadTimes,
+            </if>
+            <if test="UserId != null">
+                UserId,
+            </if>
+            <if test="TeamId != null">
+                TeamId,
+            </if>
+            <if test="Url != null">
+                Url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="CodeId != null">
+                #{CodeId, jdbcType=INTEGER},
+            </if>
+            <if test="CodeName != null">
+                #{CodeName, jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                #{UploadTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="CodeAbstract != null">
+                #{CodeAbstract, jdbcType=VARCHAR},
+            </if>
+            <if test="CodeDetails != null">
+                #{CodeDetails, jdbcType=LONGVARCHAR},
+            </if>
+            <if test="DownloadTimes != null">
+                #{DownloadTimes, jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                #{UserId, jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                #{TeamId, jdbcType=INTEGER},
+            </if>
+            <if test="Url != null">
+                #{Url, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Code">
+        update code
+        <set>
+            <if test="CodeName != null">
+                CodeName = #{CodeName,jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="CodeAbstract != null">
+                CodeAbstract = #{CodeAbstract,jdbcType=VARCHAR},
+            </if>
+            <if test="CodeDetails != null">
+                CodeDetails = #{CodeDetails,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="DownloadTimes != null">
+                DownloadTimes = #{DownloadTimes,jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                UserId = #{UserId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                TeamId = #{TeamId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId == null">
+                TeamId = null,
+            </if>
+            <if test="Url != null">
+                Url = #{Url,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CodeId = #{CodeId,jdbcType=INTEGER}
+    </update>
+    <select id="getNumOfTotalCodeByUserId" parameterType="Map" resultType="int">
+        select count(*) from code
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and CodeName like concat('%', #{searchQuery}, '%')
+        </if>
+    </select>
+    <select id="findAllCodeListByUserIdOrderByTime" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and CodeName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by UploadTime desc
+        <if test="start != null and limit != null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+    <select id="findAllCodeListByUserIdOrderByTeamId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and CodeName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by TeamId
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <select id="getNumOfTotalCode" resultType="int">
+        SELECT COUNT(*) FROM code
+    </select>
+    <select id="getNumOfUserCode" resultType="int">
+        SELECT COUNT(*)
+        FROM code
+        WHERE
+        TeamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR TeamId IS NULL
+    </select>
+
+    <select id="findAllCodeList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        code.CodeName,
+        code.UploadTime,
+        code.CodeAbstract,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        code.TeamId AS teamId
+        FROM code
+        JOIN user ON code.UserId = user.UserId
+        <if test="start != null and limit != null">
+            LIMIT #{start}, #{limit}
+        </if>
+    </select>
+
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        DELETE FROM code
+        WHERE CodeId IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

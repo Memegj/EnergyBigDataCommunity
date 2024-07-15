@@ -9,13 +9,12 @@ import lombok.Setter;
 @Data
 public class Collect {
     private Integer CollectId;
-
-    private String  CollectType;
-    private Integer UserId;
-    private Integer CodeId;
-    private Integer LiterId;
+    private String CollectType;
     private Integer DataId;
     private Integer VideoId;
+    private Integer LiterId;
+    private Integer CodeId;
+    private Integer UserId;
     private String DataName;
     private String UploadTime;
 

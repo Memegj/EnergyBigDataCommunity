@@ -14,6 +14,9 @@
         <result column="VideoId" jdbcType="INTEGER" property="VideoId" />
 
     </resultMap>
+    <sql id="Base_Column_List">
+        CollectId, CollectType, DataId, CodeId, VideoId, LiterId, UserId
+    </sql>
     <select id="getCollectionByUserId" parameterType="Map" resultMap="BaseResultMap">
         SELECT
         c.CollectId,
@@ -65,58 +68,174 @@
         SELECT COUNT(*) FROM collect WHERE UserId = #{userId} AND (#{selectedCategory} IS NULL OR CollectType = #{selectedCategory})
     </select>
 
-    <select id="getCollectionByUserId1" parameterType="Map" resultMap="BaseResultMap">
-        SELECT
-        c.CollectId,
-        c.CollectType,
-        c.UserId,
-        c.CodeId,
-        c.LiterId,
-        c.DataId,
-        c.VideoId,
-        CASE
-        WHEN c.CodeId IS NOT NULL THEN co.CodeName
-        WHEN c.LiterId IS NOT NULL THEN li.LiterName
-        WHEN c.DataId IS NOT NULL THEN da.DataName
-        WHEN c.VideoId IS NOT NULL THEN vi.VideoName
-        END AS DataName,
-        CASE
-        WHEN c.CodeId IS NOT NULL THEN co.UploadTime
-        WHEN c.LiterId IS NOT NULL THEN li.UploadTime
-        WHEN c.DataId IS NOT NULL THEN da.UploadTime
-        WHEN c.VideoId IS NOT NULL THEN vi.UploadTime
-        END AS UploadTime,
-        -- 获取与收藏相关的团队名称
-        (SELECT TeamName FROM team WHERE TeamId =
-        CASE
-        WHEN c.CodeId IS NOT NULL THEN co.TeamId
-        WHEN c.DataId IS NOT NULL THEN da.TeamId
-        WHEN c.VideoId IS NOT NULL THEN vi.TeamId
-        WHEN c.LiterId IS NOT NULL THEN li.TeamId
-        END
-        ) AS TeamName
-        FROM
-        collect c
-        LEFT JOIN code co ON c.CodeId = co.CodeId
-        LEFT JOIN literature li ON c.LiterId = li.LiterId
-        LEFT JOIN datasets da ON c.DataId = da.DataId
-        LEFT JOIN video vi ON c.VideoId = vi.VideoId
-        WHERE
-        c.UserId = #{userId}
-        AND  c.CollectType = #{selectedCategory})
-        <if test="start != null and limit != null">
-            LIMIT #{start}, #{limit}
-        </if>
-    </select>
-
-
-    <select id="getNumOfTotalCollect1" parameterType="Map" resultType="int">
-        SELECT COUNT(*) FROM collect WHERE UserId = #{userId} AND (#{selectedCategory} IS NULL OR CollectType = #{selectedCategory})
-    </select>
-
     <delete id="deleteCollectById" parameterType="map">
         DELETE FROM collect
         WHERE CollectId = #{collectId} AND UserId = #{userId}
     </delete>
 
+    <select id="selectByDataId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from collect
+        where DataId = #{dataid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByCodeId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from collect
+        where CodeId = #{codeid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByVideoId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from collect
+        where VideoId = #{videoid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByLiterId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from collect
+        where LiterId = #{literid,jdbcType=INTEGER}
+        and UserId = #{userid,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByCollectType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from collect
+        where CollectType = #{CollectType,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="upc.backend.entity.Collect">
+        insert into collect (CollectId, CollectType, DataId, CodeId, VideoId, LiterId, UserId)
+        values (#{CollectId,jdbcType=INTEGER}, #{CollectType,jdbcType=VARCHAR}, #{DataId,jdbcType=INTEGER}, #{CodeId,jdbcType=INTEGER},
+        #{VideoId,jdbcType=INTEGER}, #{LiterId,jdbcType=INTEGER}, #{UserId,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.Collect">
+        insert into collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="CollectId != null">
+                CollectId,
+            </if>
+            <if test="CollectType != null">
+                CollectType,
+            </if>
+            <if test="DataId != null">
+                DataId,
+            </if>
+            <if test="CodeId != null">
+                CodeId,
+            </if>
+            <if test="VideoId != null">
+                VideoId,
+            </if>
+            <if test="LiterId != null">
+                LiterId,
+            </if>
+            <if test="UserId != null">
+                UserId,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="CollectId != null">
+                #{CollectId, jdbcType=INTEGER},
+            </if>
+            <if test="CollectType != null">
+                #{CollectType, jdbcType=VARCHAR},
+            </if>
+            <if test="DataId != null">
+                #{DataId, jdbcType=INTEGER},
+            </if>
+            <if test="CodeId != null">
+                #{CodeId, jdbcType=INTEGER},
+            </if>
+            <if test="VideoId != null">
+                #{VideoId, jdbcType=INTEGER},
+            </if>
+            <if test="LiterId != null">
+                #{LiterId, jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                #{UserId, jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Collect">
+        update collect
+        <set>
+            <if test="CollectType != null">
+                CollectType = #{CollectType,jdbcType=VARCHAR},
+            </if>
+            <if test="DataId != null">
+                DataId = #{DataId,jdbcType=INTEGER},
+            </if>
+            <if test="CodeId != null">
+                CodeId = #{CodeId,jdbcType=INTEGER},
+            </if>
+            <if test="VideoId != null">
+                VideoId = #{VideoId,jdbcType=INTEGER},
+            </if>
+            <if test="LiterId != null">
+                LiterId = #{LiterId,jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                UserId = #{UserId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where CollectId = #{CollectId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.Collect">
+        update collect
+        set CollectType = #{CollectType,jdbcType=VARCHAR},
+        DataId = #{DataId,jdbcType=INTEGER},
+        CodeId = #{CodeId,jdbcType=INTEGER},
+        VideoId = #{VideoId,jdbcType=INTEGER},
+        LiterId = #{LiterId,jdbcType=INTEGER},
+        UserId = #{UserId,jdbcType=INTEGER}
+        where CollectId = #{CollectId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteBatchByDataId" parameterType="java.lang.Integer">
+        delete from collect
+        where DataId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBatchByCodeId" parameterType="java.lang.Integer">
+        delete from collect
+        where CodeId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBatchByLiterId" parameterType="java.lang.Integer">
+        delete from collect
+        where LiterId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBatchByVideoId" parameterType="java.lang.Integer">
+        delete from collect
+        where VideoId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from collect
+        where CollectId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

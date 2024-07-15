@@ -1,173 +1,216 @@
 <template>
-  <el-card class="references-container">
-    <template #header>
-      <div class="header">
-        <el-button type="primary" :icon="Plus" @click="handleAdd">增加</el-button>
-        <el-popconfirm
-            title="确定删除吗？"
-            confirmButtonText='确定'
-            cancelButtonText='取消'
-            @confirm="handleDelete"
-        >
-          <template #reference>
-            <el-button type="danger" :icon="Delete">批量删除</el-button>
-          </template>
-        </el-popconfirm>
+  <div>
+    <!-- 上方 Card -->
+    <el-card class="account-container">
+      <h2>代码集</h2>
+      <div style="line-height: 30px">
+        探索、分析与共享代码集
       </div>
-    </template>
-    <el-table
-        v-loading="state.loading"
-        ref="multipleTable"
-        :data="state.tableData"
-        tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-      <el-table-column
-          type="selection"
-          width="55"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="CodeName"
-          label="Code名称"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="UploadTime"
-          label="上传时间"
-          width="200"
-      >
-      </el-table-column>
+    </el-card>
 
-      <el-table-column
-          prop="TeamName"
-          label="上传团队"
-          width="200"
-      >
-      </el-table-column>
-      <el-table-column
-          label="操作"
-          width="220"
-      >
-        <template #default="scope">
-          <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.codeid)">修改</a>
-          <el-popconfirm
-              title="确定删除吗？"
-              confirmButtonText='确定'
-              cancelButtonText='取消'
-              @confirm="handleDeleteOne(scope.row.codeid)"
-          >
-            <template #reference>
-              <a style="cursor: pointer">删除</a>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--总数超过一页，再展示分页器-->
-    <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="state.total"
-        :page-size="state.pageSize"
-        :current-page="state.currentPage"
-        @current-change="changePage"
-    />
-    <DialogAddCode ref="addRef" :reload="table_data_reload" :type="state.type" />
-  </el-card>
+    <!-- 下方 Card -->
+    <el-card class="references-container">
+      <!-- 搜索 Row -->
+      <el-row class="search-row">
+        <el-col :span="22">
+          <el-input placeholder="搜索" v-model="searchQuery" class="search-input">
+            <el-button slot="append" icon="el-icon-search" @click="search">搜索</el-button>
+          </el-input>
+        </el-col>
+        <el-col :span="2" style="text-align: right;">
+          <el-button type="primary" @click="search">搜索</el-button>
+        </el-col>
+      </el-row>
+
+      <el-table
+          :data="pagedData"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @row-click="handleRowClick">
+        <el-table-column
+            prop="codeName"
+            label="名称"
+            width="250"
+            header-align="center"
+            align="center">
+        </el-table-column>
+        <el-table-column
+            prop="codeAbstract"
+            label="简介"
+            width="350"
+            header-align="center"
+            align="center">
+        </el-table-column>
+        <el-table-column
+            prop="userName"
+            label="上传人"
+            width="100"
+            header-align="center"
+            align="center">
+        </el-table-column>
+        <el-table-column
+            prop="teamName"
+            label="团队"
+            width="200"
+            header-align="center"
+            align="center">
+        </el-table-column>
+        <el-table-column
+            prop="uploadTime"
+            label="上传时间"
+            width="180"
+            header-align="center"
+            align="center"
+            :formatter="(row) => formatUploadTime(row.uploadTime)">
+        </el-table-column>
+      </el-table>
+
+      <!-- 总数超过一页，再展示分页器 -->
+      <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="filteredData.length"
+          :page-size="state.pageSize"
+          :current-page="state.currentPage"
+          @current-change="changePage" />
+      <DialogAddStu ref='addStu' :reload="table_data_reload"></DialogAddStu>
+    </el-card>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, reactive, ref, toRefs, watchEffect } from 'vue'
+import { onMounted, reactive, ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { Plus, Delete } from '@element-plus/icons-vue'
 import axios from '@/utils/axios'
-import DialogAddReference from '@/components/DialogAddReference.vue'
+import DialogAddStu from "@/components/DialogAddStu.vue"
 
 const addRef = ref(null)
 const router = useRouter() // 声明路由实例
-useRoute();
-// 获取路由参数
+const route = useRoute() // 获取路由参数
+let addStu = ref(null)
 const state = reactive({
   loading: false,
-  tableData: [], // 数据列表
+  allCode: [], // 所有数据列表
   multipleSelection: [], // 选中项
   total: 0, // 总条数
   currentPage: 1, // 当前页
-  pageSize: 10, // 分页大小
-  type: 'add' // 操作类型
+  pageSize: 5, // 分页大小
+  isPublic: ''
 })
+const searchQuery = ref('')
+const searchTriggered = ref(false) // 用于标记是否点击了搜索按钮
+
 onMounted(() => {
-  getExcel()
+  getAllReferences()
 })
 
-// 获取分类列表
-const getExcel = () => {
+// 获取所有数据列表
+const getAllReferences = () => {
   state.loading = true
-  axios.get('/excel1/list1', {
+  axios.get('/code/list', {
     params: {
-      pageNumber: state.currentPage,
-      pageSize: state.pageSize,
+      pageNumber: 1,
+      pageSize: 10000, // 假设数据量不会超过10000条
     }
   }).then(res => {
-    state.tableData = res.list
+    state.allCode = res.list
     state.total = res.totalCount
-    state.currentPage = res.currPage
     state.loading = false
+    updateTableCode()
   })
 }
+
 const changePage = (val) => {
   state.currentPage = val
-  getExcel()
+  updateTableCode()
 }
 
-// 添加分类
-const handleAdd = () => {
-  state.type = 'add'
-  addRef.value.open()
-}
-// 修改分类
-
-// 选择项
-const handleSelectionChange = (val) => {
-  state.multipleSelection = val
-}
-const handleEdit = (CodeId) => {
-  state.type = 'edit'
-  addRef.value.open(CodeId)
-}
-// 批量删除
-const handleDelete = () => {
-  if (!state.multipleSelection.length) {
-    ElMessage.error('请选择项')
-    return
-  }
-  axios.delete('/excel1', {
-    data: {
-      ids: state.multipleSelection.map(i => i.codeid)
-    }
-  }).then(() => {
-    ElMessage.success('删除成功')
-    getExcel()
-  })
-}
-const handleDeleteOne = (codeid) => {
-  axios.delete('/excel1', {
-    data: {
-      ids: [codeid]
-    }
-  }).then(() => {
-    ElMessage.success('删除成功')
-    getExcel()
-  })
-}
 const table_data_reload = () => {
-  getExcel()
+  getAllReferences()
 }
+
+// 搜索功能
+const search = () => {
+  state.currentPage = 1
+  searchTriggered.value = true
+  updateTableCode()
+}
+
+const formatUploadTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+}
+
+const handleRowClick = (row) => {
+  router.push({
+    name: 'codeDetail',
+    params: {
+      codeId: row.codeId
+    }
+  })
+}
+
+// 更新当前页数据
+const updateTableCode = () => {
+  state.tableCode = pagedData.value
+}
+
+// 过滤后的数据
+const filteredData = computed(() => {
+  if (!searchTriggered.value) return state.allCode
+  return state.allCode.filter(row => {
+    return ['codeName', 'codeAbstract', 'userName', 'teamName', 'codeId'].some(key => {
+      return String(row[key]).toLowerCase().includes(searchQuery.value.toLowerCase())
+    })
+  })
+})
+
+// 当前页数据
+const pagedData = computed(() => {
+  return filteredData.value.slice((state.currentPage - 1) * state.pageSize, state.currentPage * state.pageSize)
+})
+
+// 监听 searchQuery 的变化，重置标记
+watch(searchQuery, (newVal) => {
+  if (newVal === '') {
+    searchTriggered.value = false
+    updateTableCode() // 清除搜索内容后，重新显示所有数据
+  }
+})
 
 </script>
 
-<style>
+<style scoped>
+.account-container {
+  margin-bottom: 5px;
+  padding: 0;
+}
 
+.data-set-management {
+  padding: 0;
+}
+
+.search-row {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+}
+
+.action-row {
+  margin-bottom: 20px;
+}
+
+.category-select {
+  width: 150px;
+}
 </style>

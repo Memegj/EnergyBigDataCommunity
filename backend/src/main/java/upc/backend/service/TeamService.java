@@ -2,6 +2,7 @@ package upc.backend.service;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import upc.backend.entity.Student;
 import upc.backend.entity.Team;
 import upc.backend.entity.UserTeam;
 import upc.backend.mapper.TeamMapper;
@@ -22,12 +23,44 @@ public class TeamService {
     private UserTeamMapper userTeamMapper;
 
     // 获取文献信息
+    public Team getTeamByTeamId(Integer TeamId){
+        return teamMapper.selectByTeamId(TeamId);
+    }
+    // 获取文献信息
     public Team getReferenceById(Integer teamId){
         return teamMapper.selectByID(teamId);
     }
 
+    //更新文献信息
+    public Boolean updateTeamInfo(Team team){
+        int radd = teamMapper.updateByPrimaryKeySelective(team);
+        if (radd > 0){return true;}
+        else {return false;}
+    }
     public Boolean updateReferenceInfo(Team team){
         int radd = teamMapper.updateByPrimaryKeySelective(team);
+        if (radd > 0){return true;}
+        else {return false;}
+    }
+
+    public PageResult getTeamPage(PageQueryUtil pageUtil){
+        List<Team> team = teamMapper.findAllTeamList(pageUtil);
+        int total = teamMapper.getNumOfTotalTeam(pageUtil);
+        PageResult pageResult = new PageResult(team, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+    public Boolean add_team(Team team){
+        int radd = teamMapper.insertSelective(team);
+        if (radd > 0){return true;}
+        else {return false;}
+    }
+    public Boolean add_reference(Team team){
+        int radd = teamMapper.insertSelective(team);
+        if (radd > 0){return true;}
+        else {return false;}
+    }
+    public Boolean insertUserTeamById(UserTeam userteam){
+        int radd = teamMapper.insertUserTeam(userteam);
         if (radd > 0){return true;}
         else {return false;}
     }
@@ -46,7 +79,7 @@ public class TeamService {
         }
         return false;
     }
-//    public PageResult getReferencesPage(PageQueryUtil pageUtil){
+    //    public PageResult getReferencesPage(PageQueryUtil pageUtil){
 //        List<Team> team = teamMapper.findAllReferenceList(pageUtil);
 //        int total = teamMapper.getNumOfTotalReferences(pageUtil);
 //       // PageResult pageResult = new PageResult(excel, total, pageUtil.getLimit(), pageUtil.getPage());
@@ -57,24 +90,14 @@ public class TeamService {
         int total = teamMapper.getNumOfTotalReferences(pageUtil);
         return new PageResult(team, total, pageUtil.getLimit(), pageUtil.getPage());
     }
-    public PageResult getTeamPage(PageQueryUtil pageUtil) {
-        List<Team> team = teamMapper.findAllTeamList(pageUtil);
-        int total = teamMapper.getNumOfTotalTeam(pageUtil);
-        return new PageResult(team, total, pageUtil.getLimit(), pageUtil.getPage());
+    public String getTeamNameByTeamId(Integer TeamId){
+        return teamMapper.getTeamNameByTeamId(TeamId);
     }
-    public Boolean add_reference(Team team){
-        int radd = teamMapper.insertSelective(team);
-        if (radd > 0){return true;}
-        else {return false;}
+    public List<Team> getTeamByTeamIds(List<Integer> teamIds) {
+        return teamMapper.selectByTeamIds(teamIds);
     }
 
-    public Boolean insertUserTeamById(UserTeam userteam){
-        int radd = teamMapper.insertUserTeam(userteam);
-        if (radd > 0){return true;}
-        else {return false;}
-    }
-
-    public Boolean deleteBatch1(Integer[] ids) {
+        public Boolean deleteBatch(Integer[] ids) {
         if (ids.length < 1) {
             return false;
         }

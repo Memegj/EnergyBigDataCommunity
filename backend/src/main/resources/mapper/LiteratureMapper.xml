@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.LiteratureMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Literature">
+        <id column="LiterId" jdbcType="INTEGER" property="LiterId" />
+        <result column="LiterName" jdbcType="VARCHAR" property="LiterName" />
+        <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime" />
+        <result column="LiterDigest" jdbcType="LONGVARCHAR" property="LiterDigest" />
+        <result column="LiterType" jdbcType="VARCHAR" property="LiterType" />
+        <result column="LiterAuthor" jdbcType="VARCHAR" property="LiterAuthor" />
+        <result column="Sources" jdbcType="VARCHAR" property="Sources" />
+        <result column="KeyWord" jdbcType="VARCHAR" property="KeyWord" />
+        <result column="DownloadTimes" jdbcType="INTEGER" property="DownloadTimes" />
+        <result column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
+        <result column="Url" jdbcType="VARCHAR" property="Url" />
+
+
+    </resultMap>
+    <sql id="Base_Column_List">
+        LiterId, LiterName, UploadTime, LiterDigest, LiterType, LiterAuthor, Sources, KeyWord, DownloadTimes, UserId, TeamId, Url
+    </sql>
+
+    <select id="selectByLiterId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from literature
+        where LiterId = #{LiterId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByLiterName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from literature
+        where LiterName = #{LiterName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByUploadTime" resultMap="BaseResultMap">
+        select count(*) from literature
+        order by UploadTime desc
+    </select>
+    <select id="selectByTeamIdsByType" resultMap="BaseResultMap">
+        SELECT
+        literature.LiterId,
+        literature.LiterName,
+        literature.UploadTime,
+        literature.LiterAuthor,
+        Sources,
+        literature.LiterType,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        literature.TeamId AS teamId
+        FROM literature
+        JOIN user ON literature.UserId = user.UserId
+        WHERE
+        <if test="pageUtil.litertype != null and pageUtil.litertype != ''">
+            literature.LiterType = #{pageUtil.litertype, jdbcType=VARCHAR}
+            AND (teamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR teamId IS NULL)
+        </if>
+        <if test="pageUtil.litertype == null or pageUtil.litertype == ''">
+            teamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR teamId IS NULL
+        </if>
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            limit #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+    </select>
+
+    <select id="getNumOfUserLiterature" resultType="int">
+        SELECT COUNT(*)
+        FROM literature
+        WHERE
+        TeamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR TeamId IS NULL
+    </select>
+    <select id="getNumOfUserLiteratureByType" resultType="int">
+        SELECT COUNT(*)
+        FROM literature
+        WHERE
+        <if test="pageUtil.litertype != null and pageUtil.litertype != ''">
+            LiterType = #{pageUtil.litertype, jdbcType=INTEGER}
+            AND (TeamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR TeamId IS NULL)
+        </if>
+        <if test="pageUtil.litertype == null or pageUtil.litertype == ''">
+            TeamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR TeamId IS NULL
+        </if>
+    </select>
+
+
+    <select id="getNumOfTotalLiterature" parameterType="Map" resultType="int">
+        select count(*) from literature
+    </select>
+    <select id="getNumOfTotalLiteratureByUserId" parameterType="Map" resultType="int">
+        select count(*) from literature
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and LiterName like concat('%', #{searchQuery}, '%')
+        </if>
+    </select>
+    <select id="findAllLiteratureList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from literature
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <select id="findAllLiteratureListByUserId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from literature
+        where UserId = #{userid}
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <select id="findAllLiteratureListByUserIdOrderByTime" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from literature
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and LiterName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by UploadTime desc
+        <if test="start != null and limit != null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+    <select id="findAllLiteratureListByUserIdOrderByTeamId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from literature
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and LiteraName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by TeamId
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="upc.backend.entity.Literature">
+        insert into literature (LiterId, LiterName, UploadTime, LiterDigest, LiterType, LiterAuthor, Sources,
+                                KeyWord, DownloadTimes, UserId, TeamId, Url)
+        values (#{LiterId,jdbcType=INTEGER}, #{LiterName,jdbcType=VARCHAR}, #{UploadTime,jdbcType=TIMESTAMP},
+                #{LiterDigest,jdbcType=LONGVARCHAR}, #{LiterType,jdbcType=VARCHAR}, #{LiterAuthor,jdbcType=VARCHAR},
+                #{Sources,jdbcType=VARCHAR}, #{KeyWord,jdbcType=VARCHAR}, #{DownloadTimes,jdbcType=INTEGER},
+                #{UserId,jdbcType=INTEGER}, #{TeamId,jdbcType=INTEGER}, #{Url,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.Literature">
+        insert into literature
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="LiterId != null">
+                LiterId,
+            </if>
+            <if test="LiterName != null">
+                LiterName,
+            </if>
+            <if test="UploadTime != null">
+                UploadTime,
+            </if>
+            <if test="LiterDigest != null">
+                LiterDigest,
+            </if>
+            <if test="LiterType != null">
+                LiterType,
+            </if>
+            <if test="LiterAuthor != null">
+                LiterAuthor,
+            </if>
+            <if test="Sources != null">
+                Sources,
+            </if>
+            <if test="KeyWord != null">
+                KeyWord,
+            </if>
+            <if test="DownloadTimes != null">
+                DownloadTimes,
+            </if>
+            <if test="UserId != null">
+                UserId,
+            </if>
+            <if test="TeamId != null">
+                TeamId,
+            </if>
+            <if test="Url != null">
+                Url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="LiterId != null">
+                #{LiterId, jdbcType=INTEGER},
+            </if>
+            <if test="LiterName != null">
+                #{LiterName, jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                #{UploadTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="LiterDigest != null">
+                #{LiterDigest, jdbcType=LONGVARCHAR},
+            </if>
+            <if test="LiterType != null">
+                #{LiterType, jdbcType=VARCHAR},
+            </if>
+            <if test="LiterAuthor != null">
+                #{LiterAuthor, jdbcType=VARCHAR},
+            </if>
+            <if test="Sources != null">
+                #{Sources, jdbcType=VARCHAR},
+            </if>
+            <if test="KeyWord != null">
+                #{KeyWord, jdbcType=VARCHAR},
+            </if>
+            <if test="DownloadTimes != null">
+                #{DownloadTimes, jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                #{UserId, jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                #{TeamId, jdbcType=INTEGER},
+            </if>
+            <if test="Url != null">
+                #{Url, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Literature">
+        update literature
+        <set>
+            <if test="LiterName != null">
+                LiterName = #{LiterName,jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="LiterDigest != null">
+                LiterDigest = #{LiterDigest,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="LiterType != null">
+                LiterType = #{LiterType,jdbcType=VARCHAR},
+            </if>
+            <if test="LiterAuthor != null">
+                LiterAuthor = #{LiterAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="Sources != null">
+                Sources = #{Sources,jdbcType=VARCHAR},
+            </if>
+            <if test="KeyWord != null">
+                KeyWord = #{KeyWord,jdbcType=VARCHAR},
+            </if>
+            <if test="DownloadTimes != null">
+                DownloadTimes = #{DownloadTimes,jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                UserId = #{UserId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                TeamId = #{TeamId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId == null">
+                TeamId = null,
+            </if>
+            <if test="Url != null">
+                Url = #{Url,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where LiterId = #{LiterId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.Literature">
+        update literature
+        set LiterName = #{LiterName,jdbcType=VARCHAR},
+            UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
+            LiterDigest = #{LiterDigest,jdbcType=LONGVARCHAR},
+            LiterType = #{LiterType,jdbcType=VARCHAR},
+            LiterAuthor = #{LiterAuthor,jdbcType=VARCHAR},
+            Sources = #{Sources,jdbcType=VARCHAR},
+            KeyWord = #{KeyWord,jdbcType=VARCHAR},
+            DownloadTimes = #{DownloadTimes,jdbcType=INTEGER},
+            UserId = #{UserId,jdbcType=INTEGER},
+            TeamId = #{UserId,jdbcType=INTEGER},
+            Url = #{Url,jdbcType=VARCHAR}
+        where LiterId = #{LiterId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from literature
+        where LiterId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -13,8 +13,14 @@ public interface TeamMapper {
     int insertUserTeam(UserTeam userteam);
 
     List<Team> selectByTitle(String teamname);
+
     Team  selectByID(Integer teamId);
 
+    String getTeamNameByTeamId(Integer TeamId);
+
+    List<Team> selectByTeamIds(List<Integer> TeamIds);
+
+    Team selectByTeamId(Integer TeamId);
 
     int updateByPrimaryKeySelective(Team team);
 
