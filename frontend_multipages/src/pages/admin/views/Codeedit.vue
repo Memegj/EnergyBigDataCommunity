@@ -197,11 +197,6 @@ const handleUrlSuccess = (val) => {
   state.uploadProgress = null
 }
 
-const getHost = () => {
-  const {protocol, hostname, port} = window.location
-  return `${protocol}//${hostname}${port ? `:${port}` : ''}`
-}
-
 const getTeamOptions = () => {
   //读取和设置姓名下拉框
   axios.get('/code/teamlist')

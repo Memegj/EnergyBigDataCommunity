@@ -7,7 +7,7 @@
         <result column="CodeName" jdbcType="VARCHAR" property="CodeName"/>
         <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime"/>
         <result column="CodeAbstract" jdbcType="VARCHAR" property="CodeAbstract"/>
-        <result column="CodeDetails" jdbcType="VARCHAR" property="CodeDetails"/>
+        <result column="CodeDetails" jdbcType="LONGVARCHAR" property="CodeDetails"/>
         <result column="DownloadTimes" jdbcType="INTEGER" property="DownloadTimes"/>
         <result column="UserId" jdbcType="INTEGER" property="UserId"/>
         <result column="Url" jdbcType="VARCHAR" property="Url"/>

@@ -211,6 +211,11 @@ onMounted(() => {
 .details-card {
   margin-top: 20px;
   width: 100%;
-  height: 350px;
+  height: 350px; /* 可以根据需要调整高度 */
+  overflow-y: auto; /* 添加垂直滚动条 */
+}
+
+.data-details {
+  padding: 20px; /* 添加内边距 */
 }
 </style>

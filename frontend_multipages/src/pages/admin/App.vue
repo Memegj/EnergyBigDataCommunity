@@ -39,8 +39,8 @@
             <template #title>
               <span><el-icon><Document-copy /></el-icon>文献资料</span>
             </template>
-            <el-menu-item index="/admin/account">文献资料检索</el-menu-item>
-            <el-menu-item index="/admin/account">文献资料管理</el-menu-item>
+            <el-menu-item index="/admin/literature">文献资料检索</el-menu-item>
+            <el-menu-item index="/admin/literature_manage">文献资料管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>

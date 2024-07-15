@@ -26,6 +26,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Code_management.vue')
     },
     {
+      path: '/admin/literature_manage',
+      name: 'literature_manage',
+      component: () => import( '@/pages/admin/views/Literature_management.vue')
+    },
+    {
       path: '/admin/file_upload',
       name: 'file_upload',
       component: () => import( '@/pages/admin/views/FileUpload.vue'),
@@ -72,6 +77,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Dataset.vue')
     },
     {
+      path: '/admin/literature',
+      name: 'literature',
+      component: () => import( '@/pages/admin/views/Literature.vue')
+    },
+    {
       path: '/admin/datasetupload',
       name: 'datasetupload',
       component: () => import( '@/pages/admin/views/Datasetupload.vue')
@@ -82,28 +92,42 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Codeupload.vue')
     },
     {
+      path: '/admin/literatureupload',
+      name: 'literatureupload',
+      component: () => import( '@/pages/admin/views/Literatureupload.vue')
+    },
+    {
       path: '/admin/datasetedit/:dataId', // 添加 dataId 参数
       name: 'datasetedit',
       component: () => import('@/pages/admin/views/Datasetedit.vue'),
       props: true // 通过 props 传递路由参数
     },
       {
-          path: '/admin/codeedit/:codeId', // 添加 dataId 参数
+          path: '/admin/codeedit/:codeId', // 添加 codeId 参数
           name: 'codeedit',
           component: () => import('@/pages/admin/views/Codeedit.vue'),
           props: true // 通过 props 传递路由参数
       },
     {
+      path: '/admin/literatureedit/:literId', // 添加 codeId 参数
+      name: 'literatureedit',
+      component: () => import('@/pages/admin/views/Literatureedit.vue'),
+      props: true // 通过 props 传递路由参数
+    },
+    {
       path: '/admin/data_detail/:dataId',
       name: 'datasetDetail',
       component: () => import( '@/pages/admin/views/DatasetDetail.vue'),
-
     },
     {
       path: '/admin/code_detail/:codeId',
       name: 'codeDetail',
       component: () => import( '@/pages/admin/views/CodeDetail.vue'),
-
+    },
+    {
+      path: '/admin/literature_detail/:literId',
+      name: 'literatureDetail',
+      component: () => import( '@/pages/admin/views/LiteratureDetail.vue'),
     },
   ],
 })

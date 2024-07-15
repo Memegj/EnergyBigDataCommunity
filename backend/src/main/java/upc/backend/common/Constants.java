@@ -11,6 +11,7 @@ public class Constants {
     public final static String IMGS_UPLOAD_DIC = getUploadDirectory("/upload/images");
     public final static String DATASETS_UPLOAD_DIC = getUploadDirectory("/upload/datasets");
     public final static String CODE_UPLOAD_DIC = getUploadDirectory("/upload/code");
+    public final static String LITERATURE_UPLOAD_DIC = getUploadDirectory("/upload/literature");
 
     private static String getUploadDirectory(String filepath) {
         try {

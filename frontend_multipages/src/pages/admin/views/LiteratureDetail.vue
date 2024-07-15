@@ -1,23 +1,18 @@
 <template>
-  <div>
+  <div class="container">
     <el-card class="info-card">
       <div class="card-header">
-        <div>
-          <div class="user-info">
-            <el-icon>
-              <User />
-            </el-icon>
-            <span class="user-label">上传人: {{ state.fileParams.UserName }}</span>
-            <span class="time-label">更新时间: {{ formattedUploadTime }}</span>
-          </div>
-          <h2>{{ state.fileParams.DataName }}</h2>
-          <p>{{ state.fileParams.DataAbstract }}</p>
+        <div class="user-info">
+          <el-icon>
+            <User />
+          </el-icon>
+          <span class="user-label">上传人: {{ state.fileParams.UserName }}</span>
+          <span class="time-label">更新时间: {{ formattedUploadTime }}</span>
         </div>
         <div class="download-section">
           <div class="download-info">
             <span class="download-label">下载量: {{ state.fileParams.DownloadTimes }}</span>
             <el-button type="primary" @click="handleDownload">下载 ({{ formattedFileSize }})</el-button>
-
             <el-button
                 type="primary"
                 @click="handleCollect"
@@ -38,8 +33,13 @@
     </el-card>
 
     <el-card class="details-card">
-      <h3>关于数据集</h3>
-      <div v-html="state.fileParams.DataDetails"></div>
+      <h2>{{ state.fileParams.LiterName }}</h2>
+      <p>作者: {{ state.fileParams.LiterAuthor }}</p>
+      <p>来源: {{ state.fileParams.Sources }}</p>
+      <p>类型: {{ state.fileParams.LiterType }}</p>
+      <p>关键词: {{ state.fileParams.KeyWord }}</p>
+      <h3>文献摘要</h3>
+      <div v-html="state.fileParams.LiterDigest"></div>
     </el-card>
   </div>
 </template>
@@ -53,13 +53,16 @@ import { localGet } from "@/utils/index.js";
 import { User } from '@element-plus/icons-vue';
 
 const route = useRoute();
-const dataId = ref(route.params.dataId);
+const literId = ref(route.params.literId);
 const state = reactive({
   token: localGet('token') || '',
   fileParams: {
-    DataName: '',
-    DataAbstract: '',
-    DataDetails: '',
+    LiterName: '',
+    LiterAuthor: '',
+    LiterType: '',
+    LiterDigest: '',
+    Sources: '',
+    KeyWord: '',
     UserName: '',
     UploadTime: '',
     DownloadTimes: 0,
@@ -94,20 +97,23 @@ const formattedFileSize = computed(() => {
 
 const getDetail = async (id) => {
   try {
-    const res = await axios.get(`/dataset/${id}`);
+    const res = await axios.get(`/literature/${id}`);
     console.log('Response:', res);
     state.fileParams = {
-      DataName: res.datasets.dataName,
-      DataAbstract: res.datasets.dataAbstract,
-      DataDetails: res.datasets.dataDetails,
-      UserId: res.datasets.userId,
-      UserName: res.datasets.userName,
-      UploadTime: res.datasets.uploadTime,
-      DownloadTimes: res.datasets.downloadTimes,
-      file_path: res.hostUrl + res.datasets.url,
-      FileSize: res.datasets.fileSize,
-      TeamId: res.datasets.teamId,
-      CollectId: res.datasets.collectId
+      LiterName: res.literature.literName,
+      LiterAuthor: res.literature.literAuthor,
+      LiterDigest: res.literature.literDigest,
+      LiterType: res.literature.literType,
+      Sources: res.literature.sources,
+      KeyWord: res.literature.keyWord,
+      UserId: res.literature.userId,
+      UserName: res.literature.userName,
+      UploadTime: res.literature.uploadTime,
+      DownloadTimes: res.literature.downloadTimes,
+      file_path: res.hostUrl + res.literature.url,
+      FileSize: res.literature.fileSize,
+      TeamId: res.literature.teamId,
+      CollectId: res.literature.collectId
     };
   } catch (error) {
     console.error('Failed to fetch data:', error);
@@ -117,8 +123,8 @@ const getDetail = async (id) => {
 const handleDownload = async () => {
   try {
     const updatedDownloadTimes = state.fileParams.DownloadTimes + 1;
-    await axios.put('/dataset/detail', {
-      dataId: dataId.value,
+    await axios.put('/literature/detail', {
+      literId: literId.value,
       downloadTimes: updatedDownloadTimes,
       teamId: state.fileParams.TeamId
     }, {
@@ -140,7 +146,7 @@ const handleCollect = async () => {
   try {
     if (state.fileParams.CollectId) {
       // 取消收藏
-      await axios.delete('/dataset/collect', {
+      await axios.delete('/literature/collect', {
         data: {ids: [state.fileParams.CollectId]},
         headers: {'token': state.token}
       });
@@ -148,14 +154,14 @@ const handleCollect = async () => {
     } else {
       // 收藏
       const params = {
-        dataId: dataId.value,
+        literId: literId.value,
       };
-      await axios.post('/dataset/collect', params, {
+      await axios.post('/literature/collect', params, {
         headers: {'token': state.token}
       });
       ElMessage.success('已收藏');
     }
-    getDetail(dataId.value); // 重新获取详情以更新页面状态
+    getDetail(literId.value); // 重新获取详情以更新页面状态
   } catch (error) {
     console.error('Failed to update collect status:', error.response ? error.response.data : error);
     ElMessage.error('操作失败: ' + (error.response ? error.response.data.message : error.message));
@@ -163,19 +169,25 @@ const handleCollect = async () => {
 };
 
 onMounted(() => {
-  getDetail(dataId.value);
+  getDetail(literId.value);
 });
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 确保容器占满视口高度 */
+}
+
 .info-card {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .user-info {
@@ -194,8 +206,7 @@ onMounted(() => {
 
 .download-section {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .download-info {
@@ -209,13 +220,17 @@ onMounted(() => {
 }
 
 .details-card {
-  margin-top: 20px;
-  width: 100%;
-  height: 350px; /* 可以根据需要调整高度 */
-  overflow-y: auto; /* 添加垂直滚动条 */
+  flex-grow: 1; /* 允许 details-card 占满剩余空间 */
+  padding: 90px; /* 添加内边距 */
+  text-align: center; /* 内容居中 */
+  display: flex;
+  flex-direction: column; /* 纵向排列内容 */
+  justify-content: flex-start; /* 让内容从顶部开始排列 */
+  overflow-y: auto; /* 添加垂直滚动 */
 }
 
-.data-details {
-  padding: 20px; /* 添加内边距 */
+.liter-digest {
+  flex-grow: 1; /* 使文献摘要部分可扩展 */
+  overflow-y: auto; /* 添加滚动条 */
 }
 </style>
