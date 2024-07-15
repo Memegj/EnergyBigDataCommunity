@@ -44,7 +44,10 @@
         select
         <include refid="Base_Column_List"/>
         from user
+        where
+        user.user_role = 'student' or user.user_role = 'teacher'
         order by RegisterTime desc
+
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>
