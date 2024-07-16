@@ -2,7 +2,6 @@ package upc.backend.service;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import upc.backend.entity.UserToken;
-import upc.backend.mapper.UserMapper;
 import upc.backend.mapper.UserTokenMapper;
 
 @Service

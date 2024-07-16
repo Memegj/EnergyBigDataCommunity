@@ -54,17 +54,17 @@ const router = createRouter({
     {
       path: '/student/studentvideo',
       name: 'studentvideo',
-      component: () => import( '@/pages/student/views/video/studentvideo.vue')
+      component: () => import( '@/pages/student/views/studentvideo.vue')
     },
     {
-      path: '/video/:VideoId',
+      path: '/video/:videoId',
       name: 'videoDetaile',
-      component: () => import( '@/pages/student/views/video/VideoDetail.vue')
+      component: () => import( '@/pages/student/views/VideoDetail.vue')
     },
     {
       path: '/student/videoManagement',
       name: 'videoManagement',
-      component: () => import( '@/pages/student/views/video/videoManagement.vue')
+      component: () => import( '@/pages/student/views/videoManagement.vue')
     }
   ],
 })

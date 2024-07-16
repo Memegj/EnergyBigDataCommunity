@@ -8,8 +8,8 @@
         </div>
       </div>
       <el-form label-position="top" :rules="state.rules" :model="state.ruleForm" ref="loginForm" class="login-form">
-        <el-form-item label="账号" prop="UserName">
-          <el-input type="text" v-model.trim="state.ruleForm.UserName" autocomplete="off"></el-input>
+        <el-form-item label="账号" prop="UserId">
+          <el-input type="text" v-model.trim="state.ruleForm.UserId" autocomplete="off"></el-input>
         </el-form-item>
         <br/>
         <el-form-item  label="密码" prop="UserPassword">
@@ -37,12 +37,12 @@ import router from '@/pages/index/router'
 const loginForm = ref(null)
 const state = reactive({
   ruleForm: {
-    UserName: '',
+    UserId: '',
     UserPassword: ''
   },
   checked: true,
   rules: {
-    UserName: [
+    UserId: [
       { required: 'true', message: '账户不能为空', trigger: 'blur' }
     ],
     UserPassword: [
@@ -55,7 +55,7 @@ const submitForm = async () => {
   loginForm.value.validate((valid) => {
     if (valid) {
       axios.post('/user/login', {
-        username: state.ruleForm.UserName,
+        userid: state.ruleForm.UserId,
         password: md5(state.ruleForm.UserPassword)
       }).then(res => {
         localSet('token', res.tokenStr)

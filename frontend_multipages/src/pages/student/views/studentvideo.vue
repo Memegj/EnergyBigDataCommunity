@@ -3,27 +3,15 @@
     <template #header>
       <div class="search-bar">
         <h1>全部课程</h1>
-        <el-button type="primary" :icon="Plus" @click="handleAdd">上传视频</el-button>
-        <el-popconfirm
-            title="确定删除吗？"
-            confirmButtonText='确定'
-            cancelButtonText='取消'
-            @confirm="handleDelete"
-        >
-          <template #reference>
-            <el-button type="danger" :icon="Delete">批量删除</el-button>
-          </template>
-        </el-popconfirm>
         <div class="search-inputs">
-          <input type="text" v-model="searchText" placeholder="输入关键词...">
-          <select v-model="searchOption">
-            <option value="VideoName">按课程名字</option>
-            <option value="VideoTeacher">按发布人</option>
-          </select>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <input type="text" v-model="searchQuery" placeholder="输入关键词...">
+          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search">
+            <el-option label="按课程名字" value="VideoName"></el-option>
+            <el-option label="按授课老师" value="VideoTeacher"></el-option>
+          </el-select>
+          <el-button type="primary" @click="search">搜索</el-button>
           <el-button type="warning" @click="resetSearch">清空</el-button>
         </div>
-
       </div>
     </template>
     <div class="course-grid">
@@ -41,8 +29,6 @@
         </div>
       </router-link>
     </div>
-
-
     <el-pagination
         background
         layout="prev, pager, next"
@@ -55,71 +41,65 @@
 </template>
 
 <script setup>
-import {Delete, Plus} from "@element-plus/icons-vue";
-import { ref, reactive,onMounted} from 'vue'
-import { ElMessage } from 'element-plus'
-import axios from '@/utils/axios'
-import { useRouter } from 'vue-router'
+import {ref, reactive, onMounted} from 'vue'
+import {ElMessage} from 'element-plus'
+import axios from '@/utils/axios.js'
+import {useRouter} from 'vue-router'
 
-import WangEditor from 'wangeditor'
-import {localGet} from '@/utils'
-import DialogAddUser from "@/components/DialogAddStu.vue";
-
-const searchText = ref('');
-const searchOption = ref('VideoName');
+const searchQuery = ref('')
+const selectedCategory = ref('VideoName')
 const router = useRouter()
 const state = reactive({
   loading: false,
-  videos: [{ }],
+  videos: [],
   total: 0,
   currentPage: 1,
   pageSize: 8,
-});
+})
+
 // 初始化加载数据
 onMounted(() => {
-  getVideos();
-});
-//获取分类列表
-const getVideos = () => {
-  state.loading = true;
-  axios.get('/api/videos', {
+  getReferences()
+})
+
+// 获取视频列表
+const getReferences = () => {
+  state.loading = true
+  axios.get('/videos', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
+      searchQuery: searchQuery.value,
+      category: selectedCategory.value,
     }
   }).then(res => {
     state.videos = res.list
     state.total = res.totalCount
-    state.currentPage = res.currPage
+    state.currentPage = res.currentPage
     state.loading = false
   }).catch(error => {
-    ElMessage.error('获取视频列表失败');
-    state.loading = false;
-  });
-};
-const handleAdd = () => {
-  router.push('/student/VideoUpload')
+    ElMessage.error('获取视频列表失败')
+    state.loading = false
+  })
+}
+
+const search = () => {
+  state.currentPage = 1
+  getReferences()
 }
 
 const changePage = (val) => {
-  state.currentPage = val;
-  getVideos();
-};
+  state.currentPage = val
+  getReferences()
+}
 
-const handleSearch =()=> {
-  console.log('搜索关键词:', this.searchText);
-  console.log('搜索选项:', this.searchOption);
-  getVideos();
-};
 const resetSearch = () => {
-  searchText.value = '';
-  searchOption.value = 'VideoName';
-
-};
-
-
+  searchQuery.value = ''
+  selectedCategory.value = 'VideoName'
+  state.currentPage = 1
+  getReferences()
+}
 </script>
-
 
 <style>
 .search-inputs input[type="text"] {
@@ -128,18 +108,20 @@ const resetSearch = () => {
   font-size: 14px;
   margin-right: 10px;
 }
+
 .search-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
 }
+
 .course-grid {
-  width: 100%; /* 设置宽度为100%，占据父容器的全部宽度 */
-  margin: 0 auto; /* 让网格居中显示 */
+  width: 100%;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 每行四列 */
-  gap: 50px; /* 列之间的间隔 */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 50px;
 }
 
 .course-item-content {
@@ -148,8 +130,8 @@ const resetSearch = () => {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%; /* 调整高度 */
-  width: 100%; /* 调整每个格子的宽度 */
+  height: 100%;
+  width: 100%;
 }
 
 .course-image {
@@ -169,8 +151,9 @@ const resetSearch = () => {
   color: #777;
 }
 
-.course-image {
+.course-video {
   width: 100%;
+  text-align: center;
   aspect-ratio: auto 628 / 353;
   height: 50%;
 }
@@ -191,11 +174,5 @@ const resetSearch = () => {
   padding: 8px;
   font-size: 14px;
   margin-right: 10px;
-}
-.course-video{
-  width: 100%;
-  text-align: center;
-  aspect-ratio: auto 628 / 353;
-  height: 50%;
 }
 </style>

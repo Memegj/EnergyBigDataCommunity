@@ -13,6 +13,8 @@
         <result column="UserCollege" jdbcType="VARCHAR" property="UserCollege" />
         <result column="RegisterTime" jdbcType="TIMESTAMP" property="RegisterTime" />
     </resultMap>
+
+
     <sql id="Base_Column_List">
         UserId, UserName, UserPassword, NickName, UserLocked, user_role, UserEmail, UserCollege, RegisterTime
     </sql>
@@ -21,9 +23,21 @@
         select
         <include refid="Base_Column_List" />
         from user
-        where UserName = #{UserName,jdbcType=VARCHAR} AND UserPassword=#{UserPassword,jdbcType=VARCHAR} AND UserLocked = 0
+        where UserId = #{UserId,jdbcType=INTEGER} AND UserPassword=#{UserPassword,jdbcType=VARCHAR} AND UserLocked = 0
     </select>
 
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where UserId = #{UserId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getUserNameByUserId" >
+        select UserName
+        from user
+        where UserId = #{UserId,jdbcType=INTEGER}
+    </select>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
@@ -35,7 +49,10 @@
         select
         <include refid="Base_Column_List"/>
         from user
+        where
+        user.user_role = 'student' or user.user_role = 'teacher'
         order by RegisterTime desc
+
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>
@@ -153,6 +170,12 @@
             RegisterTime = #{RegisterTime,jdbcType=TIMESTAMP}
         where UserId = #{UserId,jdbcType=INTEGER}
     </update>
+    <update id="resetPassword" parameterType="upc.backend.entity.User">
+        update user
+        set UserPassword = #{UserPassword,jdbcType=VARCHAR}
+        where UserId = #{UserId,jdbcType=INTEGER}
+
+    </update>
     <update id="lockUserBatch">
         update user
         set UserLocked=#{lockStatus} where UserId in
@@ -160,4 +183,11 @@
             #{id}
         </foreach>
     </update>
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from user
+        where UserId in
+        <foreach item="UserId" collection="array" open="(" separator="," close=")">
+            #{UserId}
+        </foreach>
+    </delete>
 </mapper>

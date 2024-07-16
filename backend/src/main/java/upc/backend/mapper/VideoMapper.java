@@ -17,7 +17,7 @@ public interface VideoMapper {
     //   Boolean updateByPrimaryKeySelective(video video);
 
 
-    Video getVideoByID(Integer VideoId);
+    Video selectByVideoId(Integer VideoId);
     List<Video> findAllVideoList(PageQueryUtil pageUtil);
     int getNumOfTotalVideos(PageQueryUtil pageUtil);
 

@@ -33,7 +33,7 @@ public class UserLogin {
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public Result<String> login(@RequestBody UserLoginParam loginParam) {
-        HashMap<String, String> loginResult = userService.login(loginParam.getUsername(), loginParam.getPassword());
+        HashMap<String, String> loginResult = userService.login(loginParam.getUserid(), loginParam.getPassword());
         //log.info("manage login api,username={},loginResult={}", loginParam.getUsername(), loginResult);
         //登录成功
         if (StringUtils.hasText(loginResult.get("tokenStr")) && loginResult.get("tokenStr").length() == Constants.TOKEN_LENGTH) {
@@ -91,7 +91,7 @@ public class UserLogin {
     public Result nameUpdate(@RequestBody UpdateUserNameParam nameParam) {
         //log.info("user:{}", nameParam.getUsername());
         UserToken userToken = userTokenService.selectByToken(nameParam.getToken());
-        if (userService.updateName(userToken.getUserId(), nameParam.getUsername(), nameParam.getNickname())) {
+        if (userService.updateName(userToken.getUserId(),nameParam.getNickname(),nameParam.getUseremail(),nameParam.getUsercollege())) {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult(ServiceResultEnum.DB_ERROR.getResult());

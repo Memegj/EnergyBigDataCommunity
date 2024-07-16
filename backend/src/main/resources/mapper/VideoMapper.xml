@@ -8,7 +8,6 @@
         <result column="VideoTeacher" jdbcType="VARCHAR" property="VideoTeacher" />
         <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime" />
         <result column="VideoIntro" jdbcType="VARCHAR" property="VideoIntro" />
-        <result column="isPublic" jdbcType="INTEGER" property="isPublic" />
         <result column="PageView" jdbcType="INTEGER" property="PageView" />
         <result column="Url" jdbcType="VARCHAR" property="Url" />
         <result column="UserId" jdbcType="INTEGER" property="UserId" />
@@ -16,9 +15,9 @@
 <!--        <result column="imageUrl" jdbcType="LONGTEXT" property="imageUrl" />-->
     </resultMap>
     <sql id="Base_Column_List">
-        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,isPublic,PageView,Url,UserId,TeamId
+        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,PageView,Url,UserId,TeamId
     </sql>
-    <select id="getVideoByID" resultMap="BaseResultMap">
+    <select id="selectByVideoId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from video
@@ -76,9 +75,6 @@
         </if>
         <if test="VideoIntro != null">
             VideoIntro = #{VideoIntro,jdbcType=VARCHAR},
-        </if>
-        <if test="isPublic!= null">
-            isPublic = #{isPublic,jdbcType=INTEGER},
         </if>
         <if test="PageView != null">
             PageView = #{PageView,jdbcType=INTEGER},

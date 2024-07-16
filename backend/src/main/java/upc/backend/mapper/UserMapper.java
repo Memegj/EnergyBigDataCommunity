@@ -10,9 +10,11 @@ public interface UserMapper {
 
     int insertSelective(User record);
 
-    User login(@Param("UserName") String UsernName, @Param("UserPassword") String UserPassword);
+    User login(@Param("UserId") Integer UsernId, @Param("UserPassword") String UserPassword);
 
     User selectByPrimaryKey(Integer UserId);
+
+    String getUserNameByUserId(Integer UserId);
 
     int updateByPrimaryKeySelective(User record);
 
@@ -21,4 +23,13 @@ public interface UserMapper {
     List<User> findAllUserList(PageQueryUtil pageUtil);
     int getNumOfTotalUsers(PageQueryUtil pageUtil);
     int lockUserBatch(@Param("ids") Integer[] ids, @Param("lockStatus") int lockStatus);
+
+    int deleteBatch(Integer[] ids);
+
+
+    User selectByUserId(Integer userId);
+    User selectByID(Integer UserId);
+
+    int resetPassword(Integer UserId,String UserPassword);
+
 }
