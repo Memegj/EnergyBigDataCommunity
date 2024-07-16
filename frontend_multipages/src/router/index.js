@@ -33,6 +33,7 @@ const router = createRouter({
       name: 'index',
       component: () => import( '@/pages/admin/views/Index.vue')
     },
+
     {
       path: '/student',
       redirect: '/student/index'
@@ -47,6 +48,8 @@ const router = createRouter({
       name: 'index',
       component: () => import( '@/pages/student/views/Index.vue')
     },
+
+
     {
       path: '/teacher',
       redirect: '/teacher/index'
@@ -61,6 +64,7 @@ const router = createRouter({
       name: 'index',
       component: () => import( '@/pages/teacher/views/Index.vue')
     },
+
     {
       path: '/teacher/team',
       name: 'team',

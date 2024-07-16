@@ -11,7 +11,6 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import upc.backend.common.Constants;
 import upc.backend.common.ServiceResultEnum;
 import upc.backend.controller.file.param.FileAddParam;
-import upc.backend.entity.Reference;
 import upc.backend.entity.UploadFile;
 import upc.backend.entity.User;
 import upc.backend.entity.UserToken;

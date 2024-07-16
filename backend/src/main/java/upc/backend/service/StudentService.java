@@ -20,6 +20,9 @@ public class StudentService {
     public Student getStudentDetailById(Integer UserId,Integer TeamId){
         return studentMapper.selectByPrimaryKey(UserId,TeamId);
     }
+    public Student getStudentByStunum(Integer id){
+        return studentMapper.selectByStunum(id);
+    }
     //更新文献信息
     public Boolean updateStudentInfo(Student student){
         int radd = studentMapper.updateByPrimaryKeySelective(student);

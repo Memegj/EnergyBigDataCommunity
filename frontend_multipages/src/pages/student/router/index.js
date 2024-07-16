@@ -107,6 +107,21 @@ const router = createRouter({
       name: 'literatureDetail',
       component: () => import( '@/pages/student/views/LiteratureDetail.vue'),
     },
+      {
+          path: '/student/studentvideo',
+          name: 'studentvideo',
+          component: () => import( '@/pages/student/views/studentvideo.vue')
+      },
+      {
+          path: '/video/:videoId',
+          name: 'videoDetaile',
+          component: () => import( '@/pages/student/views/VideoDetail.vue')
+      },
+      {
+          path: '/student/videoManagement',
+          name: 'videoManagement',
+          component: () => import( '@/pages/student/views/videoManagement.vue')
+      }
   ],
 })
 
