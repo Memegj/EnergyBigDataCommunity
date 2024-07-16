@@ -31,4 +31,14 @@ public class videoService {
         PageResult pageResult = new PageResult(videos, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
+
+    public Boolean deleteBatch(Integer[] ids) {
+        if (ids.length < 1) {
+            return false;
+        }
+        //删除分类数据
+        Integer aa= videoMapper.deleteBatchCollect(ids);
+        Integer bb= videoMapper.deleteBatchVideo(ids);
+        return aa+bb > 0;
+    }
 }

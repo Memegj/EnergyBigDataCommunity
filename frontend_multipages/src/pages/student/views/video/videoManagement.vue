@@ -23,25 +23,29 @@
           <el-button type="primary" @click="handleSearch">搜索</el-button>
           <el-button type="warning" @click="resetSearch">清空</el-button>
         </div>
-
       </div>
     </template>
     <div class="course-grid">
-      <router-link v-for="video in state.videos" :key="video.VideoId" :to="'/video/' + video.videoId" class="course-item">
-        <div class="course-item-content">
-          <video :src="video.url" controls class="course-video">你的浏览器不支持视频播放</video>
-          <div class="course-details">
-            <div class="course-name">视频名称：{{ video.videoName }}</div>
-            <div class="course-intro">简介：{{ video.videoIntro }}</div>
-            <div class="course-meta">
-              <span>上传人: {{ video.videoTeacher }}</span><br>
-              <span>上传时间: {{ video.uploadTime }}</span>
+      <div class="select-all-container">
+        <el-checkbox v-model="allSelected" @change="handleSelectAll"></el-checkbox>
+      </div>
+      <div v-for="video in state.videos" :key="video.videoId" class="course-item">
+        <el-checkbox v-model="selectedVideos" :label="video.videoId" class="video-checkbox"></el-checkbox>
+        <router-link :to="'/video/' + video.videoId">
+          <div class="course-item-content">
+            <video :src="video.url" controls class="course-video">你的浏览器不支持视频播放</video>
+            <div class="course-details">
+              <div class="course-name">视频名称：{{ video.videoName }}</div>
+              <div class="course-intro">简介：{{ video.videoIntro }}</div>
+              <div class="course-meta">
+                <span>上传人: {{ video.userName }}</span><br>
+                <span>上传时间: {{ video.uploadTime }}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </router-link>
+        </router-link>
+      </div>
     </div>
-
 
     <el-pagination
         background
@@ -55,47 +59,51 @@
 </template>
 
 <script setup>
-import {Delete, Plus} from "@element-plus/icons-vue";
-import { ref, reactive,onMounted} from 'vue'
-import { ElMessage } from 'element-plus'
-import axios from '@/utils/axios'
-import { useRouter } from 'vue-router'
-
-import WangEditor from 'wangeditor'
-import {localGet} from '@/utils'
-import DialogAddUser from "@/components/DialogAddStu.vue";
+import { Delete, Plus } from "@element-plus/icons-vue";
+import { ref, reactive, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
+import axios from '@/utils/axios';
+import { useRouter } from 'vue-router';
 
 const searchText = ref('');
 const searchOption = ref('VideoName');
-const router = useRouter()
+const router = useRouter();
 const state = reactive({
   loading: false,
-  videos: [{ }],
+  videos: [],
+  multipleSelection: [],
   total: 0,
   currentPage: 1,
-  pageSize: 8,
+  pageSize: 8
 });
+const selectedVideos = ref([]); // 添加这个数组来存储选中的视频ID
+const allSelected = ref(false); // 全选按钮的状态
+
 // 初始化加载数据
 onMounted(() => {
   getVideos();
 });
-//获取分类列表
+
+// 获取分类列表
+// 获取分类列表
 const getVideos = () => {
   state.loading = true;
   axios.get('/api/videos', {
     params: {
       pageNumber: state.currentPage,
-      pageSize: state.pageSize,
+      pageSize: state.pageSize
     }
-  }).then(res => {
-    state.videos = res.list
-    state.total = res.totalCount
-    state.currentPage = res.currentPage
-    state.loading = false
-  }).catch(error => {
-    ElMessage.error('获取视频列表失败');
-    state.loading = false;
-  });
+  })
+      .then(res => {
+        state.videos = res.list; // 确保数据结构正确
+        state.total = res.totalCount; // 确保数据结构正确
+        state.currentPage = res.currPage;
+        state.loading = false;
+      })
+      .catch(error => {
+        ElMessage.error('获取视频列表失败');
+        state.loading = false;
+      });
 };
 
 
@@ -104,20 +112,56 @@ const changePage = (val) => {
   getVideos();
 };
 
-const handleSearch =()=> {
-  console.log('搜索关键词:', this.searchText);
-  console.log('搜索选项:', this.searchOption);
+const handleSearch = () => {
   getVideos();
 };
+
 const resetSearch = () => {
   searchText.value = '';
   searchOption.value = 'VideoName';
+  getVideos();
+};
 
+// 批量删除
+const handleDelete = () => {
+  if (!selectedVideos.value.length) {
+    ElMessage.error('请选择项');
+    return;
+  }
+
+  axios.delete('/api/videos', {
+    data: {
+      ids: selectedVideos.value
+    }
+  })
+      .then(() => {
+        ElMessage.success('删除成功');
+        selectedVideos.value = []; // 清空已选中视频ID
+        allSelected.value = false; // 重置全选按钮状态
+        getVideos(); // 删除成功后重新获取视频列表
+
+      })
+      .catch(error => {
+        ElMessage.error('删除失败');
+      });
 };
 
 
-</script>
+// 更新选中状态
+const handleSelectionChange = (val) => {
+  selectedVideos.value = val;
+}
 
+// 全选功能
+const handleSelectAll = (value) => {
+  if (value) {
+    selectedVideos.value = state.videos.map(video => video.videoId);
+  } else {
+    selectedVideos.value = [];
+  }
+};
+defineExpose({ state: state, getVideos: getVideos })
+</script>
 
 <style>
 .search-inputs input[type="text"] {
@@ -133,11 +177,19 @@ const resetSearch = () => {
   margin-bottom: 5px;
 }
 .course-grid {
-  width: 100%; /* 设置宽度为100%，占据父容器的全部宽度 */
-  margin: 0 auto; /* 让网格居中显示 */
+  width: 100%;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 每行四列 */
-  gap: 50px; /* 列之间的间隔 */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 50px;
+  position: relative; /* 使子元素的绝对定位相对于此元素 */
+}
+
+.select-all-container {
+  position: absolute;
+  top: -40px; /* 根据需要调整 */
+  left: 0;
+  z-index: 2;
 }
 
 .course-item-content {
@@ -146,8 +198,8 @@ const resetSearch = () => {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%; /* 调整高度 */
-  width: 100%; /* 调整每个格子的宽度 */
+  height: 100%;
+  width: 100%;
 }
 
 .course-image {
@@ -190,10 +242,22 @@ const resetSearch = () => {
   font-size: 14px;
   margin-right: 10px;
 }
-.course-video{
+
+.course-video {
   width: 100%;
   text-align: center;
   aspect-ratio: auto 628 / 353;
   height: 50%;
+}
+
+.video-checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.course-item {
+  position: relative;
 }
 </style>

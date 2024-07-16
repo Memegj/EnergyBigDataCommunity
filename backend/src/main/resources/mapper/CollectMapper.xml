@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.CollectMapper">
+        <!-- Collect 实体的结果映射 -->
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Collect">
+        <id column="CollectId" jdbcType="INTEGER" property="CollectId" />
+        <result column="CollectType" jdbcType="VARCHAR" property="CollectType" />
+        <result column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="CodeId" jdbcType="INTEGER" property="CodeId" />
+        <result column="LiterId" jdbcType="INTEGER" property="LiterId" />
+        <result column="DataId" jdbcType="INTEGER" property="DataId" />
+        <result column="VideoId" jdbcType="INTEGER" property="VideoId" />
+    </resultMap>
+
+    <delete id="deleteCollectByVideoId" parameterType="map">
+        DELETE FROM collect
+        WHERE CollectId = #{collectId} AND VideoId = #{videoId}
+    </delete>
+
+</mapper>

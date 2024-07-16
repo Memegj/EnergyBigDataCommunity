@@ -30,12 +30,33 @@
 
     <select id="findAllVideoList" parameterType="Map" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,isPublic,PageView,Url,
+        video.UserId,
+        user.UserName
         from video
+        JOIN
+        user ON user.UserId=video.UserId
+         where video.UserId=#{userId,jdbcType=INTEGER}
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>
     </select>
+    <delete id="deleteBatchCollect" parameterType="java.lang.Integer">
+        <!-- 先删除外键表中的引用记录 -->
+        delete from collect
+        where VideoId in
+        <foreach item="VideoId" collection="array" open="(" separator="," close=")">
+            #{VideoId}
+        </foreach>;
+    </delete>
+    <delete id="deleteBatchVideo" parameterType="java.lang.Integer">
+        <!-- 然后删除主表中的记录 -->
+        delete from video
+        where VideoId in
+        <foreach item="VideoId" collection="array" open="(" separator="," close=")">
+            #{VideoId}
+        </foreach>
+    </delete>
     <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.video">
     update video
     <set>

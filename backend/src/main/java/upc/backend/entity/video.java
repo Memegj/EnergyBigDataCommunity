@@ -22,6 +22,8 @@ public class video {
     private Integer PageView;//浏览量
     private String Url;
     private Integer UserId;
+    private String UserName;
+
 
 
 

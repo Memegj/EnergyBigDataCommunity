@@ -21,4 +21,7 @@ public interface VideoMapper {
     List<video> findAllVideoList(PageQueryUtil pageUtil);
     int getNumOfTotalVideos(PageQueryUtil pageUtil);
 
+    int deleteBatchVideo(Integer[] ids);
+    int deleteBatchCollect(Integer[] ids);
+
 }
