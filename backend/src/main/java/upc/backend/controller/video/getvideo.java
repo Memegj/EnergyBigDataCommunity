@@ -52,9 +52,9 @@ public class getvideo {
         CollectQueryUtil collectUtil = new CollectQueryUtil(params);
         Collect collect = collectService.getCollectByUserIdAndVideoId(userId, videoId);
         if (collect != null) {
-           video.setCollectId(collect.getCollectId());
+            video.setCollectId(collect.getCollectId());
         } else {
-          video.setCollectId(null); // 或者可以选择其他处理方式
+            video.setCollectId(null); // 或者可以选择其他处理方式
         }
 
         if (video == null) {

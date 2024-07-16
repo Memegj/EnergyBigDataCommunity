@@ -46,11 +46,10 @@
             <span class="video-collection-title">视频合集</span>
             &nbsp;&nbsp;
             <el-button type="primary" icon="Plus" @click="handleAdd">增加</el-button>
-            <el-button type="primary" icon="Plus" @click="handle">展示</el-button>
           </div>
           <el-menu>
             <el-table
-                :data="state.tableData"
+                :data="paginatedFilteredData"
                 tooltip-effect="dark"
                 style="width: 100%"
                 @selection-change="handleSelectionChange">
@@ -113,8 +112,19 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from '@/utils/axios';
 import { ElMessage } from 'element-plus';
 import { Plus, Delete } from '@element-plus/icons-vue'
-
+const addRef = ref(null)
+const router = useRouter() // 声明路由实例
+useRoute();
 // 获取路由参数
+const state = reactive({
+  loading: false,
+  tableData: [], // 数据列表
+  multipleSelection: [], // 选中项
+  total: 0, // 总条数
+  currentPage: 1, // 当前页
+  pageSize: 10, // 分页大小
+  type: 'add' // 操作类型
+})
 
 const getExcel = () => {
   state.loading = true
@@ -130,6 +140,7 @@ const getExcel = () => {
     state.loading = false
   })
 }
+
 
 
 
@@ -166,9 +177,20 @@ export default {
     const fetchVideoDetail = () => {
       const videoId = route.params.VideoId; // 使用 useRoute() 获取当前路由参数
       state.value.loading = true;
+      axios.get('/video/list', {
+        params: {
+          pageNumber: state.currentPage,
+          pageSize: state.pageSize,
+        }
+      }).then(res => {
+        state.tableData = res.list
+        state.total = res.totalCount
+        state.currentPage = res.currPage
+        state.loading = false
+      })
       axios.get(`/api/videos/${videoId}`)
           .then(res => {
-            state.loading = false
+
             state.value.video.Url = res.url;
             state.value.video.VideoName = res.videoName;
             state.value.video.PageView = res.pageView;
@@ -210,9 +232,6 @@ export default {
     const handleCollect = async () => {
       console.log('CollectId:', state.fileParams.CollectId);
       console.log('Token:', state.token);
-      const handleSelectionChange = (val) => {
-        state.multipleSelection = val
-      }
 
       try {
         if (state.fileParams.CollectId) {
