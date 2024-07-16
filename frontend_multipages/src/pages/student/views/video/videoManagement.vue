@@ -90,14 +90,16 @@ const getVideos = () => {
   }).then(res => {
     state.videos = res.list
     state.total = res.totalCount
-    state.currentPage = res.currentPage
+    state.currentPage = res.currPage
     state.loading = false
   }).catch(error => {
     ElMessage.error('获取视频列表失败');
     state.loading = false;
   });
 };
-
+const handleAdd = () => {
+  router.push('/student/VideoUpload')
+}
 
 const changePage = (val) => {
   state.currentPage = val;

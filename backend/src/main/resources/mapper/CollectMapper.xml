@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.CollectMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Collect">
+        <id column="CollectId" jdbcType="INTEGER" property="CollectId" />
+        <result column="CollectType" jdbcType="VARCHAR" property="CollectType" />
+        <result column="DataId" jdbcType="INTEGER" property="DataId" />
+        <result column="CodeId" jdbcType="INTEGER" property="CodeId" />
+        <result column="VideoId" jdbcType="INTEGER" property="VideoId" />
+        <result column="LiterId" jdbcType="INTEGER" property="LiterId" />
+        <result column="UserId" jdbcType="INTEGER" property="UserId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        CollectId, CollectType, DataId, CodeId, VideoId, LiterId, UserId
+    </sql>
+    <!-- 根据用户ID和视频ID查询收藏记录 -->
+    <select id="findByUserIdAndVideoId" resultType="upc.backend.entity.Collect">
+        SELECT
+        CollectId, CollectType, UserId, CodeId, LiterId, DataId, VideoId
+        FROM
+            collect
+        WHERE
+            UserId = #{userId} AND VideoId = #{videoId}
+    </select>
+    <!-- 插入收藏记录 -->
+    <insert id="insert" parameterType="upc.backend.entity.Collect">
+        insert into collect (CollectId, CollectType, DataId, CodeId, VideoId, LiterId, UserId)
+        values (#{CollectId,jdbcType=INTEGER}, #{CollectType,jdbcType=VARCHAR}, #{DataId,jdbcType=INTEGER}, #{CodeId,jdbcType=INTEGER},
+                #{VideoId,jdbcType=INTEGER}, #{LiterId,jdbcType=INTEGER}, #{UserId,jdbcType=INTEGER})
+    </insert>
+
+
+    <!-- 根据用户ID和视频ID删除收藏记录 -->
+    <delete id="deleteByUserIdAndVideoId">
+        DELETE FROM collect
+        WHERE UserId = #{userId} AND VideoId = #{videoId}
+    </delete>
+    <!-- CollectMapper.xml -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM collect WHERE id = #{id}
+    </delete>
+
+
+</mapper>

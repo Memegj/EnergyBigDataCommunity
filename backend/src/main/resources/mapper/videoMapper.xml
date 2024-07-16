@@ -2,7 +2,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="upc.backend.mapper.VideoMapper">
-    <resultMap id="BaseResultMap" type="upc.backend.entity.video">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Video">
         <id column="VideoId" jdbcType="INTEGER" property="VideoId" />
         <result column="VideoName" jdbcType="VARCHAR" property="VideoName" />
         <result column="VideoTeacher" jdbcType="VARCHAR" property="VideoTeacher" />
@@ -12,10 +12,11 @@
         <result column="PageView" jdbcType="INTEGER" property="PageView" />
         <result column="Url" jdbcType="VARCHAR" property="Url" />
         <result column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
 <!--        <result column="imageUrl" jdbcType="LONGTEXT" property="imageUrl" />-->
     </resultMap>
     <sql id="Base_Column_List">
-        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,isPublic,PageView,Url,UserId
+        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,isPublic,PageView,Url,UserId,TeamId
     </sql>
     <select id="getVideoByID" resultMap="BaseResultMap">
         select
@@ -26,17 +27,42 @@
 
     <select id="getNumOfTotalVideos" parameterType="Map" resultType="int">
         select count(*) from video
+        <where>
+            <if test="searchQuery != null and searchQuery != ''">
+                <choose>
+                    <when test="category == 'VideoName'">
+                        VideoName like CONCAT('%', #{searchQuery}, '%')
+                    </when>
+                    <when test="category == 'VideoTeacher'">
+                        VideoTeacher like CONCAT('%', #{searchQuery}, '%')
+                    </when>
+                </choose>
+            </if>
+        </where>
     </select>
 
     <select id="findAllVideoList" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from video
-        <if test="start!=null and limit!=null">
-            limit #{start},#{limit}
+        <where>
+            <if test="searchQuery != null and searchQuery != ''">
+                <choose>
+                    <when test="category == 'VideoName'">
+                        VideoName like CONCAT('%', #{searchQuery}, '%')
+                    </when>
+                    <when test="category == 'VideoTeacher'">
+                        VideoTeacher like CONCAT('%', #{searchQuery}, '%')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        <if test="start != null and limit != null">
+            limit #{start}, #{limit}
         </if>
     </select>
-    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.video">
+
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Video">
     update video
     <set>
         <if test="VideoName != null">
@@ -62,6 +88,9 @@
         </if>
         <if test="UserId != null">
             UserId = #{UserId,jdbcType=VARCHAR},
+        </if>
+        <if test="TeamId!= null">
+            UserId = #{TeamId,jdbcType=VARCHAR},
         </if>
 <!--        <if test="imageUrl != null">-->
 <!--            imageUrl  = #{imageUrl ,jdbcType=LONGTEXT},-->
