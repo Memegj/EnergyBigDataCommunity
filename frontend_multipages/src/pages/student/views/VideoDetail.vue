@@ -119,7 +119,7 @@ const getDetail = async (id) => {
   }
 };
 const goBack = () => {
-  router.push('/student/studentvideo');
+  router.push('/student/video');
 };
 
 const handleCollect = async () => {

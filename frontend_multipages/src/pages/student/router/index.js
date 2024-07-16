@@ -45,6 +45,11 @@ const router = createRouter({
       component: () => import( '@/pages/student/views/Literature_management.vue')
     },
     {
+      path: '/student/video_manage',
+      name: 'video_manage',
+      component: () => import( '@/pages/student/views/Video_management.vue')
+    },
+    {
       path: '/student/code',
       name: 'code',
       component: () => import( '@/pages/student/views/Code.vue')
@@ -58,6 +63,11 @@ const router = createRouter({
       path: '/student/literature',
       name: 'literature',
       component: () => import( '@/pages/student/views/Literature.vue')
+    },
+    {
+      path: '/student/video',
+      name: 'video',
+      component: () => import( '@/pages/student/views/Video.vue')
     },
     {
       path: '/student/datasetupload',
@@ -107,21 +117,11 @@ const router = createRouter({
       name: 'literatureDetail',
       component: () => import( '@/pages/student/views/LiteratureDetail.vue'),
     },
-      {
-          path: '/student/studentvideo',
-          name: 'studentvideo',
-          component: () => import( '@/pages/student/views/studentvideo.vue')
-      },
-      {
-          path: '/video/:videoId',
-          name: 'videoDetaile',
-          component: () => import( '@/pages/student/views/VideoDetail.vue')
-      },
-      {
-          path: '/student/videoManagement',
-          name: 'videoManagement',
-          component: () => import( '@/pages/student/views/videoManagement.vue')
-      }
+    {
+      path: '/student/video_detail/:videoId',
+      name: 'videoDetaile',
+      component: () => import( '@/pages/student/views/VideoDetail.vue')
+    },
   ],
 })
 

@@ -31,7 +31,7 @@ import java.util.Map;
 @ResponseBody
 @Slf4j
 @RequestMapping("/api")
-public class getvideo {
+public class VideoManagement {
     @Resource
     private VideoService videoService;
     @Resource

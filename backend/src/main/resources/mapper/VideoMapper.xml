@@ -85,14 +85,194 @@
         <if test="UserId != null">
             UserId = #{UserId,jdbcType=VARCHAR},
         </if>
-        <if test="TeamId!= null">
-            UserId = #{TeamId,jdbcType=VARCHAR},
+        <if test="TeamId != null">
+            TeamId = #{TeamId,jdbcType=INTEGER},
         </if>
-<!--        <if test="imageUrl != null">-->
-<!--            imageUrl  = #{imageUrl ,jdbcType=LONGTEXT},-->
-<!--        </if>-->
+        <if test="TeamId == null">
+            TeamId = null,
+        </if>
     </set>
     where VideoId = #{VideoId,jdbcType=INTEGER}
 </update>
+
+
+    <select id="selectByVideoName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from video
+        where VideoName = #{VideoName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByUploadTime" resultMap="BaseResultMap">
+        select count(*) from video
+        order by UploadTime desc
+    </select>
+    <select id="selectByTeamIds" resultMap="BaseResultMap">
+        SELECT
+        video.VideoId,
+        video.VideoName,
+        video.VideoTeacher,
+        video.UploadTime,
+        video.VideoIntro,
+        video.PageView,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        video.TeamId AS teamId
+        FROM video
+        JOIN user ON video.UserId = user.UserId
+        WHERE
+        teamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR teamId IS NULL
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            LIMIT #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+    </select>
+    <select id="getNumOfUserVideo" resultType="int">
+        SELECT COUNT(*)
+        FROM video
+        WHERE
+        TeamId IN
+        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+            #{teamId, jdbcType=INTEGER}
+        </foreach>
+        OR TeamId IS NULL
+    </select>
+
+    <select id="getNumOfTotalVideo" parameterType="Map" resultType="int">
+        select count(*) from video
+    </select>
+    <select id="getNumOfTotalVideoByUserId" parameterType="Map" resultType="int">
+        select count(*) from video
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and VideoName like concat('%', #{searchQuery}, '%')
+        </if>
+    </select>
+    <select id="findAllVideoListByUserId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        where UserId = #{userid}
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <select id="findAllVideoListByUserIdOrderByTime" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and VideoName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by UploadTime desc
+        <if test="start != null and limit != null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+    <select id="findAllVideoListByUserIdOrderByTeamId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        where UserId = #{userid}
+        <if test="searchQuery != null and searchQuery != ''">
+            and VideoName like concat('%', #{searchQuery}, '%')
+        </if>
+        order by TeamId
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="upc.backend.entity.Video">
+        insert into video (VideoId, VideoName, UploadTime, VideoTeacher, VideoIntro, PageView, UserId, TeamId, Url)
+        values (#{VideoId,jdbcType=INTEGER}, #{VideoName,jdbcType=VARCHAR}, #{UploadTime,jdbcType=TIMESTAMP},
+                #{VideoTeacher,jdbcType=VARCHAR}, #{VideoIntro,jdbcType=VARCHAR},
+                #{PageView,jdbcType=INTEGER}, #{UserId,jdbcType=INTEGER}, #{TeamId,jdbcType=INTEGER}, #{Url,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.Video">
+        insert into video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="VideoId != null">
+                VideoId,
+            </if>
+            <if test="VideoName != null">
+                VideoName,
+            </if>
+            <if test="UploadTime != null">
+                UploadTime,
+            </if>
+            <if test="VideoTeacher != null">
+                VideoTeacher,
+            </if>
+            <if test="VideoIntro != null">
+                VideoIntro,
+            </if>
+            <if test="PageView != null">
+                PageView,
+            </if>
+            <if test="UserId != null">
+                UserId,
+            </if>
+            <if test="TeamId != null">
+                TeamId,
+            </if>
+            <if test="Url != null">
+                Url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="VideoId != null">
+                #{VideoId, jdbcType=INTEGER},
+            </if>
+            <if test="VideoName != null">
+                #{VideoName, jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                #{UploadTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="VideoTeacher != null">
+                #{VideoTeacher, jdbcType=VARCHAR},
+            </if>
+            <if test="VideoIntro != null">
+                #{VideoIntro, jdbcType=VARCHAR},
+            </if>
+            <if test="PageView != null">
+                #{PageView, jdbcType=INTEGER},
+            </if>
+            <if test="UserId != null">
+                #{UserId, jdbcType=INTEGER},
+            </if>
+            <if test="TeamId != null">
+                #{TeamId, jdbcType=INTEGER},
+            </if>
+            <if test="Url != null">
+                #{Url, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.Video">
+        update video
+        set VideoName = #{VideoName,jdbcType=VARCHAR},
+            UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
+            VideoTeacher = #{VideoTeacher,jdbcType=VARCHAR},
+            VideoIntro = #{VideoIntro,jdbcType=VARCHAR},
+            PageView = #{PageView,jdbcType=INTEGER},
+            UserId = #{UserId,jdbcType=INTEGER},
+            TeamId = #{UserId,jdbcType=INTEGER},
+            Url = #{Url,jdbcType=VARCHAR}
+        where VideoId = #{VideoId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from video
+        where VideoId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

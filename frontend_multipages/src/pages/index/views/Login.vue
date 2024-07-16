@@ -65,10 +65,6 @@ const submitForm = async () => {
         else if(res.roleStr == 'student') window.location.href = '/student'
         else if(res.roleStr == 'guest') window.location.href = '/'
         //router.push('/home')
-        else if(res.roleStr == 'student') window.location.href = '/student'
-        //router.push('/student')
-        else if(res.roleStr == 'teacher') window.location.href = '/teacher'
-        //router.push('/teacher')
         else{
           window.location.href = '/'
           //router.push('/home')

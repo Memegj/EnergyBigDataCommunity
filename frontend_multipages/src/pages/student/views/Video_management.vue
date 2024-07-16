@@ -101,7 +101,7 @@ const getVideos = () => {
 
 // 跳转到视频详情
 const navigateToVideo = (videoId) => {
-  router.push(`/video/${videoId}`);
+  router.push(`/student/video_detail/${videoId}`);
 };
 
 const handleAdd = () => {
