@@ -33,6 +33,9 @@ public class VideoService {
     public Video getVideoByVideoId(Integer VideoId){
         return videoMapper.selectByVideoId(VideoId);
     }
+    public Videocontent getVideocontentByVideocontentId(Integer VideocontentId){
+        return videoContentMapper.selectByVideocontentId(VideocontentId);
+    }
     public Video getVideoById(Integer VideoId){
         return videoMapper.getVideoByID(VideoId);
     }

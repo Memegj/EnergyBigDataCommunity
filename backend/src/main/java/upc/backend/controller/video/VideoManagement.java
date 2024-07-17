@@ -96,7 +96,40 @@ public class VideoManagement {
             return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
         }
     }
+    @RequestMapping(value = "/videocontentdetail/{videocontentId}", method = RequestMethod.GET)
+// "获取单条信息", "根据id查询"
+    public Result videocontentinfo(HttpServletRequest httpServletRequest , @PathVariable("videocontentId") Integer videocontentId,
+                       @RequestHeader("token") String str_token) {
+        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            }
+            else {
+                try {
+                    URI requestUrl = new URI(httpServletRequest.getRequestURL().toString());
+                    URI hostUrl = new URI(requestUrl.getScheme(), requestUrl.getUserInfo(), requestUrl.getHost(), requestUrl.getPort(), null, null, null);
+                    Videocontent videocontent = videoService.getVideocontentByVideocontentId(videocontentId);
 
+                    if (videocontent == null) {
+                        return ResultGenerator.genFailResult("未查询到数据");
+                    }
+
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("videocontent",videocontent);
+                    result.put("hostUrl", hostUrl.toString()); // 将URI转换为字符串
+                    return ResultGenerator.genSuccessResult(result);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    return ResultGenerator.genFailResult("URI解析异常");
+                }
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+        }
+    }
     //获取单个详情信息
 /*    @RequestMapping(value = "api/videos/{videoId}", method = RequestMethod.GET)
     public Result info(@PathVariable("videoId") Integer VideoId) {

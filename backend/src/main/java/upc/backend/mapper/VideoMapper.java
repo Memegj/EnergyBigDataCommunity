@@ -17,6 +17,7 @@ public interface VideoMapper {
     int updateByPrimaryKeySelective(Video video);
 
     Video selectByVideoId(Integer VideoId);
+
     int getNumOfTotalVideos(PageQueryUtil pageUtil);
     int getNumOfUserVideo(PageQueryUtil pageUtil,Integer[] teamIdsArray);
     int insert(Video video);

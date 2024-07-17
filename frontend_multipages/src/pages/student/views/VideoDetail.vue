@@ -255,18 +255,14 @@ const handleAdd = () => {
     query: { videoId: videoId.value }
   });
 };
-const handleEdit = (videocontent) => {
-  router.push({
-    path: '/student/videocontentupload',
-    query: {
-      videoId: videoId.value,
-      videocontentId: videocontent.videocontentId, // 将视频内容的ID传递给编辑页面
-      videocontentName: videocontent.videocontentName, // 将视频内容的名称传递给编辑页面
-      uploadTime: videocontent.uploadTime, // 将上传时间传递给编辑页面
-      videocontentUrl: videocontent.videocontentUrl // 将视频内容的URL传递给编辑页面
-    }
-  });
-};
+const handleEdit = (videocontentId) => {
+    router.push({
+      name: 'videocontentedit',
+      params: {
+        videocontentId: videocontentId
+      }
+    })
+}
 const goToChapter = (index) => {
   console.log(`Navigating to chapter ${index + 1}`);
   getDetail(videoId.value);
