@@ -3,49 +3,30 @@
     <template #header>
       <div class="search-bar">
         <h1>全部课程</h1>
-        <div class="button-container">
-          <el-button type="primary" :icon="Plus" @click="handleAdd">上传视频</el-button>
-          <el-popconfirm
-              title="确定删除吗？"
-              confirmButtonText="确定"
-              cancelButtonText="取消"
-              @confirm="handleDelete"
-          >
-            <template #reference>
-              <el-button type="danger" :icon="Delete">批量删除</el-button>
-            </template>
-          </el-popconfirm>
-        </div>
         <div class="search-inputs">
-          <input type="text" v-model="searchQuery" placeholder="输入关键词..." />
-          <el-select v-model="selectedCategory" placeholder="类别检索" @change="handleSearch" style="width: 150px;">
-            <el-option label="按课程名称" value="VideoName">按课程名字</el-option>
-            <el-option label="按团队名称" value="TeamName">按团队名称</el-option>
+          <input type="text" v-model="searchQuery" placeholder="输入关键词...">
+          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search" style="width: 150px;">
+            <el-option label="按课程名称" value="VideoName"></el-option>
+            <el-option label="按授课老师" value="VideoTeacher"></el-option>
+            <el-option label="按团队名称" value="TeamName"></el-option>
           </el-select>&nbsp&nbsp
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <el-button type="primary" @click="search">搜索</el-button>
           <el-button type="warning" @click="resetSearch">清空</el-button>
         </div>
       </div>
     </template>
     <div class="course-grid">
-      <div class="select-all-container">
-        <el-checkbox v-model="allSelected" @change="handleSelectAll">全选</el-checkbox>
-      </div>
       <div
           v-for="video in state.videos"
           :key="video.videoId"
           class="course-item"
           @click="navigateToVideo(video.videoId)"
       >
-        <el-checkbox v-model="selectedVideos"  class="video-checkbox"></el-checkbox>
         <div class="course-item-content">
-          <button class="edit-button" @click="handleEditClick(video.videoId, $event)">
-            <el-icon class="large-icon"><Edit /></el-icon>
-          </button>
           <img :src="state.hostUrl + video.picture" alt="视频封面" class="course-image" />
           <div class="course-details">
             <div class="course-name" style="font-weight: bold;">视频名称：{{ video.videoName }}</div>
-            <div class="course-intro" style="color: #777;">简介：{{ getPlainText(video.videoIntro) }}</div>
+            <div class="course-intro" style="color: #777;">简介：{{ stripHTML(video.videoIntro) }}</div>
             <div class="course-meta">
               <span>上传人: {{ video.userName }}</span><br />
               <span>上传时间: {{ video.uploadTime }}</span>
@@ -54,7 +35,6 @@
         </div>
       </div>
     </div>
-
     <el-pagination
         background
         layout="prev, pager, next"
@@ -67,14 +47,13 @@
 </template>
 
 <script setup>
-import { Delete, Plus, Edit } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import axios from '@/utils/axios.js';
 import { useRouter } from 'vue-router';
 
-const searchText = ref('');
-const searchOption = ref('VideoName');
+const searchQuery = ref('');
+const selectedCategory = ref('VideoName');
 const router = useRouter();
 const state = reactive({
   loading: false,
@@ -85,18 +64,15 @@ const state = reactive({
   hostUrl: '',
 });
 
-const searchQuery = ref('');
-const selectedCategory = ref('VideoName');
-const selectedVideos = ref([]);
-const allSelected = ref(false);
-
+// 初始化加载数据
 onMounted(() => {
-  getVideos();
+  getReferences();
 });
 
-const getVideos = () => {
+// 获取视频列表
+const getReferences = () => {
   state.loading = true;
-  axios.get('/video_manage', {
+  axios.get('/video_search', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
@@ -115,82 +91,32 @@ const getVideos = () => {
   });
 };
 
-const getPlainText = (html) => {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = html;
-  return tempDiv.innerText;
-};
-
 const navigateToVideo = (videoId) => {
-  router.push({
-    path: `/student/video_detail/${videoId}`,
-    query: {
-      fromPage: 'videoManage'
-    }
-  });
+  router.push(`/admin/video_detail/${videoId}`);
 };
 
-const navigateToEdit = (videoId) => {
-  console.log('Navigating to edit video with ID:', videoId);
-  router.push(`/student/videoedit/${videoId}`);
-};
-
-const handleAdd = () => {
-  router.push('/student/videoupload');
+const search = () => {
+  getReferences();
 };
 
 const changePage = (val) => {
   state.currentPage = val;
-  getVideos();
-};
-
-const handleSearch = () => {
-  getVideos();
+  getReferences();
 };
 
 const resetSearch = () => {
   searchQuery.value = '';
   selectedCategory.value = 'VideoName';
   state.currentPage = 1;
-  getVideos();
+  getReferences();
 };
 
-const handleDelete = () => {
-  if (!selectedVideos.value.length) {
-    ElMessage.error('请选择项');
-    return;
-  }
-
-  axios.delete('/video', {
-    data: {
-      ids: selectedVideos.value
-    }
-  })
-      .then(() => {
-        ElMessage.success('删除成功');
-        selectedVideos.value = [];
-        allSelected.value = false;
-        getVideos();
-      })
-      .catch(error => {
-        ElMessage.error('删除失败');
-      });
+// 移除 HTML 标签
+const stripHTML = (html) => {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  return tempDiv.textContent || tempDiv.innerText || '';
 };
-
-const handleSelectAll = (value) => {
-  if (value) {
-    selectedVideos.value = state.videos.map(video => video.videoId);
-  } else {
-    selectedVideos.value = [];
-  }
-};
-
-const handleEditClick = (videoId, event) => {
-  event.stopPropagation();
-  navigateToEdit(videoId);
-};
-
-defineExpose({state: state, getVideos: getVideos})
 </script>
 
 <style scoped>

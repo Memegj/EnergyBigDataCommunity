@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Literature_management.vue')
     },
     {
+      path: '/admin/video_manage',
+      name: 'video_manage',
+      component: () => import( '@/pages/admin/views/Video_management.vue')
+    },
+    {
       path: '/admin/user_manage',
       name: 'user_manage',
       component: () => import('@/pages/admin/views/UserManage.vue')
@@ -60,6 +65,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/Literature.vue')
     },
     {
+      path: '/admin/video',
+      name: 'video',
+      component: () => import( '@/pages/admin/views/Video.vue')
+    },
+    {
       path: '/admin/datasetupload',
       name: 'datasetupload',
       component: () => import( '@/pages/admin/views/Datasetupload.vue')
@@ -73,6 +83,11 @@ const router = createRouter({
       path: '/admin/literatureupload',
       name: 'literatureupload',
       component: () => import( '@/pages/admin/views/Literatureupload.vue')
+    },
+    {
+      path: '/admin/videoupload',
+      name: 'videoupload',
+      component: () => import( '@/pages/admin/views/Videoupload.vue')
     },
     {
       path: '/admin/datasetedit/:dataId', // 添加 dataId 参数
@@ -93,6 +108,12 @@ const router = createRouter({
       props: true // 通过 props 传递路由参数
     },
     {
+      path: '/admin/videoedit/:videoId', // 添加 codeId 参数
+      name: 'videoedit',
+      component: () => import('@/pages/admin/views/Videoedit.vue'),
+      props: true // 通过 props 传递路由参数
+    },
+    {
       path: '/admin/data_detail/:dataId',
       name: 'datasetDetail',
       component: () => import( '@/pages/admin/views/DatasetDetail.vue'),
@@ -106,6 +127,22 @@ const router = createRouter({
       path: '/admin/literature_detail/:literId',
       name: 'literatureDetail',
       component: () => import( '@/pages/admin/views/LiteratureDetail.vue'),
+    },
+    {
+      path: '/admin/video_detail/:videoId',
+      name: 'videoDetail',
+      component: () => import( '@/pages/admin/views/VideoDetail.vue'),
+    },
+    {
+      path: '/admin/videocontentedit/:videocontentId',
+      name: 'videocontentedit',
+      component: () => import('@/pages/admin/views/Videocontentedit.vue'),
+      props: true // 通过 props 传递路由参数
+    },
+    {
+      path: '/admin/videocontentupload',
+      name: 'videocontentupload',
+      component: () => import( '@/pages/admin/views/Videocontentupload.vue')
     },
   ],
 })

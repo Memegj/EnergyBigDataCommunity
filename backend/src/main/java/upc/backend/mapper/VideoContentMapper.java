@@ -10,7 +10,9 @@ import java.util.List;
 @Mapper
 public interface VideoContentMapper {
     int deleteBatchVideocontent(Integer[] ids);
+    int deleteVideocontentBatchByVideoId(Integer[] ids);
     List<Videocontent> selectByVideoId(@Param("videoId") Integer videoId);
-    Videocontent selectByVideocontentId(@Param("videocontentId") Integer videocontentId);
+    Videocontent selectByVideocontentId(Integer videocontentId);
     int insertvideocontentSelective(Videocontent videocontent);
+    int updateByPrimaryKeySelective(Videocontent videocontent);
 }

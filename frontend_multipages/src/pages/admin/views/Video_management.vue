@@ -123,7 +123,7 @@ const getPlainText = (html) => {
 
 const navigateToVideo = (videoId) => {
   router.push({
-    path: `/student/video_detail/${videoId}`,
+    path: `/admin/video_detail/${videoId}`,
     query: {
       fromPage: 'videoManage'
     }
@@ -132,11 +132,11 @@ const navigateToVideo = (videoId) => {
 
 const navigateToEdit = (videoId) => {
   console.log('Navigating to edit video with ID:', videoId);
-  router.push(`/student/videoedit/${videoId}`);
+  router.push(`/admin/videoedit/${videoId}`);
 };
 
 const handleAdd = () => {
-  router.push('/student/videoupload');
+  router.push('/admin/videoupload');
 };
 
 const changePage = (val) => {

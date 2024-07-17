@@ -95,7 +95,6 @@ const router = createRouter({
       path: '/student/videocontentupload',
       name: 'videocontentupload',
       component: () => import( '@/pages/student/views/Videocontentupload.vue')
-
     },
     {
       path: '/student/datasetedit/:dataId', // 添加 dataId 参数
@@ -124,7 +123,7 @@ const router = createRouter({
     {
       path: '/student/videocontentedit/:videocontentId',
       name: 'videocontentedit',
-      component: () => import('@/pages/student/views/Videocontentedit2.vue'),
+      component: () => import('@/pages/student/views/Videocontentedit.vue'),
       props: true // 通过 props 传递路由参数
     },
     {

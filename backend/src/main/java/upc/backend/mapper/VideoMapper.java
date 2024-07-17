@@ -15,7 +15,6 @@ public interface VideoMapper {
     List<Video> selectByVideoName(String title);
     List<Video> selectByVideoTeacher(String author);
     int updateByPrimaryKeySelective(Video video);
-
     Video selectByVideoId(Integer VideoId);
 
     int getNumOfTotalVideos(PageQueryUtil pageUtil);

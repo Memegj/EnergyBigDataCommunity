@@ -69,5 +69,26 @@
             </if>
         </trim>
     </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Videocontent">
+        update videocontent
+        <set>
+            <if test="VideocontentName != null">
+                VideocontentName = #{VideocontentName,jdbcType=VARCHAR},
+            </if>
+            <if test="VideocontentUrl != null">
+                VideocontentUrl = #{VideocontentUrl,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where VideocontentId = #{VideocontentId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteVideocontentBatchByVideoId" parameterType="java.lang.Integer">
+        delete from videocontent
+        where VideoId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 
 </mapper>

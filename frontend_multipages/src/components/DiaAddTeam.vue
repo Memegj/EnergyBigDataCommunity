@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-      :title="state.type == 'add' ? '文献新增' : '文献修改'"
+      :title="state.type == 'add' ? '团队新增' : '团队修改'"
       v-model="state.visible"
       width="400px"
   >

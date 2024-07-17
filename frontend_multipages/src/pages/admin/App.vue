@@ -46,8 +46,8 @@
             <template #title>
               <span><el-icon><el-icon-video-camera /></el-icon>教学视频</span>
             </template>
-            <el-menu-item index="/admin/gettable">教学视频检索</el-menu-item>
-            <el-menu-item index="/admin/getfile">教学视频管理</el-menu-item>
+            <el-menu-item index="/admin/video">教学视频检索</el-menu-item>
+            <el-menu-item index="/admin/video_manage">教学视频管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="5">
             <template #title>

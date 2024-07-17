@@ -55,6 +55,11 @@ public class VideoService {
         if (radd > 0){return true;}
         else {return false;}
     }
+    public Boolean updateVideocontentInfo(Videocontent videocontent){
+        int radd = videoContentMapper.updateByPrimaryKeySelective(videocontent);
+        if (radd > 0){return true;}
+        else {return false;}
+    }
 
     public PageResult getVideoPageByUserId(PageQueryUtil pageUtil){
         List<Video> videos = videoMapper.findAllVideoListByUserId(pageUtil);
@@ -156,6 +161,14 @@ public class VideoService {
         Integer bb= videoMapper.deleteBatchVideo(ids);
         return aa+bb > 0;
     }
+    public Boolean deleteVideocontentBatchByVideoId(Integer[] ids) {
+        if (ids.length < 1) {
+            return false;
+        }
+        //删除分类数据
+        return videoContentMapper.deleteVideocontentBatchByVideoId(ids) > 0;
+    }
+
     public Boolean deleteBatchVideocontent(Integer[] ids) {
         if (ids.length < 1) {
             return false;

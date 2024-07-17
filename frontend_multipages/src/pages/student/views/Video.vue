@@ -5,7 +5,7 @@
         <h1>全部课程</h1>
         <div class="search-inputs">
           <input type="text" v-model="searchQuery" placeholder="输入关键词...">
-          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search"style="width: 150px;">
+          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search" style="width: 150px;">
             <el-option label="按课程名称" value="VideoName"></el-option>
             <el-option label="按授课老师" value="VideoTeacher"></el-option>
             <el-option label="按团队名称" value="TeamName"></el-option>
@@ -25,8 +25,8 @@
         <div class="course-item-content">
           <img :src="state.hostUrl + video.picture" alt="视频封面" class="course-image" />
           <div class="course-details">
-            <div class="course-name">视频名称：{{ video.videoName }}</div>
-            <div class="course-intro">简介：{{ stripHTML(video.videoIntro) }}</div>
+            <div class="course-name" style="font-weight: bold;">视频名称：{{ video.videoName }}</div>
+            <div class="course-intro" style="color: #777;">简介：{{ stripHTML(video.videoIntro) }}</div>
             <div class="course-meta">
               <span>上传人: {{ video.userName }}</span><br />
               <span>上传时间: {{ video.uploadTime }}</span>
@@ -61,7 +61,7 @@ const state = reactive({
   total: 0,
   currentPage: 1,
   pageSize: 8,
-  hostUrl: '', // 请求头
+  hostUrl: '',
 });
 
 // 初始化加载数据
@@ -119,7 +119,24 @@ const stripHTML = (html) => {
 };
 </script>
 
-<style>
+<style scoped>
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.button-container {
+  display: flex;
+  margin-right: 300px; /* 调整左侧间距 */
+}
+
+.search-inputs {
+  display: flex;
+  align-items: center;
+}
+
 .search-inputs input[type="text"] {
   width: 200px;
   padding: 8px;
@@ -127,11 +144,10 @@ const stripHTML = (html) => {
   margin-right: 10px;
 }
 
-.search-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+.search-inputs select {
+  padding: 8px;
+  font-size: 14px;
+  margin-right: 10px;
 }
 
 .course-grid {
@@ -140,6 +156,15 @@ const stripHTML = (html) => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
+  position: relative;
+  margin-bottom: 80px;
+}
+
+.select-all-container {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: 2;
 }
 
 .course-item-content {
@@ -150,16 +175,23 @@ const stripHTML = (html) => {
   flex-direction: column;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .course-image {
   width: 100%;
-  height: auto;
-  aspect-ratio: auto 628 / 353; /* 根据需要调整 */
+  height: 50%;
+  text-align: center;
+  aspect-ratio: auto 628 / 353;
 }
 
 .course-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 使内容靠下 */
   flex: 1;
+  margin-top: 10px; /* 增加上边距 */
+  padding: 10px;
 }
 
 .course-meta {
@@ -168,14 +200,37 @@ const stripHTML = (html) => {
   color: #777;
 }
 
-.search-inputs {
+.edit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background 0.3s;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
-.search-inputs select {
-  padding: 8px;
-  font-size: 14px;
-  margin-right: 10px;
+.edit-button:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.large-icon {
+  font-size: 16px;
+}
+
+.video-checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.course-item {
+  position: relative;
 }
 </style>

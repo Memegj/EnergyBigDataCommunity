@@ -209,9 +209,9 @@ const handleSelectionChange = (val) => {
 
 const goBack = () => {
   if (fromPage === 'videoManage') {
-    router.push('/student/video_manage');
+    router.push('/admin/video_manage');
   } else {
-    router.push('/student/video');
+    router.push('/admin/video');
   }
 };
 const handleDelete = () => {
@@ -264,7 +264,7 @@ const handleCollect = async () => {
 
 const handleAdd = () => {
   router.push({
-    path: '/student/videocontentupload',
+    path: '/admin/videocontentupload',
     query: { videoId: videoId.value }
   });
 };

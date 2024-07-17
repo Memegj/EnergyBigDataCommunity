@@ -129,7 +129,7 @@ const submitForm = () => {
             if (res === true) {
               ElMessage.success('更新成功');
               state.visible = false;
-              router.push({ path: `/student/video_detail/${videoId.value}` });
+              router.push({ path: `/teacher/video_detail/${videoId.value}` });
             } else {
               ElMessage.error('更新失败');
             }
