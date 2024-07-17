@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.VideoContentMapper">
+
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Videocontent">
+        <id column="VideocontentId" jdbcType="INTEGER" property="VideocontentId" />
+        <result column="VideocontentName" jdbcType="VARCHAR" property="VideocontentName" />
+        <result column="VideocontentUrl" jdbcType="VARCHAR" property="VideocontentUrl" />
+        <result column="VideoId" jdbcType="INTEGER" property="VideoId" />
+        <result column="UploadTime" jdbcType="TIMESTAMP" property="UploadTime" />
+    </resultMap>
+
+    <select id="selectByVideoId" resultMap="BaseResultMap" parameterType="Map">
+        SELECT VideocontentId, VideocontentName, VideocontentUrl, VideoId, UploadTime
+        FROM videocontent
+        WHERE VideoId = #{videoId, jdbcType=INTEGER}
+    </select>
+    <delete id="deleteBatchVideocontent" parameterType="java.lang.Integer">
+        delete from videocontent
+        where VideocontentId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+    <insert id="insertvideocontentSelective" parameterType="upc.backend.entity.Videocontent">
+        insert into videocontent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="VideocontentId != null">
+                VideocontentId,
+            </if>
+            <if test="VideocontentName != null">
+                VideocontentName,
+            </if>
+            <if test="UploadTime != null">
+                UploadTime,
+            </if>
+
+            <if test="VideoId != null">
+                VideoId,
+            </if>
+            <if test="VideocontentUrl != null">
+                VideocontentUrl,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="VideocontentId != null">
+                #{VideocontentId, jdbcType=INTEGER},
+            </if>
+            <if test="VideocontentName != null">
+                #{VideocontentName, jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                #{UploadTime, jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="VideoId != null">
+                #{VideoId, jdbcType=INTEGER},
+            </if>
+            <if test="VideocontentUrl != null">
+                #{VideocontentUrl, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

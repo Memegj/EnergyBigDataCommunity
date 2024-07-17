@@ -1,11 +1,14 @@
 package upc.backend.service;
 
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import upc.backend.entity.Datasets;
 import upc.backend.entity.Userteam;
 import upc.backend.entity.Video;
+import upc.backend.entity.Videocontent;
 import upc.backend.mapper.DatasetsMapper;
+import upc.backend.mapper.VideoContentMapper;
 import upc.backend.mapper.VideoMapper;
 import upc.backend.util.PageQueryUtil;
 import upc.backend.util.PageResult;
@@ -22,8 +25,9 @@ public class VideoService {
     private TeamService teamService;
     @Resource
     private UserteamService userteamService;
-
-
+    @Autowired
+    @Resource
+   private VideoContentMapper videoContentMapper;
     //页数
     //获取视频信息
     public Video getVideoByVideoId(Integer VideoId){
@@ -35,10 +39,13 @@ public class VideoService {
     public PageResult getVideosPage(PageQueryUtil pageUtil){
         List<Video> videos =videoMapper.findAllVideoList(pageUtil);
         int total = videoMapper.getNumOfTotalVideos(pageUtil);
+
         PageResult pageResult = new PageResult(videos, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
-
+    public List<Videocontent> getVideoContentsByVideoId(Integer videoId) {
+        return videoContentMapper.selectByVideoId(videoId);
+    }
     //更新文献信息
     public Boolean updateVideoInfo(Video video){
         int radd = videoMapper.updateByPrimaryKeySelective(video);
@@ -133,6 +140,9 @@ public class VideoService {
     public Boolean add_file(Video video){
         return videoMapper.insertSelective(video) > 0;
     }
+    public Boolean add_videocontentfile(Videocontent videocontent){
+        return videoContentMapper.insertvideocontentSelective(videocontent) > 0;
+    }
 
     public Boolean deleteBatch(Integer[] ids) {
         if (ids.length < 1) {
@@ -143,4 +153,12 @@ public class VideoService {
         Integer bb= videoMapper.deleteBatchVideo(ids);
         return aa+bb > 0;
     }
+    public Boolean deleteBatchVideocontent(Integer[] ids) {
+        if (ids.length < 1) {
+            return false;
+        }
+        //删除分类数据
+        return videoContentMapper.deleteBatchVideocontent(ids) > 0;
+    }
+
 }

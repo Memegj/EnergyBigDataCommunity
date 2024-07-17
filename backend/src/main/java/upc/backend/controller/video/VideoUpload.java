@@ -12,6 +12,7 @@ import upc.backend.common.Constants;
 import upc.backend.common.ServiceResultEnum;
 import upc.backend.controller.datasets.Param.DatasetsAddParam;
 import upc.backend.controller.video.param.VideoAddParam;
+import upc.backend.controller.video.param.VideocontentAddParam;
 import upc.backend.entity.*;
 import upc.backend.service.*;
 import upc.backend.util.BeanUtil;
@@ -209,6 +210,36 @@ public class VideoUpload {
 
                     return ResultGenerator.genSuccessResult(teams);
 
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+        }
+    }
+    @RequestMapping(value = "/videocontent/file_save", method = RequestMethod.POST)
+    //@ApiOperation(value = "新增商品信息", notes = "新增商品信息")
+    public Result saveVideocontent(@RequestBody VideocontentAddParam videocontentAddParam, @RequestHeader("token") String str_token) {
+        if (str_token != null && !str_token.isEmpty() && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            } else {
+                Videocontent videocontent = new Videocontent();
+                BeanUtil.copyProperties(videocontentAddParam, videocontent);
+
+                // 从 VideocontentAddParam 中获取 VideoId 并设置到 Videocontent
+                videocontent.setVideoId(videocontentAddParam.getVideoId());
+
+                videocontent.setUploadTime(new Date());
+                Boolean videoUpload_flag = videoService.add_videocontentfile(videocontent);
+                if (videoUpload_flag) {
+                    Result result = ResultGenerator.genSuccessResult();
+                    result.setData(true);
+                    return result;
+                } else {
+                    return ResultGenerator.genFailResult(ServiceResultEnum.OPERATE_ERROR.getResult());
+                }
             }
         } else {
             return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
