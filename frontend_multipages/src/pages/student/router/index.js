@@ -108,6 +108,12 @@ const router = createRouter({
       props: true // 通过 props 传递路由参数
     },
     {
+      path: '/student/videoedit/:videoId', // 添加 codeId 参数
+      name: 'videoedit',
+      component: () => import('@/pages/student/views/Videoedit.vue'),
+      props: true // 通过 props 传递路由参数
+    },
+    {
       path: '/student/data_detail/:dataId',
       name: 'datasetDetail',
       component: () => import( '@/pages/student/views/DatasetDetail.vue'),

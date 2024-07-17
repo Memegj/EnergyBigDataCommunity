@@ -10,14 +10,12 @@
       <!-- 视频详情 -->
       <el-card class="video-card video-details">
         <div class="video-header">
-          <video :src="state.fileParams.file_path" controls class="video-cover">你的浏览器不支持视频播放</video>
+          <video v-if="state.fileParams.file_path && !isImage" :src="state.fileParams.file_path" controls class="video-cover">你的浏览器不支持视频播放</video>
+          <img v-else :src="state.fileParams.file_path" class="video-cover" alt="封面图片" />
           <div class="video-info">
             <h1>{{ state.fileParams.VideoName }}</h1>
             <p v-if="videoDuration !== null">
               视频时长：{{ formatDuration(videoDuration) }}
-            </p>
-            <p v-else>
-              视频时长: 正在加载视频时长信息...
             </p>
             <p>浏览量: {{ state.fileParams.PageView }}</p>
             <el-button type="primary" @click="handleCollect" v-if="state.fileParams.CollectId">
@@ -86,9 +84,11 @@ const state = reactive({
     VideoTeacher: '',
     VideoIntro: '',
     chapters: [],
-    CollectId: ''
+    CollectId: '',
+    file_path: '',
   }
 });
+const isImage = ref(false);
 
 const formatDuration = (duration) => {
   if (duration === null) return '';
@@ -107,13 +107,16 @@ const getDetail = async (id) => {
       VideoTeacher: res.video.videoTeacher,
       VideoIntro: res.video.videoIntro,
       CollectId: res.video.collectId,
-      file_path: res.hostUrl + res.video.url,
+      file_path: res.video.url ? res.hostUrl + res.video.url : res.hostUrl + res.video.picture,
     };
-    const videoElement = document.createElement('video');
-    videoElement.src = state.fileParams.file_path;
-    videoElement.onloadedmetadata = () => {
-      videoDuration.value = Math.round(videoElement.duration);
-    };
+    isImage.value = !res.video.url;
+    if (res.video.url) {
+      const videoElement = document.createElement('video');
+      videoElement.src = state.fileParams.file_path;
+      videoElement.onloadedmetadata = () => {
+        videoDuration.value = Math.round(videoElement.duration);
+      };
+    }
   } catch (error) {
     console.error('Failed to fetch data:', error);
   }

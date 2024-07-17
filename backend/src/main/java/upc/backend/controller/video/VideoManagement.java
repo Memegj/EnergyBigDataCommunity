@@ -9,7 +9,10 @@ import upc.backend.common.BatchIdParam;
 import upc.backend.common.Constants;
 import upc.backend.common.ServiceResultEnum;
 import upc.backend.controller.Param.CollectAddParam;
+import upc.backend.controller.datasets.Param.DatasetsUpdateParam;
+import upc.backend.controller.video.param.VideoUpdateParam;
 import upc.backend.entity.Collect;
+import upc.backend.entity.Datasets;
 import upc.backend.entity.UserToken;
 import upc.backend.entity.Video;
 import upc.backend.service.CollectService;
@@ -20,6 +23,7 @@ import upc.backend.util.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +101,33 @@ public class VideoManagement {
         }
         return ResultGenerator.genSuccessResult(video);
     }*/
+
+    //修改
+    @RequestMapping(value = "/video", method = RequestMethod.PUT)
+// @ApiOperation(value = "修改分类信息", notes = "修改分类信息")
+    public Result update(@RequestBody VideoUpdateParam videoUpdateParam, @RequestHeader("token") String str_token) {
+        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
+            UserToken userToken = userTokenService.selectByToken(str_token);
+            if (userToken == null) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
+                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
+            } else {
+                Video video = new Video();
+                BeanUtil.copyProperties(videoUpdateParam, video);
+                video.setUploadTime(new Date());
+                if(videoService.updateVideoInfo(video)){
+                    Result result = new ResultGenerator().genSuccessResult();
+                    result.setData(true);
+                    return result;
+                } else {
+                    return ResultGenerator.genFailResult("更新失败");
+                }
+            }
+        } else {
+            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
+        }
+    }
     @RequestMapping(value = "/video/collect", method = RequestMethod.DELETE)
     //@ApiOperation(value = "批量删除分类信息", notes = "批量删除分类信息")
     public Result deletecollect(@RequestBody BatchIdParam batchIdParam) {

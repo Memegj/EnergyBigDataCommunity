@@ -167,7 +167,7 @@ const submitForm = () => {
       console.log('提交的数据:', payload); // 打印提交的数据
       axios.put('/dataset', payload)
           .then(res => {
-            if (res === true) { // 注意这里要用 res.data，而不是 res
+            if (res === true) {
               ElMessage.success('更新成功');
               state.visible = false;
             } else {
@@ -195,11 +195,6 @@ const handleUrlSuccess = (val) => {
   state.fileParams.file_path = val.data[0] + val.data[1] || ''
   state.fileParams.Url = val.data[1]
   state.uploadProgress = null
-}
-
-const getHost = () => {
-  const {protocol, hostname, port} = window.location
-  return `${protocol}//${hostname}${port ? `:${port}` : ''}`
 }
 
 const getTeamOptions = () => {

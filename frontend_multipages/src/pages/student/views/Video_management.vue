@@ -30,11 +30,13 @@
           v-for="video in state.videos"
           :key="video.videoId"
           class="course-item"
-          @click="navigateToVideo(video.videoId)"
       >
         <div class="course-item-content">
-          <img :src="state.hostUrl+video.picture" alt="视频封面" class="course-image" />
-          <div class="course-details">
+          <button class="edit-button" @click="navigateToEdit(video.videoId)">
+            <el-icon class="large-icon"><Edit /></el-icon>
+          </button>
+          <img :src="state.hostUrl + video.picture" alt="视频封面" class="course-image" />
+          <div class="course-details" @click="navigateToVideo(video.videoId)">
             <div class="course-name">视频名称：{{ video.videoName }}</div>
             <div class="course-intro">简介：{{ getPlainText(video.videoIntro) }}</div>
             <div class="course-meta">
@@ -58,7 +60,7 @@
 </template>
 
 <script setup>
-import { Delete, Plus } from "@element-plus/icons-vue";
+import { Delete, Plus, Edit } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import axios from '@/utils/axios.js';
@@ -113,6 +115,11 @@ const navigateToVideo = (videoId) => {
   router.push(`/student/video_detail/${videoId}`);
 };
 
+// 跳转到视频编辑页面
+const navigateToEdit = (videoId) => {
+  router.push(`/student/videoedit/${videoId}`);
+};
+
 const handleAdd = () => {
   router.push('/student/videoupload');
 };
@@ -134,7 +141,7 @@ const resetSearch = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .search-inputs input[type="text"] {
   width: 200px;
   padding: 8px;
@@ -165,6 +172,7 @@ const resetSearch = () => {
   flex-direction: column;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .course-image {
@@ -192,5 +200,28 @@ const resetSearch = () => {
   padding: 8px;
   font-size: 14px;
   margin-right: 10px;
+}
+
+.edit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-button:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.large-icon {
+  font-size: 16px; /* 调整图标的大小 */
 }
 </style>

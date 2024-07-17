@@ -97,7 +97,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitAdd">立即创建</el-button>
+          <el-button type="primary" @click="submitForm">提交修改</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -110,7 +110,10 @@ import axios from '@/utils/axios'
 import WangEditor from 'wangeditor'
 import {ElMessage} from 'element-plus'
 import {localGet} from '@/utils'
+import {useRoute} from "vue-router";
 
+const route = useRoute()
+const videoId = ref(route.params.videoId)
 const editor = ref(null)
 const {proxy} = getCurrentInstance()
 const fileRef = ref(null)
@@ -156,6 +159,7 @@ const state = reactive({
 let instance
 
 onMounted(async () => {
+  await getDetail(videoId.value) // 确保获取详情之后再初始化编辑器
   instance = new WangEditor(editor.value)
   instance.config.showLinkImg = false
   instance.config.showLinkImgAlt = false
@@ -179,6 +183,7 @@ onMounted(async () => {
     },
   })
   instance.create()
+  instance.txt.html(state.fileParams.VideoIntro) // 设置编辑器内容为 HTML
   await getTeamOptions()
 })
 
@@ -187,10 +192,12 @@ onBeforeUnmount(() => {
   instance = null
 })
 
-const submitAdd = () => {
+const submitForm = () => {
   fileRef.value.validate((valid) => {
     if (valid) {
-      let params = {
+      handlePublicChange()
+      const payload = {
+        videoId: videoId.value,
         videoName: state.fileParams.VideoName,
         videoTeacher: state.fileParams.VideoTeacher,
         videoIntro: instance.txt.html(),
@@ -198,13 +205,20 @@ const submitAdd = () => {
         picture: state.fileParams.Picture,
         teamId: state.fileParams.TeamId,
         pageView: state.fileParams.PageView
-      }
-      console.log('params', params)
-      axios.post('/video/file_save', params).then(res => {
-        if (res == true) {
-          ElMessage.success('添加成功')
-        } else ElMessage.error("添加失败")
-      })
+      };
+      console.log('提交的数据:', payload); // 打印提交的数据
+      axios.put('/video', payload)
+          .then(res => {
+            if (res === true) {
+              ElMessage.success('更新成功');
+              state.visible = false;
+            } else {
+              ElMessage.error('更新失败');
+            }
+          })
+          .catch(error => {
+            console.error('请求出错', error);
+          });
     }
   })
 }
@@ -227,7 +241,7 @@ const handleUrlSuccess = (val) => {
 
 const handlePictureSuccess = (val) => {
   state.fileParams.Picture = val.data[1] || ''
-  state.fileParams.picture_path = val.data[0] + val.data[1] || '' // 处理封面图成功响应
+  state.fileParams.Picture_path = val.data[0] + val.data[1] || '' // 处理封面图成功响应
   state.pictureUploadProgress = null // 上传成功后重置进度条
 }
 
@@ -246,6 +260,24 @@ const getTeamOptions = () => {
       .catch(function (err) {
         console.log(err)
       })
+}
+
+const getDetail = async (id) => {
+  const res = await axios.get(`/videodetail/${id}`)
+  console.log('Response:', res); // 打印响应数据
+  state.fileParams = {
+    VideoName: res.video.videoName,
+    VideoTeacher: res.video.videoTeacher,
+    VideoIntro: res.video.videoIntro,
+    file_path: res.video.url ? res.hostUrl + res.video.url : null, // 当 url 为 null 时，file_path 也为 null
+    Url: res.video.url,
+    Picture: res.video.picture,
+    picture_path: res.hostUrl + res.video.picture,
+    TeamId: res.video.teamId,
+    PageView: res.video.pageView,
+    isPublic: res.video.teamId === null // 根据 TeamId 设置 isPublic
+  }
+
 }
 
 const handleUploadProgress = (event, type) => {
