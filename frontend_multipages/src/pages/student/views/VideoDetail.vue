@@ -10,7 +10,7 @@
       <!-- 视频详情 -->
       <el-card class="video-card video-details">
         <div class="video-header">
-          <video :src="state.fileParams.Url" controls class="video-cover">你的浏览器不支持视频播放</video>
+          <video :src="state.fileParams.file_path" controls class="video-cover">你的浏览器不支持视频播放</video>
           <div class="video-info">
             <h1>{{ state.fileParams.VideoName }}</h1>
             <p v-if="videoDuration !== null">
@@ -49,7 +49,7 @@
             <div slot="header" class="clearfix">
               <span>授课教师</span>
             </div>
-            <p>{{ state.fileParams.VideoTeacher }}</p>
+            <p class="teacher-name">{{ state.fileParams.VideoTeacher }}</p>
           </el-card>
 
           <!-- 课程介绍 -->
@@ -57,7 +57,7 @@
             <div slot="header" class="clearfix">
               <span>课程介绍</span>
             </div>
-            <p>{{ state.fileParams.VideoIntro }}</p>
+            <div class="course-intro" v-html="state.fileParams.VideoIntro"></div>
           </el-card>
         </div>
       </div>
@@ -66,15 +66,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { localGet } from "@/utils/index.js";
-import { User } from '@element-plus/icons-vue';
+import { useRouter } from 'vue-router';
 
 const videoDuration = ref(null);
 const route = useRoute();
+const router = useRouter();
 const videoId = ref(route.params.videoId);
 const state = reactive({
   token: localGet('token') || '',
@@ -100,17 +101,16 @@ const formatDuration = (duration) => {
 const getDetail = async (id) => {
   try {
     const res = await axios.get(`/videodetail/${id}`);
-    console.log('Response:', res);
     state.fileParams = {
       VideoName: res.video.videoName,
       PageView: res.video.pageView,
       VideoTeacher: res.video.videoTeacher,
       VideoIntro: res.video.videoIntro,
       CollectId: res.video.collectId,
-      Url: res.video.url
+      file_path: res.hostUrl + res.video.url,
     };
     const videoElement = document.createElement('video');
-    videoElement.src = state.fileParams.Url;
+    videoElement.src = state.fileParams.file_path;
     videoElement.onloadedmetadata = () => {
       videoDuration.value = Math.round(videoElement.duration);
     };
@@ -118,35 +118,27 @@ const getDetail = async (id) => {
     console.error('Failed to fetch data:', error);
   }
 };
+
 const goBack = () => {
   router.push('/student/video');
 };
 
 const handleCollect = async () => {
-  console.log('CollectId:', state.fileParams.CollectId);
-  console.log('Token:', state.token);
-
   try {
     if (state.fileParams.CollectId) {
-      // 取消收藏
-      await axios.delete('/videos/collect', {
-        data: {ids: [state.fileParams.CollectId]},
-        headers: {'token': state.token}
+      await axios.delete('/video/collect', {
+        data: { ids: [state.fileParams.CollectId] },
+        headers: { 'token': state.token }
       });
       ElMessage.success('已取消收藏');
     } else {
-      // 收藏
-      const params = {
-        videoId: videoId.value,
-      };
-      await axios.post('/videos/collect', params, {
-        headers: {'token': state.token}
+      await axios.post('/video/collect', { videoId: videoId.value }, {
+        headers: { 'token': state.token }
       });
       ElMessage.success('已收藏');
     }
     getDetail(videoId.value); // 重新获取详情以更新页面状态
   } catch (error) {
-    console.error('Failed to update collect status:', error.response ? error.response.data : error);
     ElMessage.error('操作失败: ' + (error.response ? error.response.data.message : error.message));
   }
 };
@@ -173,6 +165,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -204,13 +197,13 @@ onMounted(() => {
   padding: 1px;
 }
 
-.teacher-info,
-.course-description {
-  flex: 2;
+.teacher-info {
+  flex: 1; /* 设置授课教师框的高度 */
   margin-bottom: 10px;
 }
 
 .course-description {
+  flex: 2; /* 设置课程介绍框的高度 */
   margin-bottom: 0;
 }
 
@@ -237,5 +230,16 @@ onMounted(() => {
 .el-card__header {
   font-weight: bold;
   font-size: 18px;
+}
+
+.teacher-name {
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 超出隐藏 */
+  text-overflow: ellipsis; /* 省略号 */
+}
+
+.course-intro {
+  max-height: 200px; /* 设置最大高度 */
+  overflow-y: auto; /* 添加垂直滚动条 */
 }
 </style>

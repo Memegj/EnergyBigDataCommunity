@@ -85,6 +85,11 @@ const router = createRouter({
       component: () => import( '@/pages/student/views/Literatureupload.vue')
     },
     {
+      path: '/student/videoupload',
+      name: 'videoupload',
+      component: () => import( '@/pages/student/views/Videoupload.vue')
+    },
+    {
       path: '/student/datasetedit/:dataId', // 添加 dataId 参数
       name: 'datasetedit',
       component: () => import('@/pages/student/views/Datasetedit.vue'),

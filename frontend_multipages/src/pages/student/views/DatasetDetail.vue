@@ -47,12 +47,13 @@
 <script setup>
 import { ref, onMounted, reactive, computed } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { localGet } from "@/utils/index.js";
 import { User } from '@element-plus/icons-vue';
 
 const route = useRoute();
+const router = useRouter();
 const dataId = ref(route.params.dataId);
 const state = reactive({
   token: localGet('token') || '',

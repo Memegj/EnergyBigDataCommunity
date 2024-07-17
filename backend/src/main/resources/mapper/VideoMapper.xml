@@ -10,12 +10,13 @@
         <result column="VideoIntro" jdbcType="VARCHAR" property="VideoIntro" />
         <result column="PageView" jdbcType="INTEGER" property="PageView" />
         <result column="Url" jdbcType="VARCHAR" property="Url" />
+        <result column="Picture" jdbcType="VARCHAR" property="Picture" />
         <result column="UserId" jdbcType="INTEGER" property="UserId" />
         <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
 <!--        <result column="imageUrl" jdbcType="LONGTEXT" property="imageUrl" />-->
     </resultMap>
     <sql id="Base_Column_List">
-        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,PageView,Url,UserId,TeamId
+        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,PageView,Url,Picture,UserId,TeamId
     </sql>
     <select id="selectByVideoId" resultMap="BaseResultMap">
         select
@@ -82,6 +83,9 @@
         <if test="Url != null">
             Url = #{Url,jdbcType=VARCHAR},
         </if>
+        <if test="Picture != null">
+            Picture = #{Picture,jdbcType=VARCHAR},
+        </if>
         <if test="UserId != null">
             UserId = #{UserId,jdbcType=VARCHAR},
         </if>
@@ -115,6 +119,7 @@
         video.UploadTime,
         video.VideoIntro,
         video.PageView,
+        video.Picture,
         user.UserId AS userId,
         user.UserName AS userName,
         video.TeamId AS teamId
@@ -188,10 +193,10 @@
     </select>
 
     <insert id="insert" parameterType="upc.backend.entity.Video">
-        insert into video (VideoId, VideoName, UploadTime, VideoTeacher, VideoIntro, PageView, UserId, TeamId, Url)
+        insert into video (VideoId, VideoName, UploadTime, VideoTeacher, VideoIntro, PageView, Picture, UserId, TeamId, Url)
         values (#{VideoId,jdbcType=INTEGER}, #{VideoName,jdbcType=VARCHAR}, #{UploadTime,jdbcType=TIMESTAMP},
                 #{VideoTeacher,jdbcType=VARCHAR}, #{VideoIntro,jdbcType=VARCHAR},
-                #{PageView,jdbcType=INTEGER}, #{UserId,jdbcType=INTEGER}, #{TeamId,jdbcType=INTEGER}, #{Url,jdbcType=VARCHAR})
+                #{PageView,jdbcType=INTEGER}, #{Picture,jdbcType=VARCHAR}, #{UserId,jdbcType=INTEGER}, #{TeamId,jdbcType=INTEGER}, #{Url,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="upc.backend.entity.Video">
         insert into video
@@ -213,6 +218,9 @@
             </if>
             <if test="PageView != null">
                 PageView,
+            </if>
+            <if test="Picture != null">
+                Picture,
             </if>
             <if test="UserId != null">
                 UserId,
@@ -243,6 +251,9 @@
             <if test="PageView != null">
                 #{PageView, jdbcType=INTEGER},
             </if>
+            <if test="Picture != null">
+                #{Picture, jdbcType=VARCHAR},
+            </if>
             <if test="UserId != null">
                 #{UserId, jdbcType=INTEGER},
             </if>
@@ -262,6 +273,7 @@
             VideoTeacher = #{VideoTeacher,jdbcType=VARCHAR},
             VideoIntro = #{VideoIntro,jdbcType=VARCHAR},
             PageView = #{PageView,jdbcType=INTEGER},
+            Picture = #{Picture,jdbcType=VARCHAR},
             UserId = #{UserId,jdbcType=INTEGER},
             TeamId = #{UserId,jdbcType=INTEGER},
             Url = #{Url,jdbcType=VARCHAR}

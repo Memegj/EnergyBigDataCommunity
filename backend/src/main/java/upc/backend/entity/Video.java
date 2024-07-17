@@ -24,4 +24,5 @@ public class Video {
     private Integer TeamId;
     private Integer CollectId;
     private String TeamName;
+    private String Picture;
 }

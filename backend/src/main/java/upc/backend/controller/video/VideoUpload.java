@@ -70,6 +70,30 @@ public class VideoUpload {
             return ResultGenerator.genFailResult("文件上传失败"); // 返回失败结果
         }
     }
+    @RequestMapping(value = "/video/picture", method = RequestMethod.POST)
+    public Result upload_picture(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) throws URISyntaxException, FileNotFoundException {
+        List<String> multipartData = new ArrayList<>(2);
+        String fileName = file.getOriginalFilename(); // 获取上传文件的原始文件名
+        String suffixName = fileName.substring(fileName.lastIndexOf(".")); // 提取文件的后缀名
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss"); // 日期格式化，用于生成唯一文件名
+        Random r = new Random(); // 随机数生成器
+        StringBuilder tempName = new StringBuilder();
+        tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName); // 生成唯一文件名
+        String newFileName = tempName.toString(); // 转换为字符串
+        File destFile = new File(Constants.PICTURE_UPLOAD_DIC + newFileName); // 创建目标文件
+        try {
+            file.transferTo(destFile); // 将上传的文件保存到目标文件
+            Result resultSuccess = ResultGenerator.genSuccessResult(); // 生成成功结果
+            multipartData.add(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")).toString());
+            multipartData.add("/upload/picture/" + newFileName);
+            resultSuccess.setData(multipartData);
+            //resultSuccess.setData(Utils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/files/" + newFileName); // 设置返回的数据
+            return resultSuccess; // 返回成功结果
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("文件上传失败"); // 返回失败结果
+        }
+    }
 
     /**
      * 图片上传

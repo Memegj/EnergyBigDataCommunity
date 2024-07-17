@@ -16,10 +16,7 @@ import upc.backend.service.CollectService;
 import upc.backend.service.UserService;
 import upc.backend.service.UserTokenService;
 import upc.backend.service.VideoService;
-import upc.backend.util.CollectQueryUtil;
-import upc.backend.util.PageQueryUtil;
-import upc.backend.util.Result;
-import upc.backend.util.ResultGenerator;
+import upc.backend.util.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -89,40 +86,6 @@ public class VideoManagement {
             return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
         }
     }
-    @RequestMapping(value = "/videos/{videoId}", method = RequestMethod.GET)
-    public Result getVideoInfo(@PathVariable("videoId") Integer videoId,
-                               @RequestHeader("token") String str_token) {
-        if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
-            UserToken userToken = userTokenService.selectByToken(str_token);
-            if (userToken == null) {
-                return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
-            } else if (userToken.getExpire_time().getTime() <= System.currentTimeMillis()) {
-                return ResultGenerator.genFailResult(ServiceResultEnum.TOKEN_EXPIRE_ERROR.getResult());
-            } else {
-                Integer userId = userToken.getUserId(); // 获取 userId
-                Video video = videoService.getVideoByVideoId(videoId);
-                //获取CollectId
-                Map<String, Object> params = new HashMap<>(10);
-                params.put("userid", userToken.getUserId());
-                params.put("videoid", videoId);
-                CollectQueryUtil collectUtil = new CollectQueryUtil(params);
-                Collect collect = collectService.getCollectByVideoId(collectUtil);
-                if (collect != null) {
-                    video.setCollectId(collect.getCollectId());
-                } else {
-                    video.setCollectId(null); // 或者可以选择其他处理方式
-                }
-
-                if (video == null) {
-                    return ResultGenerator.genFailResult("未查询到数据");
-                }
-
-                return ResultGenerator.genSuccessResult(video);
-            }
-        } else {
-            return ResultGenerator.genFailResult(ServiceResultEnum.NOT_LOGIN_ERROR.getResult());
-        }
-    }
 
     //获取单个详情信息
 /*    @RequestMapping(value = "api/videos/{videoId}", method = RequestMethod.GET)
@@ -134,7 +97,7 @@ public class VideoManagement {
         }
         return ResultGenerator.genSuccessResult(video);
     }*/
-    @RequestMapping(value = "/videos/collect", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/video/collect", method = RequestMethod.DELETE)
     //@ApiOperation(value = "批量删除分类信息", notes = "批量删除分类信息")
     public Result deletecollect(@RequestBody BatchIdParam batchIdParam) {
 
@@ -148,7 +111,7 @@ public class VideoManagement {
         }
     }
 
-    @RequestMapping(value = "/videos/collect", method = RequestMethod.POST)
+    @RequestMapping(value = "/video/collect", method = RequestMethod.POST)
     public Result save(@RequestBody CollectAddParam collectAddParam, @RequestHeader("token") String str_token) {
         if (null != str_token && !"".equals(str_token) && str_token.length() == Constants.TOKEN_LENGTH) {
             UserToken userToken = userTokenService.selectByToken(str_token);
@@ -179,22 +142,28 @@ public class VideoManagement {
     }
 
     //获取分页
-    @RequestMapping(value = "/videos", method = RequestMethod.GET)
-    public Result list(@RequestParam(required = false) Integer pageNumber,
+    @RequestMapping(value = "/video", method = RequestMethod.GET)
+    public Result list(HttpServletRequest httpServletRequest , @RequestParam(required = false) Integer pageNumber,
                        @RequestParam(required = false) Integer pageSize,
                        @RequestParam(required = false) String searchQuery,
                        @RequestParam(defaultValue = "VideoName") String category
-    ) {
+    ) throws URISyntaxException {
         if (pageNumber == null || pageNumber < 1 || pageSize == null || pageSize < 8) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+        URI requestUrl = new URI(httpServletRequest.getRequestURL().toString());
+        URI hostUrl = new URI(requestUrl.getScheme(), requestUrl.getUserInfo(), requestUrl.getHost(), requestUrl.getPort(), null, null, null);
         Map params = new HashMap(8);
         params.put("page", pageNumber);
         params.put("limit", pageSize);
         params.put("category", category);
         params.put("searchQuery",searchQuery);
         PageQueryUtil pageUtil = new PageQueryUtil(params);
-        return ResultGenerator.genSuccessResult(videoService.getVideosPage(pageUtil));
+        PageResult pageresult = videoService.getVideosPage(pageUtil);
+        Map<String, Object> result = new HashMap<>();
+        result.put("pageresult", pageresult);
+        result.put("hostUrl", hostUrl.toString()); // 将URI转换为字符串
+        return ResultGenerator.genSuccessResult(result);
     }
 
 }

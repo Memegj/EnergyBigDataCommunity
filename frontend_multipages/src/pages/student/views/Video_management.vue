@@ -33,10 +33,10 @@
           @click="navigateToVideo(video.videoId)"
       >
         <div class="course-item-content">
-          <video :src="video.url" controls class="course-video">你的浏览器不支持视频播放</video>
+          <img :src="state.hostUrl+video.picture" alt="视频封面" class="course-image" />
           <div class="course-details">
             <div class="course-name">视频名称：{{ video.videoName }}</div>
-            <div class="course-intro">简介：{{ video.videoIntro }}</div>
+            <div class="course-intro">简介：{{ getPlainText(video.videoIntro) }}</div>
             <div class="course-meta">
               <span>上传人: {{ video.videoTeacher }}</span><br />
               <span>上传时间: {{ video.uploadTime }}</span>
@@ -73,6 +73,7 @@ const state = reactive({
   total: 0,
   currentPage: 1,
   pageSize: 8,
+  hostUrl: '', // 请求头
 });
 
 // 初始化加载数据
@@ -83,20 +84,28 @@ onMounted(() => {
 // 获取视频列表
 const getVideos = () => {
   state.loading = true;
-  axios.get('/videos', {
+  axios.get('/video', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
     }
   }).then(res => {
-    state.videos = res.list;
-    state.total = res.totalCount;
-    state.currentPage = res.currPage;
+    state.videos = res.pageresult.list;
+    state.total = res.pageresult.totalCount;
+    state.currentPage = res.pageresult.currPage;
+    state.hostUrl = res.hostUrl;
     state.loading = false;
   }).catch(error => {
     ElMessage.error('获取视频列表失败');
     state.loading = false;
   });
+};
+
+// 将 HTML 转换为纯文本
+const getPlainText = (html) => {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  return tempDiv.innerText;
 };
 
 // 跳转到视频详情
@@ -105,7 +114,7 @@ const navigateToVideo = (videoId) => {
 };
 
 const handleAdd = () => {
-  router.push('/student/VideoUpload');
+  router.push('/student/videoupload');
 };
 
 const changePage = (val) => {
@@ -132,12 +141,14 @@ const resetSearch = () => {
   font-size: 14px;
   margin-right: 10px;
 }
+
 .search-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
 }
+
 .course-grid {
   width: 100%;
   margin: 0 auto;
@@ -156,6 +167,12 @@ const resetSearch = () => {
   width: 100%;
 }
 
+.course-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 628 / 353; /* 根据需要调整 */
+}
+
 .course-details {
   flex: 1;
 }
@@ -170,15 +187,10 @@ const resetSearch = () => {
   display: flex;
   align-items: center;
 }
+
 .search-inputs select {
   padding: 8px;
   font-size: 14px;
   margin-right: 10px;
-}
-.course-video {
-  width: 100%;
-  text-align: center;
-  aspect-ratio: auto 628 / 353;
-  height: 50%;
 }
 </style>
