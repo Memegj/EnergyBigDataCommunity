@@ -3,6 +3,7 @@ package upc.backend.controller.video;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import upc.backend.common.BatchIdParam;
@@ -12,6 +13,7 @@ import upc.backend.controller.Param.CollectAddParam;
 import upc.backend.entity.Collect;
 import upc.backend.entity.UserToken;
 import upc.backend.entity.Video;
+import upc.backend.entity.Videocontent;
 import upc.backend.service.CollectService;
 import upc.backend.service.UserService;
 import upc.backend.service.UserTokenService;
@@ -21,8 +23,9 @@ import upc.backend.util.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+@MapperScan("upc.backend.mapper")
 @Controller
 @CrossOrigin
 @ResponseBody
@@ -54,6 +57,7 @@ public class VideoManagement {
                     URI requestUrl = new URI(httpServletRequest.getRequestURL().toString());
                     URI hostUrl = new URI(requestUrl.getScheme(), requestUrl.getUserInfo(), requestUrl.getHost(), requestUrl.getPort(), null, null, null);
                     Video video = videoService.getVideoByVideoId(videoId);
+
                     if (video == null) {
                         return ResultGenerator.genFailResult("未查询到数据");
                     }
@@ -64,6 +68,7 @@ public class VideoManagement {
                     params.put("videoid", video.getVideoId());
                     CollectQueryUtil collectUtil = new CollectQueryUtil(params);
                     Collect collect = collectService.getCollectByVideoId(collectUtil);
+                  List<Videocontent> videocontent = videoService.getVideoContentsByVideoId(videoId);
                     if (collect != null) {
                         video.setCollectId(collect.getCollectId());
                     } else {
@@ -74,6 +79,7 @@ public class VideoManagement {
                         return ResultGenerator.genFailResult("未查询到数据");
                     }
                     Map<String, Object> result = new HashMap<>();
+                 result.put("videocontent",videocontent);
                     result.put("video", video);
                     result.put("hostUrl", hostUrl.toString()); // 将URI转换为字符串
                     return ResultGenerator.genSuccessResult(result);
@@ -165,5 +171,14 @@ public class VideoManagement {
         result.put("hostUrl", hostUrl.toString()); // 将URI转换为字符串
         return ResultGenerator.genSuccessResult(result);
     }
-
-}
+    @RequestMapping(value = "/videoo", method = RequestMethod.DELETE)
+    public Result delete(@RequestBody BatchIdParam batchIdParam, @RequestHeader("token") String str_token) {
+        if (batchIdParam == null || batchIdParam.getIds().length < 1) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        if (videoService.deleteBatchVideocontent(batchIdParam.getIds())) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("删除失败");
+        }
+}}
