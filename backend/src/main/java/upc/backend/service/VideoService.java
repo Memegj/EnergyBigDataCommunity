@@ -135,6 +135,9 @@ public class VideoService {
     public Boolean add_file(Video video){
         return videoMapper.insertSelective(video) > 0;
     }
+    public Boolean add_videocontentfile(Videocontent videocontent){
+        return videoContentMapper.insertvideocontentSelective(videocontent) > 0;
+    }
 
     public Boolean deleteBatch(Integer[] ids) {
         if (ids.length < 1) {

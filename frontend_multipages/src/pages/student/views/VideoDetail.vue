@@ -58,7 +58,7 @@
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column label="视频预览" width="200" header-align="center" align="center">
                   <template #default="scope">
-                    <video :src="scope.row.videocontentUrl" controls width="180" height="100">你的浏览器不支持视频播放</video>
+                    <video :src="state.fileParams.hostUrl + scope.row.videocontentUrl" controls width="180" height="100">你的浏览器不支持视频播放</video>
                   </template>
                 </el-table-column>
                 <el-table-column prop="videocontentName" label="名称" width="200" header-align="center" align="center"></el-table-column>
@@ -153,6 +153,7 @@ const getDetail = async (id) => {
       VideoIntro: res.video.videoIntro,
       CollectId: res.video.collectId,
       file_path: res.hostUrl + res.video.url,
+      hostUrl: res.hostUrl,
     };
     const videoElement = document.createElement('video');
     videoElement.src = state.fileParams.file_path;
@@ -217,6 +218,25 @@ const handleCollect = async () => {
   }
 };
 
+
+const handleAdd = () => {
+  router.push({
+    path: '/student/videocontentupload',
+    query: { videoId: videoId.value }
+  });
+};
+const handleEdit = (videocontent) => {
+  router.push({
+    path: '/student/videocontentupload',
+    query: {
+      videoId: videoId.value,
+      videocontentId: videocontent.videocontentId, // 将视频内容的ID传递给编辑页面
+      videocontentName: videocontent.videocontentName, // 将视频内容的名称传递给编辑页面
+      uploadTime: videocontent.uploadTime, // 将上传时间传递给编辑页面
+      videocontentUrl: videocontent.videocontentUrl // 将视频内容的URL传递给编辑页面
+    }
+  });
+};
 const goToChapter = (index) => {
   console.log(`Navigating to chapter ${index + 1}`);
   getDetail(videoId.value);

@@ -88,6 +88,14 @@ const router = createRouter({
       path: '/student/videoupload',
       name: 'videoupload',
       component: () => import( '@/pages/student/views/Videoupload.vue')
+
+    },
+
+    {
+      path: '/student/videocontentupload',
+      name: 'videocontentupload',
+      component: () => import( '@/pages/student/views/Videocontentupload.vue')
+
     },
     {
       path: '/student/datasetedit/:dataId', // 添加 dataId 参数

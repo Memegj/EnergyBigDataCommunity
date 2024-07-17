@@ -11,4 +11,5 @@ import java.util.List;
 public interface VideoContentMapper {
     int deleteBatchVideocontent(Integer[] ids);
     List<Videocontent> selectByVideoId(@Param("videoId") Integer videoId);
+    int insertvideocontentSelective(Videocontent videocontent);
 }

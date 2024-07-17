@@ -7,6 +7,6 @@ public class VideoUpdateParam {
     private Integer VideoId;
     private String VideoName;
     private String VideoTeacher;
-    private Integer  UploadTimer;
+    private Integer  UploadTime;
     private String Url;
 }

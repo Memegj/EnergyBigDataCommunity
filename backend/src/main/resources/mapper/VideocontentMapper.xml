@@ -24,4 +24,44 @@
         </foreach>
 
     </delete>
+    <insert id="insertvideocontentSelective" parameterType="upc.backend.entity.Videocontent">
+        insert into videocontent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="VideocontentId != null">
+                VideocontentId,
+            </if>
+            <if test="VideocontentName != null">
+                VideocontentName,
+            </if>
+            <if test="UploadTime != null">
+                UploadTime,
+            </if>
+
+            <if test="VideoId != null">
+                VideoId,
+            </if>
+            <if test="VideocontentUrl != null">
+                VideocontentUrl,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="VideocontentId != null">
+                #{VideocontentId, jdbcType=INTEGER},
+            </if>
+            <if test="VideocontentName != null">
+                #{VideocontentName, jdbcType=VARCHAR},
+            </if>
+            <if test="UploadTime != null">
+                #{UploadTime, jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="VideoId != null">
+                #{VideoId, jdbcType=INTEGER},
+            </if>
+            <if test="VideocontentUrl != null">
+                #{VideocontentUrl, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
 </mapper>
