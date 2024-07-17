@@ -1,6 +1,5 @@
 package upc.backend.entity;
 
-import cn.hutool.core.date.DateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import java.util.Date;
 @Setter
 @Getter
 @Data
-public class video {
+public class Video {
     private Integer VideoId;
     private String VideoName;
     private String VideoTeacher;
@@ -23,6 +22,8 @@ public class video {
     private String Url;
     private Integer UserId;
     private String UserName;
+    private Integer TeamId;
+    private String TeamName;
 
 
 

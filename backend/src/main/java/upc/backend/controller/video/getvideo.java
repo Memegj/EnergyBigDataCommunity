@@ -2,19 +2,11 @@ package upc.backend.controller.video;
 
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import upc.backend.common.BatchIdParam;
-import upc.backend.common.ServiceResultEnum;
-import upc.backend.entity.Reference;
-import upc.backend.entity.User;
 import upc.backend.entity.UserToken;
-import upc.backend.entity.video;
-import upc.backend.mapper.UserTokenMapper;
-import upc.backend.service.ReferenceService;
-import upc.backend.service.UserA_Service;
+import upc.backend.entity.Video;
 import upc.backend.service.UserTokenService;
 import upc.backend.service.videoService;
 import upc.backend.util.PageQueryUtil;
@@ -38,7 +30,7 @@ public class getvideo {
 //获取单个详情信息
     @RequestMapping(value = "api/videos/{videoId}", method = RequestMethod.GET)
     public Result info(@PathVariable("videoId") Integer VideoId) {
-        video video = videoService.getVideoById(VideoId);
+        Video video = videoService.getVideoById(VideoId);
         if (video == null) {
             return ResultGenerator.genFailResult("未查询到数据");
         }
@@ -84,6 +76,27 @@ public class getvideo {
         } else {
             return ResultGenerator.genFailResult("删除失败");
         }
+    }
+
+    @RequestMapping(value = "/videos", method = RequestMethod.GET)
+    public Result search(@RequestParam(required = false) Integer pageNumber,
+                       @RequestParam(required = false) Integer pageSize,
+                       @RequestHeader("token") String str_token,
+                         @RequestParam(required = false) String searchQuery,
+                         @RequestParam(defaultValue = "VideoName") String category)
+    {
+        if (pageNumber == null || pageNumber < 1 || pageSize == null || pageSize < 8) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        UserToken userToken = userTokenService.selectByToken(str_token);
+        Map params = new HashMap(8);
+        params.put("page", pageNumber);
+        params.put("limit", pageSize);
+        params.put("userid", userToken.getUserId());
+        params.put("category", category);
+        params.put("searchQuery",searchQuery);
+        PageQueryUtil pageUtil = new PageQueryUtil(params);
+        return ResultGenerator.genSuccessResult(videoService.getVideoPage(pageUtil));
     }
 
 

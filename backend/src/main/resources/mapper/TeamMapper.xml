@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.TeamMapper">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Team">
+        <id column="TeamId" jdbcType="INTEGER" property="TeamId" />
+        <result column="TeamName" jdbcType="VARCHAR" property="TeamName" />
+        <result column="TeamIntro" jdbcType="VARCHAR" property="TeamIntro" />
+        <result column="RegisterTime" jdbcType="TIMESTAMP" property="RegisterTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        TeamId, TeamName, TeamIntro, RegisterTime
+    </sql>
+
+    <select id="selectByTeamId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from team
+        where TeamId = #{TeamId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByTitle" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from team
+        where TeamName = #{TeamName,jdbcType=VARCHAR}
+    </select>
+    <select id="getNumOfTotalReferences" parameterType="Map" resultType="int">
+        select count(*) from team t
+                                 join user_team ut on t.TeamId = ut.teamId
+        where ut.userId = #{UserId}
+    </select>
+
+    <select id="findAllReferenceList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT t.TeamName, t.TeamIntro, t.RegisterTime,t.TeamId
+        FROM team t
+        JOIN user_team ut ON t.TeamId = ut.teamId
+        WHERE ut.userId = #{UserId}
+        <if test="start!=null and limit!=null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+    <select id="getNumOfTotalTeam" parameterType="Map" resultType="int">
+        select count(*) from team
+    </select>
+
+    <select id="findAllTeamList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT  t.TeamName, t.TeamIntro, t.RegisterTime,t.TeamId
+        FROM team t
+        JOIN user_team ut ON t.TeamId = ut.teamId
+        WHERE ut.userId = #{UserId}
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <select id="getTeamNameByTeamId" >
+        select TeamName
+        from team
+        where TeamId = #{TeamId,jdbcType=INTEGER}
+    </select>
+    <insert id="insert" parameterType="upc.backend.entity.Team">
+        insert into team (TeamId, TeamName, TeamIntro, RegisterTime)
+        values (#{TeamId,jdbcType=INTEGER}, #{TeamName,jdbcType=VARCHAR}, #{TeamIntro,jdbcType=VARCHAR},
+                #{RegisterTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="upc.backend.entity.Team" useGeneratedKeys="true" keyProperty="teamId">
+        insert into team
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="TeamId != null">
+                TeamId,
+            </if>
+            <if test="TeamName != null">
+                TeamName,
+            </if>
+            <if test="TeamIntro != null">
+                TeamIntro,
+            </if>
+            <if test="RegisterTime != null">
+                RegisterTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="TeamId != null">
+                #{TeamId, jdbcType=INTEGER},
+            </if>
+            <if test="TeamName != null">
+                #{TeamName, jdbcType=VARCHAR},
+            </if>
+            <if test="TeamIntro != null">
+                #{TeamIntro, jdbcType=VARCHAR},
+            </if>
+            <if test="RegisterTime != null">
+                #{RegisterTime, jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Team">
+        update team
+        <set>
+            <if test="TeamName != null">
+                TeamName = #{TeamName,jdbcType=VARCHAR},
+            </if>
+            <if test="TeamIntro != null">
+                TeamIntro = #{TeamIntro,jdbcType=VARCHAR},
+            </if>
+            <if test="RegisterTime != null">
+                RegisterTime = #{RegisterTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TeamId = #{TeamId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="upc.backend.entity.Team">
+        update team
+        set TeamName = #{TeamName,jdbcType=VARCHAR},
+            TeamIntro = #{TeamIntro,jdbcType=VARCHAR},
+            RegisterTime = #{RegisterTime,jdbcType=TIMESTAMP}
+        where TeamId = #{TeamId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from team
+        where TeamId in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+    <delete id="deleteTeamById" parameterType="long">
+        delete from team where TeamId = #{teamId}
+    </delete>
+</mapper>

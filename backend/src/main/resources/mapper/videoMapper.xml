@@ -2,7 +2,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="upc.backend.mapper.VideoMapper">
-    <resultMap id="BaseResultMap" type="upc.backend.entity.video">
+    <resultMap id="BaseResultMap" type="upc.backend.entity.Video">
         <id column="VideoId" jdbcType="INTEGER" property="VideoId" />
         <result column="VideoName" jdbcType="VARCHAR" property="VideoName" />
         <result column="VideoTeacher" jdbcType="VARCHAR" property="VideoTeacher" />
@@ -12,6 +12,7 @@
         <result column="PageView" jdbcType="INTEGER" property="PageView" />
         <result column="Url" jdbcType="VARCHAR" property="Url" />
         <result column="UserId" jdbcType="INTEGER" property="UserId" />
+        <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
 <!--        <result column="imageUrl" jdbcType="LONGTEXT" property="imageUrl" />-->
     </resultMap>
     <sql id="Base_Column_List">
@@ -25,7 +26,11 @@
     </select>
 
     <select id="getNumOfTotalVideos" parameterType="Map" resultType="int">
-        select count(*) from video
+        select count(*)
+        from video
+        JOIN
+        user ON user.UserId=video.UserId
+        where video.UserId=#{userId,jdbcType=INTEGER}
     </select>
 
     <select id="findAllVideoList" parameterType="Map" resultMap="BaseResultMap">
@@ -57,7 +62,79 @@
             #{VideoId}
         </foreach>
     </delete>
-    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.video">
+    <select id="selectVideoByTeamIds" resultMap="BaseResultMap">
+        SELECT
+        video.VideoId,
+        video.VideoName,
+        video.UploadTime,
+        video.VideoIntro,
+        video.VideoTeacher,
+        video.Url,
+        video.Pageview,
+        video.TeamId,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        team.TeamName AS teamName
+        FROM video
+        JOIN user ON video.UserId = user.UserId
+        LEFT JOIN team ON video.TeamId = team.TeamId
+        <where>
+                (video.TeamId IN
+                <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                    #{teamId, jdbcType=INTEGER}
+                </foreach>
+                OR video.TeamId IS NULL)
+
+            <if test="pageUtil.searchQuery != null and pageUtil.searchQuery != ''">
+               AND
+                (<choose>
+                    <when test="pageUtil.category == 'VideoName'">
+                        video.VideoName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                    </when>
+                    <when test="pageUtil.category == 'VideoTeacher'">
+                         video.VideoTeacher LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                    </when>
+                    <when test="pageUtil.category == 'TeamName'">
+                    team.TeamName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                    </when>
+                </choose>)
+            </if>
+        </where>
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            LIMIT #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+
+    </select>
+    <select id="getNumOfUserVideo" resultType="int">
+        SELECT COUNT(*)
+        FROM video
+        JOIN user ON video.UserId = user.UserId
+        LEFT JOIN team ON video.TeamId = team.TeamId
+        <where>
+            (video.TeamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR video.TeamId IS NULL)
+
+            <if test="pageUtil.searchQuery != null and pageUtil.searchQuery != ''">
+                AND
+                (<choose>
+                <when test="pageUtil.category == 'VideoName'">
+                    video.VideoName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+                <when test="pageUtil.category == 'VideoTeacher'">
+                    video.VideoTeacher LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+                <when test="pageUtil.category == 'TeamName'">
+                    team.TeamName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+            </choose>)
+            </if>
+        </where>
+
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Video">
     update video
     <set>
         <if test="VideoName != null">

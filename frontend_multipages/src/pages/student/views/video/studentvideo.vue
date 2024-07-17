@@ -3,17 +3,16 @@
     <template #header>
       <div class="search-bar">
         <h1>全部课程</h1>
-
         <div class="search-inputs">
-          <input type="text" v-model="searchText" placeholder="输入关键词...">
-          <select v-model="searchOption">
-            <option value="VideoName">按课程名字</option>
-            <option value="VideoTeacher">按发布人</option>
-          </select>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <input type="text" v-model="searchQuery" placeholder="输入关键词...">
+          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search"style="width: 150px;">
+            <el-option label="按课程名称" value="VideoName"></el-option>
+            <el-option label="按授课老师" value="VideoTeacher"></el-option>
+            <el-option label="按团队名称" value="TeamName"></el-option>
+          </el-select>
+          <el-button type="primary" @click="search">搜索</el-button>
           <el-button type="warning" @click="resetSearch">清空</el-button>
         </div>
-
       </div>
     </template>
     <div class="course-grid">
@@ -24,15 +23,13 @@
             <div class="course-name">视频名称：{{ video.videoName }}</div>
             <div class="course-intro">简介：{{ video.videoIntro }}</div>
             <div class="course-meta">
-              <span>上传人: {{ video.videoTeacher }}</span><br>
+              <span>上传人: {{ video.userName }}</span><br>
               <span>上传时间: {{ video.uploadTime }}</span>
             </div>
           </div>
         </div>
       </router-link>
     </div>
-
-
     <el-pagination
         background
         layout="prev, pager, next"
@@ -43,7 +40,6 @@
     />
   </el-card>
 </template>
-
 <script setup>
 import {Delete, Plus} from "@element-plus/icons-vue";
 import { ref, reactive,onMounted} from 'vue'
@@ -55,16 +51,16 @@ import WangEditor from 'wangeditor'
 import {localGet} from '@/utils'
 import DialogAddUser from "@/components/DialogAddStu.vue";
 
-const searchText = ref('');
-const searchOption = ref('VideoName');
+const searchQuery = ref('')
+const selectedCategory = ref('VideoName')
 const router = useRouter()
 const state = reactive({
   loading: false,
-  videos: [{ }],
+  videos: [],
   total: 0,
   currentPage: 1,
   pageSize: 8,
-});
+})
 // 初始化加载数据
 onMounted(() => {
   getVideos();
@@ -72,22 +68,26 @@ onMounted(() => {
 //获取分类列表
 const getVideos = () => {
   state.loading = true;
-  axios.get('/api/videos', {
+  axios.get('/videos', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
+      searchQuery: searchQuery.value,
+      category: selectedCategory.value,
     }
   }).then(res => {
     state.videos = res.list
     state.total = res.totalCount
-    state.currentPage = res.currentPage
+    state.currentPage = res.currPage
     state.loading = false
   }).catch(error => {
     ElMessage.error('获取视频列表失败');
     state.loading = false;
   });
 };
-
+const search = () => {
+  getVideos()
+}
 
 const changePage = (val) => {
   state.currentPage = val;
@@ -101,9 +101,11 @@ const handleSearch =()=> {
 };
 // 重置搜索
 const resetSearch = () => {
-  searchText.value = '';
-  searchOption.value = 'VideoName';
-};
+  searchQuery.value = ''
+  selectedCategory.value = 'VideoName'
+  state.currentPage = 1
+  getVideos()
+}
 
 
 </script>
