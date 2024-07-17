@@ -74,6 +74,7 @@ import { useRouter } from 'vue-router';
 const videoDuration = ref(null);
 const route = useRoute();
 const router = useRouter();
+const fromPage = route.query.fromPage;
 const videoId = ref(route.params.videoId);
 const state = reactive({
   token: localGet('token') || '',
@@ -98,18 +99,41 @@ const formatDuration = (duration) => {
   return `${hours > 0 ? `${hours}:` : ''}${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 };
 
+const incrementPageView = async (id) => {
+  try {
+    const payload = {
+      videoId: videoId.value,
+      pageView: state.fileParams.PageView,
+      teamId: state.fileParams.TeamId
+    };
+    console.log('提交的数据:', payload); // 打印提交的数据
+    axios.put('/video', payload)
+        .then(res => {
+        })
+        .catch(error => {
+          console.error('请求出错', error);
+        });
+}catch (error) {
+    console.error('Failed to increment PageView:', error);
+  }
+};
+
 const getDetail = async (id) => {
   try {
     const res = await axios.get(`/videodetail/${id}`);
     state.fileParams = {
       VideoName: res.video.videoName,
-      PageView: res.video.pageView,
+      PageView: res.video.pageView + 1,
       VideoTeacher: res.video.videoTeacher,
       VideoIntro: res.video.videoIntro,
+      TeamId: res.video.teamId,
       CollectId: res.video.collectId,
       file_path: res.video.url ? res.hostUrl + res.video.url : res.hostUrl + res.video.picture,
     };
     isImage.value = !res.video.url;
+
+    await incrementPageView(id); // 调用增量函数
+
     if (res.video.url) {
       const videoElement = document.createElement('video');
       videoElement.src = state.fileParams.file_path;
@@ -123,7 +147,11 @@ const getDetail = async (id) => {
 };
 
 const goBack = () => {
-  router.push('/student/video');
+  if (fromPage === 'videoManage') {
+    router.push('/student/video_manage');
+  } else {
+    router.push('/student/video');
+  }
 };
 
 const handleCollect = async () => {

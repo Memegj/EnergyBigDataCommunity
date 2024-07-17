@@ -2,8 +2,17 @@
   <div class="file_upload">
     <el-card class="file_upload_container">
       <el-form :model="state.fileParams" :rules="state.rules" ref="fileRef" label-width="100px" class="fileParams">
-        <el-form-item label="视频名称" prop="videoName">
-          <el-input style="width: 600px" v-model="state.fileParams.VideoName" placeholder="请输入视频名称"/>
+
+        <!-- 添加视频类型选择下拉框 -->
+        <el-form-item label="选择类型">
+          <el-select v-model="state.selectedType" placeholder="请选择类型" style="width: 600px" @change="handleTypeChange">
+            <el-option label="创建并上传单条视频" value="single"></el-option>
+            <el-option label="创建视频合集" value="collection"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item :label="state.selectedType === 'single' ? '视频名称' : '合集名称'" prop="videoName">
+          <el-input style="width: 600px" v-model="state.fileParams.VideoName" :placeholder="state.selectedType === 'single' ? '请输入视频名称' : '请输入合集名称'"/>
         </el-form-item>
         <el-form-item label="授课教师" prop="videoTeacher">
           <el-input style="width: 600px" v-model="state.fileParams.VideoTeacher" placeholder="请输入授课教师"/>
@@ -46,7 +55,8 @@
           <el-progress v-if="state.pictureUploadProgress !== null" :percentage="state.pictureUploadProgress"/>
         </el-form-item>
 
-        <el-form-item label="视频">
+        <!-- 根据选择类型显示或隐藏视频上传按钮 -->
+        <el-form-item label="视频" v-if="state.selectedType === 'single'">
           <div v-if="!state.fileParams.file_path">
             <el-upload
                 class="file-uploader"
@@ -92,7 +102,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="视频简介">
+        <el-form-item :label="state.selectedType === 'single' ? '视频简介' : '合集简介'">
           <div ref="editor" style="position: relative; z-index: 1;"></div>
         </el-form-item>
 
@@ -151,6 +161,7 @@ const state = reactive({
   },
   pictureUploadProgress: null,
   videoUploadProgress: null,
+  selectedType: 'single', // 默认类型为单条视频
 })
 
 let instance
@@ -261,6 +272,16 @@ const handlePublicChange = (value) => {
     getTeamOptions()
   } else {
     state.fileParams.TeamId = ''
+  }
+}
+
+const handleTypeChange = (value) => {
+  if (value === 'collection') {
+    state.fileParams.VideoName = '' // 重置视频名称
+    state.fileParams.Url = '' // 重置视频路径
+    state.fileParams.file_path = '' // 重置视频文件路径
+  } else {
+    state.fileParams.VideoName = '' // 重置合集名称
   }
 }
 </script>

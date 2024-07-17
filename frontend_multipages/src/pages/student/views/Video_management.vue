@@ -3,44 +3,51 @@
     <template #header>
       <div class="search-bar">
         <h1>全部课程</h1>
-        <el-button type="primary" :icon="Plus" @click="handleAdd">上传视频</el-button>
-        <el-popconfirm
-            title="确定删除吗？"
-            confirmButtonText="确定"
-            cancelButtonText="取消"
-            @confirm="handleDelete"
-        >
-          <template #reference>
-            <el-button type="danger" :icon="Delete">批量删除</el-button>
-          </template>
-        </el-popconfirm>
+        <div class="button-container">
+          <el-button type="primary" :icon="Plus" @click="handleAdd">上传视频</el-button>
+          <el-popconfirm
+              title="确定删除吗？"
+              confirmButtonText="确定"
+              cancelButtonText="取消"
+              @confirm="handleDelete"
+          >
+            <template #reference>
+              <el-button type="danger" :icon="Delete">批量删除</el-button>
+            </template>
+          </el-popconfirm>
+        </div>
         <div class="search-inputs">
-          <input type="text" v-model="searchText" placeholder="输入关键词..." />
-          <select v-model="searchOption">
-            <option value="VideoName">按课程名字</option>
-            <option value="VideoTeacher">按发布人</option>
-          </select>
+          <input type="text" v-model="searchQuery" placeholder="输入关键词..." />
+          <el-select v-model="selectedCategory" placeholder="类别检索" @change="handleSearch" style="width: 150px;">
+            <el-option label="按课程名称" value="VideoName">按课程名字</el-option>
+            <el-option label="按团队名称" value="TeamName">按团队名称</el-option>
+          </el-select>&nbsp&nbsp
           <el-button type="primary" @click="handleSearch">搜索</el-button>
           <el-button type="warning" @click="resetSearch">清空</el-button>
         </div>
       </div>
     </template>
     <div class="course-grid">
+      <div class="select-all-container">
+        <el-checkbox v-model="allSelected" @change="handleSelectAll">全选</el-checkbox>
+      </div>
       <div
           v-for="video in state.videos"
           :key="video.videoId"
           class="course-item"
+          @click="navigateToVideo(video.videoId)"
       >
+        <el-checkbox v-model="selectedVideos" :label="video.videoId" class="video-checkbox"></el-checkbox>
         <div class="course-item-content">
-          <button class="edit-button" @click="navigateToEdit(video.videoId)">
+          <button class="edit-button" @click="handleEditClick(video.videoId, $event)">
             <el-icon class="large-icon"><Edit /></el-icon>
           </button>
           <img :src="state.hostUrl + video.picture" alt="视频封面" class="course-image" />
-          <div class="course-details" @click="navigateToVideo(video.videoId)">
+          <div class="course-details">
             <div class="course-name">视频名称：{{ video.videoName }}</div>
             <div class="course-intro">简介：{{ getPlainText(video.videoIntro) }}</div>
             <div class="course-meta">
-              <span>上传人: {{ video.videoTeacher }}</span><br />
+              <span>上传人: {{ video.userName }}</span><br />
               <span>上传时间: {{ video.uploadTime }}</span>
             </div>
           </div>
@@ -75,21 +82,26 @@ const state = reactive({
   total: 0,
   currentPage: 1,
   pageSize: 8,
-  hostUrl: '', // 请求头
+  hostUrl: '',
 });
 
-// 初始化加载数据
+const searchQuery = ref('');
+const selectedCategory = ref('VideoName');
+const selectedVideos = ref([]);
+const allSelected = ref(false);
+
 onMounted(() => {
   getVideos();
 });
 
-// 获取视频列表
 const getVideos = () => {
   state.loading = true;
-  axios.get('/video', {
+  axios.get('/video_manage', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
+      searchQuery: searchQuery.value,
+      category: selectedCategory.value,
     }
   }).then(res => {
     state.videos = res.pageresult.list;
@@ -103,20 +115,23 @@ const getVideos = () => {
   });
 };
 
-// 将 HTML 转换为纯文本
 const getPlainText = (html) => {
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = html;
   return tempDiv.innerText;
 };
 
-// 跳转到视频详情
 const navigateToVideo = (videoId) => {
-  router.push(`/student/video_detail/${videoId}`);
+  router.push({
+    path: `/student/video_detail/${videoId}`,
+    query: {
+      fromPage: 'videoManage'
+    }
+  });
 };
 
-// 跳转到视频编辑页面
 const navigateToEdit = (videoId) => {
+  console.log('Navigating to edit video with ID:', videoId);
   router.push(`/student/videoedit/${videoId}`);
 };
 
@@ -130,18 +145,72 @@ const changePage = (val) => {
 };
 
 const handleSearch = () => {
-  console.log('搜索关键词:', searchText.value);
-  console.log('搜索选项:', searchOption.value);
   getVideos();
 };
 
 const resetSearch = () => {
-  searchText.value = '';
-  searchOption.value = 'VideoName';
+  searchQuery.value = '';
+  selectedCategory.value = 'VideoName';
+  state.currentPage = 1;
+  getVideos();
 };
+
+const handleDelete = () => {
+  if (!selectedVideos.value.length) {
+    ElMessage.error('请选择项');
+    return;
+  }
+
+  axios.delete('/video', {
+    data: {
+      ids: selectedVideos.value
+    }
+  })
+      .then(() => {
+        ElMessage.success('删除成功');
+        selectedVideos.value = [];
+        allSelected.value = false;
+        getVideos();
+      })
+      .catch(error => {
+        ElMessage.error('删除失败');
+      });
+};
+
+const handleSelectAll = (value) => {
+  if (value) {
+    selectedVideos.value = state.videos.map(video => video.videoId);
+  } else {
+    selectedVideos.value = [];
+  }
+};
+
+const handleEditClick = (videoId, event) => {
+  event.stopPropagation();
+  navigateToEdit(videoId);
+};
+
+defineExpose({ state: state, getVideos: getVideos })
 </script>
 
 <style scoped>
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.button-container {
+  display: flex;
+  margin-right: 300px; /* 调整左侧间距 */
+}
+
+.search-inputs {
+  display: flex;
+  align-items: center;
+}
+
 .search-inputs input[type="text"] {
   width: 200px;
   padding: 8px;
@@ -149,11 +218,10 @@ const resetSearch = () => {
   margin-right: 10px;
 }
 
-.search-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+.search-inputs select {
+  padding: 8px;
+  font-size: 14px;
+  margin-right: 10px;
 }
 
 .course-grid {
@@ -162,6 +230,14 @@ const resetSearch = () => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
+  position: relative;
+}
+
+.select-all-container {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: 2;
 }
 
 .course-item-content {
@@ -177,8 +253,9 @@ const resetSearch = () => {
 
 .course-image {
   width: 100%;
-  height: auto;
-  aspect-ratio: auto 628 / 353; /* 根据需要调整 */
+  height: 50%;
+  text-align: center;
+  aspect-ratio: auto 628 / 353;
 }
 
 .course-details {
@@ -189,17 +266,6 @@ const resetSearch = () => {
   margin-top: auto;
   font-size: 14px;
   color: #777;
-}
-
-.search-inputs {
-  display: flex;
-  align-items: center;
-}
-
-.search-inputs select {
-  padding: 8px;
-  font-size: 14px;
-  margin-right: 10px;
 }
 
 .edit-button {
@@ -222,6 +288,17 @@ const resetSearch = () => {
 }
 
 .large-icon {
-  font-size: 16px; /* 调整图标的大小 */
+  font-size: 16px;
+}
+
+.video-checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.course-item {
+  position: relative;
 }
 </style>

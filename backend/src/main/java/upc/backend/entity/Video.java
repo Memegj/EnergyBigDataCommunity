@@ -22,6 +22,7 @@ public class Video {
     private String Url;
     private Integer UserId;
     private Integer TeamId;
+    private String UserName;
     private Integer CollectId;
     private String TeamName;
     private String Picture;

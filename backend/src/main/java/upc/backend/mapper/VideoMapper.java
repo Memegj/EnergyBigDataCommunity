@@ -18,7 +18,7 @@ public interface VideoMapper {
 
     Video selectByVideoId(Integer VideoId);
     int getNumOfTotalVideos(PageQueryUtil pageUtil);
-
+    int getNumOfUserVideo(PageQueryUtil pageUtil,Integer[] teamIdsArray);
     int insert(Video video);
 
     int insertSelective(Video video);
@@ -29,6 +29,7 @@ public interface VideoMapper {
 
     int updateByPrimaryKey(Video video);
     List<Video> selectByTeamIds(@Param("pageUtil") PageQueryUtil pageUtil, @Param("teamIdsArray") Integer[] teamIdsArray);
+    List<Video> selectVideoByTeamIds(@Param("pageUtil") PageQueryUtil pageUtil, @Param("teamIdsArray") Integer[] teamIdsArray);
     int getNumOfUserVideo(Integer[] teamIdsArray);
     List<Video> findAllVideoList(PageQueryUtil pageUtil);
     List<Video> findAllVideoListByUserId(PageQueryUtil pageUtil);
@@ -37,4 +38,7 @@ public interface VideoMapper {
     int getNumOfTotalVideo(PageQueryUtil pageUtil);
     int getNumOfTotalVideoByUserId(PageQueryUtil pageUtil);
     int deleteBatch(Integer[] ids);
+    Video getVideoByID(Integer VideoId);
+    int deleteBatchVideo(Integer[] ids);
+    int deleteBatchCollect(Integer[] ids);
 }

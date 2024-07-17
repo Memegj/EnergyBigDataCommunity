@@ -29,6 +29,9 @@ public class VideoService {
     public Video getVideoByVideoId(Integer VideoId){
         return videoMapper.selectByVideoId(VideoId);
     }
+    public Video getVideoById(Integer VideoId){
+        return videoMapper.getVideoByID(VideoId);
+    }
     public PageResult getVideosPage(PageQueryUtil pageUtil){
         List<Video> videos =videoMapper.findAllVideoList(pageUtil);
         int total = videoMapper.getNumOfTotalVideos(pageUtil);
@@ -60,8 +63,9 @@ public class VideoService {
     }
 
     public List<Video> getVideoByTeamId(PageQueryUtil pageUtil, Integer[] teamIdsArray){
-        return videoMapper.selectByTeamIds(pageUtil,teamIdsArray);
+        return videoMapper.selectVideoByTeamIds(pageUtil,teamIdsArray);
     }
+
 
     public PageResult getVideoPage(PageQueryUtil pageUtil){
         List<Userteam> userteams = userteamService.getTeamByPageUtil(pageUtil);
@@ -73,7 +77,7 @@ public class VideoService {
         }
         Integer[] teamIdsArray = teamIds.toArray(new Integer[0]);
         List<Video> videos = getVideoByTeamId(pageUtil,teamIdsArray);
-        int total = videoMapper.getNumOfUserVideo(teamIdsArray);
+        int total = videoMapper.getNumOfUserVideo(pageUtil,teamIdsArray);
         for (Video video : videos) {
             Integer teamId = video.getTeamId();
             if (teamId == null) {
@@ -86,6 +90,7 @@ public class VideoService {
         PageResult pageResult = new PageResult(videos, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
+
 
     public PageResult getVideoPageByUserIdOrderByTime(PageQueryUtil pageUtil){
         List<Video> videos = videoMapper.findAllVideoListByUserIdOrderByTime(pageUtil);
@@ -134,6 +139,8 @@ public class VideoService {
             return false;
         }
         //删除分类数据
-        return videoMapper.deleteBatch(ids) > 0;
+        Integer aa= videoMapper.deleteBatchCollect(ids);
+        Integer bb= videoMapper.deleteBatchVideo(ids);
+        return aa+bb > 0;
     }
 }

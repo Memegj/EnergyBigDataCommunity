@@ -5,10 +5,11 @@
         <h1>全部课程</h1>
         <div class="search-inputs">
           <input type="text" v-model="searchQuery" placeholder="输入关键词...">
-          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search">
-            <el-option label="按课程名字" value="VideoName"></el-option>
+          <el-select v-model="selectedCategory" placeholder="类别检索" @change="search"style="width: 150px;">
+            <el-option label="按课程名称" value="VideoName"></el-option>
             <el-option label="按授课老师" value="VideoTeacher"></el-option>
-          </el-select>
+            <el-option label="按团队名称" value="TeamName"></el-option>
+          </el-select>&nbsp&nbsp
           <el-button type="primary" @click="search">搜索</el-button>
           <el-button type="warning" @click="resetSearch">清空</el-button>
         </div>
@@ -27,7 +28,7 @@
             <div class="course-name">视频名称：{{ video.videoName }}</div>
             <div class="course-intro">简介：{{ stripHTML(video.videoIntro) }}</div>
             <div class="course-meta">
-              <span>上传人: {{ video.videoTeacher }}</span><br />
+              <span>上传人: {{ video.userName }}</span><br />
               <span>上传时间: {{ video.uploadTime }}</span>
             </div>
           </div>
@@ -71,7 +72,7 @@ onMounted(() => {
 // 获取视频列表
 const getReferences = () => {
   state.loading = true;
-  axios.get('/video', {
+  axios.get('/video_search', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
@@ -95,7 +96,6 @@ const navigateToVideo = (videoId) => {
 };
 
 const search = () => {
-  state.currentPage = 1;
   getReferences();
 };
 

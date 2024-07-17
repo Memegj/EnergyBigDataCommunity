@@ -34,6 +34,9 @@ public interface CollectMapper {
     int deleteBatchByVideoId(Integer[] ids);
     int deleteBatch(Integer[] ids);
 
+    void deleteCollectByVideoId(Map<String, Object> params);
+
+
 
 
 }

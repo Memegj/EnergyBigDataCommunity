@@ -238,4 +238,8 @@
             #{id}
         </foreach>
     </delete>
+    <delete id="deleteCollectByVideoId" parameterType="map">
+        DELETE FROM collect
+        WHERE CollectId = #{collectId} AND VideoId = #{videoId}
+    </delete>
 </mapper>

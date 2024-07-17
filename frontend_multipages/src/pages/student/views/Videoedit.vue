@@ -2,9 +2,19 @@
   <div class="file_upload">
     <el-card class="file_upload_container">
       <el-form :model="state.fileParams" :rules="state.rules" ref="fileRef" label-width="100px" class="fileParams">
-        <el-form-item label="视频名称" prop="videoName">
-          <el-input style="width: 600px" v-model="state.fileParams.VideoName" placeholder="请输入视频名称"/>
+
+        <!-- 视频类型选择下拉框 -->
+        <el-form-item label="选择类型">
+          <el-select v-model="state.selectedType" placeholder="请选择类型" style="width: 600px" @change="handleTypeChange">
+            <el-option label="创建并上传单条视频" value="single"></el-option>
+            <el-option label="创建视频合集" value="collection"></el-option>
+          </el-select>
         </el-form-item>
+
+        <el-form-item :label="state.selectedType === 'single' ? '视频名称' : '合集名称'" prop="videoName">
+          <el-input style="width: 600px" v-model="state.fileParams.VideoName" :placeholder="state.selectedType === 'single' ? '请输入视频名称' : '请输入合集名称'"/>
+        </el-form-item>
+
         <el-form-item label="授课教师" prop="videoTeacher">
           <el-input style="width: 600px" v-model="state.fileParams.VideoTeacher" placeholder="请输入授课教师"/>
         </el-form-item>
@@ -46,7 +56,7 @@
           <el-progress v-if="state.pictureUploadProgress !== null" :percentage="state.pictureUploadProgress"/>
         </el-form-item>
 
-        <el-form-item label="视频">
+        <el-form-item label="视频" v-if="state.selectedType === 'single'">
           <div v-if="!state.fileParams.file_path">
             <el-upload
                 class="file-uploader"
@@ -133,6 +143,7 @@ const state = reactive({
     PageView: 0,
     file_path: ''
   },
+  selectedType: 'single', // 默认选择单条视频
   rules: {
     VideoName: [
       {required: true, message: '请填写视频名称', trigger: ['blur']}
@@ -160,6 +171,9 @@ let instance
 
 onMounted(async () => {
   await getDetail(videoId.value) // 确保获取详情之后再初始化编辑器
+  // 根据视频的 URL 设置默认类型
+  state.selectedType = state.fileParams.Url ? 'single' : 'collection';
+
   instance = new WangEditor(editor.value)
   instance.config.showLinkImg = false
   instance.config.showLinkImgAlt = false
@@ -241,7 +255,7 @@ const handleUrlSuccess = (val) => {
 
 const handlePictureSuccess = (val) => {
   state.fileParams.Picture = val.data[1] || ''
-  state.fileParams.Picture_path = val.data[0] + val.data[1] || '' // 处理封面图成功响应
+  state.fileParams.picture_path = val.data[0] + val.data[1] || '' // 处理封面图成功响应
   state.pictureUploadProgress = null // 上传成功后重置进度条
 }
 
@@ -277,7 +291,6 @@ const getDetail = async (id) => {
     PageView: res.video.pageView,
     isPublic: res.video.teamId === null // 根据 TeamId 设置 isPublic
   }
-
 }
 
 const handleUploadProgress = (event, type) => {
@@ -293,6 +306,16 @@ const handlePublicChange = (value) => {
     getTeamOptions()
   } else {
     state.fileParams.TeamId = ''
+  }
+}
+
+const handleTypeChange = (value) => {
+  if (value === 'collection') {
+    state.fileParams.VideoName = '' // 重置视频名称
+    state.fileParams.Url = '' // 重置视频路径
+    state.fileParams.file_path = '' // 重置视频文件路径
+  } else {
+    state.fileParams.VideoName = '' // 重置合集名称
   }
 }
 </script>

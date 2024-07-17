@@ -13,7 +13,7 @@
         <result column="Picture" jdbcType="VARCHAR" property="Picture" />
         <result column="UserId" jdbcType="INTEGER" property="UserId" />
         <result column="TeamId" jdbcType="INTEGER" property="TeamId" />
-<!--        <result column="imageUrl" jdbcType="LONGTEXT" property="imageUrl" />-->
+        <!--        <result column="imageUrl" jdbcType="LONGTEXT" property="imageUrl" />-->
     </resultMap>
     <sql id="Base_Column_List">
         VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,PageView,Url,Picture,UserId,TeamId
@@ -26,78 +26,93 @@
     </select>
 
     <select id="getNumOfTotalVideos" parameterType="Map" resultType="int">
-        select count(*) from video
+        select count(*)
+        from video
+        JOIN
+        user ON user.UserId=video.UserId
+        LEFT JOIN team ON video.TeamId = team.TeamId
         <where>
+            (video.UserId=#{userId,jdbcType=INTEGER})
             <if test="searchQuery != null and searchQuery != ''">
-                <choose>
-                    <when test="category == 'VideoName'">
-                        VideoName like CONCAT('%', #{searchQuery}, '%')
-                    </when>
-                    <when test="category == 'VideoTeacher'">
-                        VideoTeacher like CONCAT('%', #{searchQuery}, '%')
-                    </when>
-                </choose>
+                AND
+                (<choose>
+                <when test="category == 'VideoName'">
+                    video.VideoName LIKE CONCAT('%', #{searchQuery}, '%')
+                </when>
+                <when test="category == 'TeamName'">
+                    team.TeamName LIKE CONCAT('%', #{searchQuery}, '%')
+                </when>
+            </choose>)
             </if>
         </where>
     </select>
 
     <select id="findAllVideoList" parameterType="Map" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        VideoId,VideoName,VideoTeacher,UploadTime, VideoIntro,PageView,Url,Picture,
+        video.UserId,
+        user.UserName,
+        team.TeamName AS teamName
         from video
+        JOIN
+        user ON user.UserId=video.UserId
+        LEFT JOIN team ON video.TeamId = team.TeamId
         <where>
+            (video.UserId=#{userId,jdbcType=INTEGER})
             <if test="searchQuery != null and searchQuery != ''">
-                <choose>
-                    <when test="category == 'VideoName'">
-                        VideoName like CONCAT('%', #{searchQuery}, '%')
-                    </when>
-                    <when test="category == 'VideoTeacher'">
-                        VideoTeacher like CONCAT('%', #{searchQuery}, '%')
-                    </when>
-                </choose>
+                AND
+                (<choose>
+                <when test="category == 'VideoName'">
+                    video.VideoName LIKE CONCAT('%', #{searchQuery}, '%')
+                </when>
+                <when test="category == 'TeamName'">
+                    team.TeamName LIKE CONCAT('%', #{searchQuery}, '%')
+                </when>
+            </choose>)
             </if>
         </where>
         <if test="start != null and limit != null">
-            limit #{start}, #{limit}
+            LIMIT #{start}, #{limit}
         </if>
+
     </select>
 
     <update id="updateByPrimaryKeySelective" parameterType="upc.backend.entity.Video">
-    update video
-    <set>
-        <if test="VideoName != null">
-            VideoName = #{VideoName,jdbcType=VARCHAR},
-        </if>
-        <if test="VideoTeacher != null">
-            VideoTeacher = #{VideoTeacher,jdbcType=VARCHAR},
-        </if>
-        <if test=" UploadTime != null">
-            UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
-        </if>
-        <if test="VideoIntro != null">
-            VideoIntro = #{VideoIntro,jdbcType=VARCHAR},
-        </if>
-        <if test="PageView != null">
-            PageView = #{PageView,jdbcType=INTEGER},
-        </if>
-        <if test="Url != null">
-            Url = #{Url,jdbcType=VARCHAR},
-        </if>
-        <if test="Picture != null">
-            Picture = #{Picture,jdbcType=VARCHAR},
-        </if>
-        <if test="UserId != null">
-            UserId = #{UserId,jdbcType=VARCHAR},
-        </if>
-        <if test="TeamId != null">
-            TeamId = #{TeamId,jdbcType=INTEGER},
-        </if>
-        <if test="TeamId == null">
-            TeamId = null,
-        </if>
-    </set>
-    where VideoId = #{VideoId,jdbcType=INTEGER}
-</update>
+        update video
+        <set>
+            <if test="VideoName != null">
+                VideoName = #{VideoName,jdbcType=VARCHAR},
+            </if>
+            <if test="VideoTeacher != null">
+                VideoTeacher = #{VideoTeacher,jdbcType=VARCHAR},
+            </if>
+            <if test=" UploadTime != null">
+                UploadTime = #{UploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="VideoIntro != null">
+                VideoIntro = #{VideoIntro,jdbcType=VARCHAR},
+            </if>
+            <if test="PageView != null">
+                PageView = #{PageView,jdbcType=INTEGER},
+            </if>
+            <if test="Url != null">
+                Url = #{Url,jdbcType=VARCHAR},
+            </if>
+            <if test="Picture != null">
+                Picture = #{Picture,jdbcType=VARCHAR},
+            </if>
+            <if test="UserId != null">
+                UserId = #{UserId,jdbcType=VARCHAR},
+            </if>
+            <if test="TeamId != null">
+                TeamId = #{TeamId,jdbcType=INTEGER},
+            </if>
+            <if test="TeamId == null">
+                TeamId = null,
+            </if>
+        </set>
+        where VideoId = #{VideoId,jdbcType=INTEGER}
+    </update>
 
 
     <select id="selectByVideoName" resultMap="BaseResultMap">
@@ -138,12 +153,31 @@
     <select id="getNumOfUserVideo" resultType="int">
         SELECT COUNT(*)
         FROM video
-        WHERE
-        TeamId IN
-        <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
-            #{teamId, jdbcType=INTEGER}
-        </foreach>
-        OR TeamId IS NULL
+        JOIN user ON video.UserId = user.UserId
+        LEFT JOIN team ON video.TeamId = team.TeamId
+        <where>
+            (video.TeamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR video.TeamId IS NULL)
+
+            <if test="pageUtil.searchQuery != null and pageUtil.searchQuery != ''">
+                AND
+                (<choose>
+                <when test="pageUtil.category == 'VideoName'">
+                    video.VideoName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+                <when test="pageUtil.category == 'VideoTeacher'">
+                    video.VideoTeacher LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+                <when test="pageUtil.category == 'TeamName'">
+                    team.TeamName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+            </choose>)
+            </if>
+        </where>
+
     </select>
 
     <select id="getNumOfTotalVideo" parameterType="Map" resultType="int">
@@ -155,6 +189,56 @@
         <if test="searchQuery != null and searchQuery != ''">
             and VideoName like concat('%', #{searchQuery}, '%')
         </if>
+    </select>
+    <select id="getVideoByID" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from video
+        where VideoId = #{VideoId,jdbcType=INTEGER}
+    </select>
+    <select id="selectVideoByTeamIds" resultMap="BaseResultMap">
+        SELECT
+        video.VideoId,
+        video.VideoName,
+        video.UploadTime,
+        video.VideoIntro,
+        video.VideoTeacher,
+        video.Url,
+        video.Pageview,
+        video.TeamId,
+        video.Picture,
+        user.UserId AS userId,
+        user.UserName AS userName,
+        team.TeamName AS teamName
+        FROM video
+        JOIN user ON video.UserId = user.UserId
+        LEFT JOIN team ON video.TeamId = team.TeamId
+        <where>
+            (video.TeamId IN
+            <foreach item="teamId" collection="teamIdsArray" open="(" separator="," close=")">
+                #{teamId, jdbcType=INTEGER}
+            </foreach>
+            OR video.TeamId IS NULL)
+
+            <if test="pageUtil.searchQuery != null and pageUtil.searchQuery != ''">
+                AND
+                (<choose>
+                <when test="pageUtil.category == 'VideoName'">
+                    video.VideoName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+                <when test="pageUtil.category == 'VideoTeacher'">
+                    video.VideoTeacher LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+                <when test="pageUtil.category == 'TeamName'">
+                    team.TeamName LIKE CONCAT('%', #{pageUtil.searchQuery}, '%')
+                </when>
+            </choose>)
+            </if>
+        </where>
+        <if test="pageUtil.start != null and pageUtil.limit != null">
+            LIMIT #{pageUtil.start}, #{pageUtil.limit}
+        </if>
+
     </select>
     <select id="findAllVideoListByUserId" parameterType="Map" resultMap="BaseResultMap">
         select
@@ -284,6 +368,22 @@
         where VideoId in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteBatchCollect" parameterType="java.lang.Integer">
+        <!-- 先删除外键表中的引用记录 -->
+        delete from collect
+        where VideoId in
+        <foreach item="VideoId" collection="array" open="(" separator="," close=")">
+            #{VideoId}
+        </foreach>;
+    </delete>
+    <delete id="deleteBatchVideo" parameterType="java.lang.Integer">
+        <!-- 然后删除主表中的记录 -->
+        delete from video
+        where VideoId in
+        <foreach item="VideoId" collection="array" open="(" separator="," close=")">
+            #{VideoId}
         </foreach>
     </delete>
 
