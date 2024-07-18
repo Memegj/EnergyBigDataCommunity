@@ -201,6 +201,7 @@ onMounted(() => {
 .download-info {
   display: flex;
   align-items: center;
+  width: 80px; /* 增加宽度 */
 }
 
 .download-label {

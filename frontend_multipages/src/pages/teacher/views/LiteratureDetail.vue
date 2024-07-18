@@ -217,6 +217,7 @@ onMounted(() => {
 .download-label {
   margin-right: 16px;
   font-size: 14px;
+  width: 80px; /* 增加宽度 */
 }
 
 .details-card {

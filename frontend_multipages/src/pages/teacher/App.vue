@@ -152,7 +152,7 @@ router.beforeEach((to, from, next) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
+  height: 55px;
 }
 
 .head > div {
@@ -206,7 +206,7 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, .2);
 
   .el-menu-item {
-    height: 40px;
+    height:30px;
   }
 
   .el-menu-item:first-child {
@@ -223,7 +223,7 @@ body {
 }
 
 .el-sub-menu__title {
-  height: 40px;
+  height: 35px;
 }
 
 a {

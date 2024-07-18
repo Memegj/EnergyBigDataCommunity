@@ -56,12 +56,12 @@
                   @selection-change="handleSelectionChange">
 
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column label="视频预览" width="200" header-align="center" align="center">
+                <el-table-column label="视频预览" width="180" header-align="center" align="center">
                   <template #default="scope">
                     <video :src="state.fileParams.hostUrl + scope.row.videocontentUrl" controls width="180" height="100">你的浏览器不支持视频播放</video>
                   </template>
                 </el-table-column>
-                <el-table-column prop="videocontentName" label="名称" width="200" header-align="center" align="center"></el-table-column>
+                <el-table-column prop="videocontentName" label="名称" width="150" header-align="center" align="center"></el-table-column>
                 <el-table-column prop="uploadTime" label="上传时间" width="150" header-align="center" align="center" :formatter="(row) => formatUploadTime(row.uploadTime)"></el-table-column>
                 <el-table-column label="操作" width="100" header-align="center" align="center">
                   <template #default="scope">
@@ -320,7 +320,6 @@ onMounted(() => {
 
 .video-chapters {
   flex: 2;
-  display: flex;
   align-items: stretch;
 }
 

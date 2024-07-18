@@ -153,6 +153,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  width: 200px; /* 增加宽度 */
 }
 
 .download-info {
@@ -163,6 +164,7 @@ onMounted(() => {
 .download-label {
   margin-right: 16px;
   font-size: 14px;
+  width: 80px; /* 增加宽度 */
 }
 
 .details-card {

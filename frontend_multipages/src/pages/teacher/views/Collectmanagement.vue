@@ -50,7 +50,9 @@
           :data="paginatedFilteredData"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange">
+          @selection-change="handleSelectionChange"
+          @row-click="handleRowClick"
+      >
 
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="dataName" label="名称" width="300" header-align="center" align="center"></el-table-column>
@@ -142,6 +144,51 @@ const getReferences = () => {
     state.loading = false;
     console.error('获取收藏列表失败：', error);
   });
+}
+
+const handleRowClick = (row, column, event) => {
+  // 如果点击的元素是操作列中的元素，不处理跳转
+  if (event.target.tagName === 'A' || event.target.tagName === 'BUTTON') {
+    return
+  }
+
+  // 根据 CollectType 属性跳转到不同的页面
+  switch(row.collectType) {
+    case '数据集':
+      router.push({
+        name: 'datasetDetail',
+        params: {
+          dataId: row.dataId
+        }
+      });
+      break;
+    case '代码':
+      router.push({
+        name: 'codeDetail',
+        params: {
+          codeId: row.codeId
+        }
+      });
+      break;
+    case '文献资料':
+      router.push({
+        name: 'literatureDetail',
+        params: {
+          literId: row.literId
+        }
+      });
+      break;
+    case '视频':
+      router.push({
+        name: 'videoDetail',
+        params: {
+          videoId: row.videoId
+        }
+      });
+      break;
+    default:
+      console.error('未知的 CollectType:', row.collectType);
+  }
 }
 
 // 根据选中的类别和搜索词过滤数据

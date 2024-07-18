@@ -46,8 +46,7 @@ export default defineConfig({
         teacher: resolve(__dirname, 'teacher.html'),
         index: resolve(__dirname, 'index.html'),
         admin: resolve(__dirname, 'admin.html'),
-        teacher: resolve(__dirname, 'teacher.html'),
-        student: resolve(__dirname, 'student.html'),
+
       }
 
     }},
