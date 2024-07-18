@@ -99,7 +99,7 @@ const noMenu = ['/login']
 const router = useRouter()
 const state = reactive({
   showMenu: true,
-  defaultOpen: ['1', '2', '3', '4'],
+  defaultOpen: ['1', '2', '3', '4', '5'],
   currentPath: '/',
 })
 

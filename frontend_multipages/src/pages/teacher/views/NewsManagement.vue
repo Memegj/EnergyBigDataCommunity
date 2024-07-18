@@ -5,7 +5,7 @@
       <div class="header">
         <div style="margin-bottom: 10px">
           <el-input v-model="state.titlefrominput" style="width: 200px" placeholder="请输入标题"></el-input>
-          <el-button  type="info" style="margin-left: 10px;background-color: olivedrab" @click="findBySearch">查询</el-button >
+          <el-button  type="primary" style="margin-left: 10px;" @click="findBySearch">查询</el-button >
         </div>
         <el-button type="primary" :icon="Plus" @click="handleAdd">增加</el-button>
         <el-popconfirm

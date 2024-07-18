@@ -304,4 +304,12 @@ const table_data_reload = () => {
 .category-select {
   width: 150px;
 }
+
+.el-table {
+  margin-bottom: 20px; /* 添加表格底部间距 */
+}
+
+.el-pagination {
+  margin-top: 20px; /* 添加分页顶部间距 */
+}
 </style>

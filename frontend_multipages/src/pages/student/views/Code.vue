@@ -12,7 +12,13 @@
     <el-card class="references-container">
       <!-- 搜索 Row -->
       <el-row class="search-row">
-        <el-col :span="22">
+        <el-col :span="4">
+          <el-select v-model="searchType" placeholder="选择搜索类型" class="search-select">
+            <el-option label="按代码名称" value="codeName"></el-option>
+            <el-option label="按团队名称" value="teamName"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="18">
           <el-input placeholder="搜索" v-model="searchQuery" class="search-input">
             <el-button slot="append" icon="el-icon-search" @click="search">搜索</el-button>
           </el-input>
@@ -25,7 +31,7 @@
       <el-table
           :data="pagedData"
           tooltip-effect="dark"
-          style="width: 100%"
+          style="width: 100%;  margin-bottom: 20px;"
           @row-click="handleRowClick">
         <el-table-column
             prop="codeName"
@@ -83,7 +89,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import axios from '@/utils/axios'
 
-
 const addRef = ref(null)
 const router = useRouter() // 声明路由实例
 const route = useRoute() // 获取路由参数
@@ -97,6 +102,7 @@ const state = reactive({
   isPublic: ''
 })
 const searchQuery = ref('')
+const searchType = ref('codeName') // 搜索类型
 const searchTriggered = ref(false) // 用于标记是否点击了搜索按钮
 
 onMounted(() => {
@@ -165,9 +171,7 @@ const updateTableCode = () => {
 const filteredData = computed(() => {
   if (!searchTriggered.value) return state.allCode
   return state.allCode.filter(row => {
-    return ['codeName', 'codeAbstract', 'userName', 'teamName', 'codeId'].some(key => {
-      return String(row[key]).toLowerCase().includes(searchQuery.value.toLowerCase())
-    })
+    return String(row[searchType.value]).toLowerCase().includes(searchQuery.value.toLowerCase())
   })
 })
 
@@ -201,6 +205,10 @@ watch(searchQuery, (newVal) => {
 }
 
 .search-input {
+  width: 100%;
+}
+
+.search-select {
   width: 100%;
 }
 

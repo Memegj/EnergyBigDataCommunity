@@ -36,7 +36,7 @@
       <el-table
           :data="state.tableLiterature"
           tooltip-effect="dark"
-          style="width: 100%"
+          style="width: 100%;  margin-bottom: 20px;"
           @row-click="handleRowClick">
         <el-table-column
             prop="literName"

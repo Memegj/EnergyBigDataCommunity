@@ -31,18 +31,25 @@
       <div class="select-all-container">
         <el-checkbox v-model="allSelected" @change="handleSelectAll">全选</el-checkbox>
       </div>
-      <div v-for="video in state.videos" :key="video.videoId" class="course-item">
-        <el-checkbox v-model="selectedVideos" class="video-checkbox" @click.stop="handleVideoSelect(video.videoId)"></el-checkbox>
-        <div class="course-item-content" @click="navigateToVideo(video.videoId)">
+      <div
+          v-for="video in state.videos"
+          :key="video.videoId"
+          class="course-item"
+          @click="navigateToVideo(video.videoId)"
+      >
+        <el-checkbox v-model="selectedVideos" :label="video.videoId" class="video-checkbox" @click.stop></el-checkbox>
+        <div class="course-item-content">
           <button class="edit-button" @click="handleEditClick(video.videoId, $event)">
-            <el-icon class="large-icon"><Edit /></el-icon>
+            <el-icon class="large-icon">
+              <Edit/>
+            </el-icon>
           </button>
-          <img :src="state.hostUrl + video.picture" alt="视频封面" class="course-image" />
+          <img :src="state.hostUrl + video.picture" alt="视频封面" class="course-image"/>
           <div class="course-details">
             <div class="course-name" style="font-weight: bold;">视频名称：{{ video.videoName }}</div>
             <div class="course-intro" style="color: #777;">简介：{{ getPlainText(video.videoIntro) }}</div>
             <div class="course-meta">
-              <span>上传人: {{ video.userName }}</span><br />
+              <span>上传人: {{ video.userName }}</span><br/>
               <span>上传时间: {{ video.uploadTime }}</span>
             </div>
           </div>
@@ -62,11 +69,11 @@
 </template>
 
 <script setup>
-import { Delete, Plus, Edit } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted, defineExpose } from 'vue';
-import { ElMessage } from 'element-plus';
+import {Delete, Plus, Edit} from "@element-plus/icons-vue";
+import {ref, reactive, onMounted} from 'vue';
+import {ElMessage} from 'element-plus';
 import axios from '@/utils/axios.js';
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 
 const searchText = ref('');
 const searchOption = ref('VideoName');
@@ -185,11 +192,7 @@ const handleEditClick = (videoId, event) => {
   navigateToEdit(videoId);
 };
 
-const handleVideoSelect = (videoId) => {
-  // Handle selection logic here if needed
-};
-
-defineExpose({ state: state, getVideos: getVideos })
+defineExpose({state: state, getVideos: getVideos})
 </script>
 
 <style scoped>
