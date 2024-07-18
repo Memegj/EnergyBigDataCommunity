@@ -133,19 +133,23 @@ router.beforeEach((to, from, next) => {
   min-height: 100vh;
   background-color: #ffffff;
 }
+
 .container {
   height: 100vh;
 }
+
 .aside {
-  width: 220px!important;
+  width: 220px !important;
   background-color: #e4e6ea;
 }
+
 .head {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
+  height: 55px;
 }
+
 .head > div {
   display: flex;
   align-items: center;
@@ -156,24 +160,32 @@ router.beforeEach((to, from, next) => {
   height: 20px;
   margin-right: 10px;
 }
+
 .head span {
   font-size: 15px;
   color: #01374d;
 }
+
 .line {
-  border-top: 1px solid hsla(0,0%,100%,.05);
-  border-bottom: 1px solid rgba(0,0,0,.2);
+  border-top: 1px solid hsla(0, 0%, 100%, .05);
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
 }
+
 .content {
   display: flex;
   flex-direction: column;
   max-height: 100vh;
   overflow: hidden;
 }
+
 .main {
   height: calc(100vh - 100px);
   overflow: auto;
   padding: 10px;
+}
+
+.el-menu-item {
+  height: 30px; /* 调整菜单项的高度 */
 }
 </style>
 
@@ -183,36 +195,46 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
 .el-menu {
-  border-right: none!important;
+  border-right: none !important;
 }
+
 .el-sub-menu {
   border-top: 1px solid hsla(0, 0%, 100%, .05);
   border-bottom: 1px solid rgba(0, 0, 0, .2);
-  .el-menu-item{
-    height: 40px;
+
+  .el-menu-item {
+    height: 29px;
   }
-  .el-menu-item:first-child{
+
+  .el-menu-item:first-child {
     margin-top: -10px;
   }
 }
+
 .el-sub-menu:first-child {
   border-top: none;
 }
+
 .el-sub-menu [class^="el-icon-"] {
-  vertical-align: -1px!important;
+  vertical-align: -1px !important;
 }
-.el-sub-menu__title{
-  height: 40px;
+
+.el-sub-menu__title {
+  height: 35px;
 }
+
 a {
   color: #409eff;
   text-decoration: none;
 }
+
 .el-pagination {
   text-align: center;
   margin-top: 20px;
 }
+
 .el-popper__arrow {
   display: none;
 }

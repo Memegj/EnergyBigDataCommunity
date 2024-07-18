@@ -62,7 +62,16 @@
         </if>
     </select>
 
+    <select id="getcollectTypes" resultType="string">
+        SELECT DISTINCT CollectType
+        FROM collect;
+    </select>
 
+    <select id="gettypesCounts" resultType="int">
+        SELECT COUNT(*) AS typeCount
+        FROM collect
+        GROUP BY CollectType;
+    </select>
 
     <select id="getNumOfTotalCollect" parameterType="Map" resultType="int">
         SELECT COUNT(*) FROM collect WHERE UserId = #{userId} AND (#{selectedCategory} IS NULL OR CollectType = #{selectedCategory})

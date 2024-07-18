@@ -10,7 +10,9 @@ import upc.backend.util.CollectQueryUtil;
 
 public interface CollectMapper {
     int insert(Collect collect);
+    List<String> getcollectTypes();
 
+    List<Integer> gettypesCounts();
     int insertSelective(Collect collect);
 
     List<Collect> getCollectionByUserId(PageQueryUtil pageUtil);

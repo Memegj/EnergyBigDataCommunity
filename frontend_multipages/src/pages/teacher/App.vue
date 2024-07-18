@@ -14,7 +14,7 @@
             text-color="#000"
             :router="true"
             :default-openeds="state.defaultOpen"
-            :default-active='state.currentPath'
+            :default-active="state.currentPath"
         >
           <el-menu-item index="/teacher/index">
             <el-icon><House /></el-icon>
@@ -25,9 +25,9 @@
               <span><el-icon><Menu /></el-icon>代码</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/teacher/code" >代码检索</el-menu-item>
+              <el-menu-item index="/teacher/code">代码检索</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item index="/teacher/code_manage" >代码管理</el-menu-item>
+            <el-menu-item index="/teacher/code_manage">代码管理</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
@@ -76,6 +76,9 @@
             <el-menu-item-group>
               <el-menu-item index="/teacher/stu_manage">学生管理</el-menu-item>
             </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="/teacher/newsManagement">新闻管理</el-menu-item>
+            </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
       </el-aside>
@@ -94,12 +97,12 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue'
-import {useRouter} from 'vue-router'
+import { onMounted, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 
 import Header from '@/pages/teacher/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import {localGet, pathMap} from '@/utils'
+import { localGet, pathMap } from '@/utils'
 
 const noMenu = ['/login']
 const router = useRouter()
@@ -121,7 +124,7 @@ router.beforeEach((to, from, next) => {
     // 如果不是 /login，判断是否有 token
     if (!localGet('token')) {
       // 如果没有，则跳至登录页面
-      next({path: '/login'})
+      next({ path: '/login' })
     } else {
       // 否则继续执行
       next()
@@ -129,7 +132,7 @@ router.beforeEach((to, from, next) => {
   }
 
   state.currentPath = to.path
-  //document.title = pathMap[to.name]
+  // document.title = pathMap[to.name]
 })
 </script>
 
@@ -188,6 +191,10 @@ router.beforeEach((to, from, next) => {
   overflow: auto;
   padding: 10px;
 }
+
+.el-menu-item {
+  height: 30px; /* 调整菜单项的高度 */
+}
 </style>
 
 <style>
@@ -206,7 +213,7 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, .2);
 
   .el-menu-item {
-    height:30px;
+    height: 29px;
   }
 
   .el-menu-item:first-child {

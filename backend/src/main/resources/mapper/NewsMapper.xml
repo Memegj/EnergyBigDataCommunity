@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="upc.backend.mapper.NewsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="upc.backend.entity.News">
+        <id column="id" property="id" />
+        <result column="Title" property="title" />
+        <result column="ReleaseAuthor" property="releaseauthor" />
+        <result column="ReleaseTime" property="releasetime" />
+        <result column="Content" property="content" />
+        <result column="UserId" property="userid" />
+        <result column="Url" property="url" />
+        <result column="UploadTime" property="uploadtime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, Title, ReleaseAuthor, ReleaseTime, Content,  Url,UploadTime,UserId
+    </sql>
+    <select id="selectByID" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from news
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!-- 在mapper.xml文件中 -->
+    <select id="findBySearch" resultMap="BaseResultMap">
+        select * from news
+        <where>
+            <if test="params != null and params.Title != null and params.Title != ''">
+                and title like concat('%', #{ params.Title }, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getNumOfSelectNews" parameterType="Map" resultType="int">
+        select count(*) from news
+        where title like CONCAT('%', #{title}, '%')
+    </select>
+    <select id="findSelectNewsList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from news
+        where title like CONCAT('%', #{title}, '%')
+    </select>
+
+
+    <select id="getNumOfTotalNews" parameterType="Map" resultType="int">
+            select count(*) from news
+    </select>
+    <select id="findAllNewsList" parameterType="Map" resultMap="BaseResultMap">
+            select
+            <include refid="Base_Column_List"/>
+            from news
+            <if test="start!=null and limit!=null">
+                limit #{start},#{limit}
+            </if>
+    </select>
+    <select id="getnews" resultType="upc.backend.entity.News">
+        select *from news
+    </select>
+
+    <update id="updateById" parameterType="upc.backend.entity.News">
+        update news
+        set title = #{title,jdbcType=VARCHAR},
+            releaseauthor = #{releaseauthor,jdbcType=VARCHAR},
+            releasetime = #{releasetime,jdbcType=TIMESTAMP},
+            content = #{content,jdbcType=LONGVARCHAR},
+            userid = #{userid,jdbcType=INTEGER},
+            url= #{url,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+<!--    <select id="selectByTitle" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--        <include refid="Base_Column_List" />-->
+<!--        from references_data-->
+<!--        where title = #{title,jdbcType=VARCHAR}-->
+<!--    </select>-->
+
+<!--    <select id="selectByAuthor" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--        <include refid="Base_Column_List"/>-->
+<!--        from references_data-->
+<!--        where author = #{author,jdbcType=VARCHAR}-->
+<!--    </select>-->
+
+<!--    <select id="getNumOfTotalReferences" parameterType="Map" resultType="int">-->
+<!--        select count(*) from references_data-->
+<!--    </select>-->
+<!--    <select id="findAllReferenceList" parameterType="Map" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--        <include refid="Base_Column_List"/>-->
+<!--        from references_data-->
+<!--        <if test="start!=null and limit!=null">-->
+<!--            limit #{start},#{limit}-->
+<!--        </if>-->
+<!--    </select>-->
+
+    <insert id="insert" parameterType="upc.backend.entity.News">
+        insert into news (id, title, releaseauthor, releasetime, content, userid, url,uploadTime)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{releaseauthor,jdbcType=VARCHAR},
+                  #{releasetime,jdbcType=DATE},#{content,jdbcType=LONGVARCHAR}, #{userid,jdbcType=INTEGER},#{url,jdbcType=VARCHAR},#{uploadtime,jdbcType=TIMESTAMP} )
+    </insert>
+
+    <delete id="deleteBatch" parameterType="java.lang.Integer">
+        delete from news
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

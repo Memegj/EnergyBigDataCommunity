@@ -33,6 +33,10 @@ public class LiteratureService {
         else {return false;}
     }
 
+    public List<Literature> getLiteraturedata() {
+        List<Literature> LiteratureList = literatureMapper.getliteraturesdata();
+        return LiteratureList;
+    }
     public PageResult getLiteraturePageByUserId(PageQueryUtil pageUtil){
         List<Literature> literatures = literatureMapper.findAllLiteratureListByUserId(pageUtil);
         int total = literatureMapper.getNumOfTotalLiteratureByUserId(pageUtil);

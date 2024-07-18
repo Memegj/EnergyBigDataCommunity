@@ -20,7 +20,15 @@ public class CollectService {
     @Resource
     private  CollectMapper collectMapper;
 
+    public List<String> getcollectTypes() {
+        List<String> types=collectMapper.getcollectTypes();
+        return types;
+    }
 
+    public List<Integer> gettypesCounts() {
+        List<Integer> counts=collectMapper.gettypesCounts();
+        return counts;
+    }
     public PageResult getCollectionByUserId(PageQueryUtil pageUtil){
         List<Collect> collect = collectMapper.getCollectionByUserId(pageUtil);
         int total = collectMapper.getNumOfTotalCollect(pageUtil);

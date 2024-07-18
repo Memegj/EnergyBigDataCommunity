@@ -23,7 +23,7 @@ export function hasEmoji (str = '') {
 
 export const pathMap = {
   login: '登录',
-  index: '后台管理首页',
+  index: '首页',
   mycharts: '统计图表',
   references: '文献管理',
   file_upload: '文件操作',

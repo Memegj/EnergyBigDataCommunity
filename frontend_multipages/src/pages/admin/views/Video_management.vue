@@ -31,14 +31,9 @@
       <div class="select-all-container">
         <el-checkbox v-model="allSelected" @change="handleSelectAll">全选</el-checkbox>
       </div>
-      <div
-          v-for="video in state.videos"
-          :key="video.videoId"
-          class="course-item"
-          @click="navigateToVideo(video.videoId)"
-      >
-        <el-checkbox v-model="selectedVideos"  class="video-checkbox"></el-checkbox>
-        <div class="course-item-content">
+      <div v-for="video in state.videos" :key="video.videoId" class="course-item">
+        <el-checkbox v-model="selectedVideos" class="video-checkbox" @click.stop="handleVideoSelect(video.videoId)"></el-checkbox>
+        <div class="course-item-content" @click="navigateToVideo(video.videoId)">
           <button class="edit-button" @click="handleEditClick(video.videoId, $event)">
             <el-icon class="large-icon"><Edit /></el-icon>
           </button>
@@ -68,7 +63,7 @@
 
 <script setup>
 import { Delete, Plus, Edit } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, defineExpose } from 'vue';
 import { ElMessage } from 'element-plus';
 import axios from '@/utils/axios.js';
 import { useRouter } from 'vue-router';
@@ -190,7 +185,11 @@ const handleEditClick = (videoId, event) => {
   navigateToEdit(videoId);
 };
 
-defineExpose({state: state, getVideos: getVideos})
+const handleVideoSelect = (videoId) => {
+  // Handle selection logic here if needed
+};
+
+defineExpose({ state: state, getVideos: getVideos })
 </script>
 
 <style scoped>

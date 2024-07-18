@@ -55,6 +55,7 @@
             </template>
             <el-menu-item index="/admin/account">个人信息修改</el-menu-item>
             <el-menu-item index="/admin/user_manage">用户管理</el-menu-item>
+            <el-menu-item index="/admin/newsManagement">新闻管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>
@@ -134,14 +135,13 @@ router.beforeEach((to, from, next) => {
   display: flex;
   align-items: center;
 }
-
 .head img {
   width: 20px;
   height: 20px;
   margin-right: 10px;
 }
 .head span {
-  font-size: 14px; /* 调整字体大小为14px */
+  font-size: 14px; /* Adjust font size to 14px */
   color: #01374d;
 }
 .line {
@@ -160,48 +160,10 @@ router.beforeEach((to, from, next) => {
   padding: 10px;
 }
 .compact-menu .el-sub-menu {
-  margin-top: 0; /* 减少子菜单之间的顶部间距 */
+  margin-top: 0; /* Reduce top margin between sub-menus */
 }
 .compact-menu .el-menu-item {
-  height: 32px; /* 减少菜单项的高度 */
-  line-height: 32px; /* 使菜单项垂直居中 */
-}
-</style>
-
-<style>
-body {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.el-menu {
-  border-right: none !important;
-}
-.el-sub-menu {
-  border-top: 1px solid hsla(0, 0%, 100%, 0.05);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
-.el-sub-menu .el-menu-item {
-  height: 36px; /* 调整子菜单项的高度 */
-}
-.el-sub-menu .el-menu-item:first-child {
-  margin-top: -8px; /* 调整第一个子菜单项的顶部间距 */
-}
-.el-sub-menu [class^="el-icon-"] {
-  vertical-align: -1px !important;
-}
-.el-sub-menu__title {
-  height: 50px; /* 调整子菜单标题的高度 */
-}
-a {
-  color: #409eff;
-  text-decoration: none;
-}
-.el-pagination {
-  text-align: center;
-  margin-top: 20px;
-}
-.el-popper__arrow {
-  display: none;
+  height: 25px; /* Increase menu item height */
+  line-height: 40px; /* Vertically center menu item content */
 }
 </style>

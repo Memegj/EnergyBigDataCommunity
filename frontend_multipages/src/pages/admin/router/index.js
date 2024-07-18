@@ -144,6 +144,16 @@ const router = createRouter({
       name: 'videocontentupload',
       component: () => import( '@/pages/admin/views/Videocontentupload.vue')
     },
+    {
+      path: '/admin/newsManagement',
+      name: 'newsManagement',
+      component: () => import( '@/pages/admin/views/NewsManagement.vue')
+    },
+    {
+      path: '/admin/AddNews',
+      name: 'AddNews',
+      component: () => import( '@/pages/admin/views/AddNews.vue')
+    }
   ],
 })
 

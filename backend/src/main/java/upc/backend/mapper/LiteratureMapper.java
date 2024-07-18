@@ -9,7 +9,7 @@ public interface LiteratureMapper {
     int insert(Literature literature);
 
     int insertSelective(Literature literature);
-
+    List<Literature> getliteraturesdata();
     List<Literature> selectByLiterName(String Literature);
     Literature selectByLiterId(Integer LiterId);
     Literature selectByLiterIdAndUserId(Integer LiterId);

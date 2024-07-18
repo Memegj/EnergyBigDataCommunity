@@ -18,9 +18,7 @@ import upc.backend.util.*;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -38,6 +36,22 @@ public class LiteratureManagement {
     private UserTokenService userTokenService;
     @Resource
     private UserService userService;
+
+
+    @RequestMapping(value = "/literature/get_chartdata", method = RequestMethod.GET)
+    public Result get_data() {
+        List<Literature> LiteratureList = literatureService.getLiteraturedata();
+        List<String> nameList = new ArrayList<String>();
+        List<Integer> DownloadTimesList = new ArrayList<Integer>();
+        for (int i = 0; i < LiteratureList .size(); i++) {
+            nameList.add(LiteratureList .get(i).getLiterName());
+            DownloadTimesList.add(LiteratureList .get(i).getDownloadTimes());
+        }
+        HashMap<String, List> map = new HashMap<>();
+        map.put("nameData", nameList);
+        map.put("DownloadTimes", DownloadTimesList);
+        return ResultGenerator.genSuccessResult(map);
+    }
 
     @RequestMapping(value = "/literature/list", method = RequestMethod.GET)
     public Result list(@RequestParam(required = false) Integer pageNumber,

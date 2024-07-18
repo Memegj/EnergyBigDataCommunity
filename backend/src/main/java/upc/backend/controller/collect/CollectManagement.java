@@ -20,6 +20,7 @@ import upc.backend.util.ResultGenerator;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -60,6 +61,18 @@ public class CollectManagement {
         //return ResultGenerator.genSuccessResult(teamService.getTeamPage(pageUtil));
         return ResultGenerator.genSuccessResult(collectService.getCollectionByUserId(pageUtil));
     }
+
+    @RequestMapping(value = "/collect/get_chartdata", method = RequestMethod.GET)
+    public Result get_data2() {
+        List<String> collectslist = collectService.getcollectTypes();
+        List<Integer> countlist = collectService.gettypesCounts();
+
+        HashMap<String, List> map = new HashMap<>();
+        map.put("typeData", collectslist);
+        map.put("collectionsamount", countlist);
+        return ResultGenerator.genSuccessResult(map);
+    }
+
     @RequestMapping(value = "/collect", method = RequestMethod.DELETE)
     public Result delete(@RequestBody BatchIdParam batchIdParam, @RequestHeader("token") String str_token) {
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
