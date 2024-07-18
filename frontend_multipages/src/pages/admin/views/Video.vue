@@ -92,7 +92,7 @@ const getReferences = () => {
 };
 
 const navigateToVideo = (videoId) => {
-  router.push(`/admin/video_detail/${videoId}`);
+  router.push(`/admin/video_detail1/${videoId}`);
 };
 
 const search = () => {

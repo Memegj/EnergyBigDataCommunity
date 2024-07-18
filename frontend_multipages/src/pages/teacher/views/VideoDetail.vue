@@ -30,57 +30,73 @@
 
       <div class="main-content">
         <!-- 视频合集 -->
-        <el-card class="video-card video-chapters">
-          <div slot="header" class="clearfix header-flex">
-            <span class="video-collection-title">视频合集</span>
-            <div class="button-group">
-              <el-button icon="Plus" @click="handleAdd">增加</el-button>
-              <el-popconfirm
-                  title="确定删除吗？"
-                  confirmButtonText='确定'
-                  cancelButtonText='取消'
-                  @confirm="handleDelete"
-              >
-                <template #reference>
-                  <el-button :icon="Delete">批量删除</el-button>
-                </template>
-              </el-popconfirm>
+        <div v-if="isImage">
+          <el-card class="video-card video-chapters">
+            <div slot="header" class="clearfix header-flex">
+              <span class="video-collection-title">视频合集</span>
+              <div class="button-group">
+                <el-button icon="Plus" @click="handleAdd">增加</el-button>
+                <el-popconfirm
+                    title="确定删除吗？"
+                    confirmButtonText='确定'
+                    cancelButtonText='取消'
+                    @confirm="handleDelete"
+                >
+                  <template #reference>
+                    <el-button :icon="Delete">批量删除</el-button>
+                  </template>
+                </el-popconfirm>
+              </div>
             </div>
-          </div>
-          <el-menu>
-            <div class="video-chapters-container">
-              <el-table
-                  :data="state.tableData"
-                  tooltip-effect="dark"
-                  style="width: 100%"
-                  @selection-change="handleSelectionChange">
+            <el-menu>
+              <div class="video-chapters-container">
+                <el-table
+                    :data="state.tableData"
+                    tooltip-effect="dark"
+                    style="width: 100%"
+                    @selection-change="handleSelectionChange">
 
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column label="视频预览" width="180" header-align="center" align="center">
-                  <template #default="scope">
-                    <video :src="state.fileParams.hostUrl + scope.row.videocontentUrl" controls width="180" height="100">你的浏览器不支持视频播放</video>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="videocontentName" label="名称" width="150" header-align="center" align="center"></el-table-column>
-                <el-table-column prop="uploadTime" label="上传时间" width="150" header-align="center" align="center" :formatter="(row) => formatUploadTime(row.uploadTime)"></el-table-column>
-                <el-table-column label="操作" width="100" header-align="center" align="center">
-                  <template #default="scope">
-                    <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.videocontentId)">修改</a>
-                    <el-popconfirm
-                        title="确定删除吗？"
-                        confirmButtonText='确定'
-                        cancelButtonText='取消'
-                        @confirm="handleDeleteOne(scope.row.videocontentId)">
-                      <template #reference>
-                        <a style="cursor: pointer">删除</a>
-                      </template>
-                    </el-popconfirm>
-                  </template>
-                </el-table-column>
-              </el-table>
+                  <el-table-column type="selection" width="55"></el-table-column>
+                  <el-table-column label="视频预览" width="180" header-align="center" align="center">
+                    <template #default="scope">
+                      <video :src="state.fileParams.hostUrl + scope.row.videocontentUrl" controls width="180" height="100">你的浏览器不支持视频播放</video>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="videocontentName" label="名称" width="150" header-align="center" align="center"></el-table-column>
+                  <el-table-column prop="uploadTime" label="上传时间" width="150" header-align="center" align="center" :formatter="(row) => formatUploadTime(row.uploadTime)"></el-table-column>
+                  <el-table-column label="操作" width="100" header-align="center" align="center">
+                    <template #default="scope">
+                      <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.videocontentId)">修改</a>
+                      <el-popconfirm
+                          title="确定删除吗？"
+                          confirmButtonText='确定'
+                          cancelButtonText='取消'
+                          @confirm="handleDeleteOne(scope.row.videocontentId)">
+                        <template #reference>
+                          <a style="cursor: pointer">删除</a>
+                        </template>
+                      </el-popconfirm>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-menu>
+          </el-card>
+        </div>
+
+        <div v-else class="no-video-chapters">
+          <el-card class="video-card video-chapters" style="height: 90%;">
+            <div slot="header" class="clearfix header-flex">
+              <span class="video-collection-title">视频合集</span>
+
             </div>
-          </el-menu>
-        </el-card>
+            <el-menu>
+              <div class="video-chapters-container" style="text-align: center;">
+                <h3 style="width: 100%;">无视频合集</h3>
+              </div>
+            </el-menu>
+          </el-card>
+        </div>
 
         <div class="info-blocks">
           <!-- 授课教师 -->
@@ -321,7 +337,16 @@ onMounted(() => {
 .video-chapters {
   flex: 2;
   align-items: stretch;
+  height: 88%;
 }
+
+.no-video-chapters {
+  display: flex;
+  flex: 1 1 40%;
+  height: 100%;
+  margin-left: 20px;
+}
+
 
 .video-chapters-container {
   max-height: 400px;
@@ -363,6 +388,7 @@ onMounted(() => {
 
 .video-card {
   padding: 20px;
+
 }
 
 .el-card__header {
@@ -393,3 +419,4 @@ onMounted(() => {
   padding: 8px;
 }
 </style>
+

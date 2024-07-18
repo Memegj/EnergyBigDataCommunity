@@ -28,6 +28,7 @@
         </div>
       </el-card>
 
+
       <div class="main-content">
         <!-- 视频合集 -->
         <div v-if="isImage">
@@ -225,9 +226,9 @@ const handleSelectionChange = (val) => {
 
 const goBack = () => {
   if (fromPage === 'videoManage') {
-    router.push('/admin/video_manage');
+    router.push('/student/video_manage');
   } else {
-    router.push('/admin/video');
+    router.push('/student/video');
   }
 };
 const handleDelete = () => {
@@ -280,7 +281,7 @@ const handleCollect = async () => {
 
 const handleAdd = () => {
   router.push({
-    path: '/admin/videocontentupload',
+    path: '/student/videocontentupload',
     query: { videoId: videoId.value }
   });
 };
@@ -302,45 +303,44 @@ onMounted(() => {
   getDetail(videoId.value);
 });
 </script>
-
 <style scoped>
-.references-container {
+  .references-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.search-bar {
+  .search-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.container {
+  .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
-.video-details {
+  .video-details {
   flex: 0 0 auto;
   padding: 20px;
 }
 
-.main-content {
+  .main-content {
   display: flex;
   flex: 1;
   padding: 10px;
   gap: 20px;
 }
 
-.video-chapters {
+  .video-chapters {
   flex: 2;
   align-items: stretch;
   height: 88%;
 }
 
-.no-video-chapters {
+  .no-video-chapters {
   display: flex;
   flex: 1 1 40%;
   height: 100%;
@@ -348,72 +348,72 @@ onMounted(() => {
 }
 
 
-.video-chapters-container {
-  max-height: 400px;
+  .video-chapters-container {
+    max-height: 400px;
   overflow-y: auto;
 }
 
-.info-blocks {
+  .info-blocks {
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: 1px;
 }
 
-.teacher-info {
+  .teacher-info {
   flex: 1; /* 设置授课教师框的高度 */
   margin-bottom: 10px;
 }
 
-.course-description {
+  .course-description {
   flex: 2; /* 设置课程介绍框的高度 */
   margin-bottom: 0;
 }
 
-.video-header {
+  .video-header {
   display: flex;
   gap: 20px;
 }
 
-.video-cover {
+  .video-cover {
   width: 40%;
   height: auto;
 }
 
-.video-info {
+  .video-info {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.video-card {
+  .video-card {
   padding: 20px;
 
 }
 
-.el-card__header {
-  font-weight: bold;
+  .el-card__header {
+    font-weight: bold;
   font-size: 18px;
 }
 
-.teacher-name {
-  white-space: nowrap; /* 不换行 */
+  .teacher-name {
+    white-space: nowrap; /* 不换行 */
   overflow: hidden; /* 超出隐藏 */
   text-overflow: ellipsis; /* 省略号 */
 }
 
-.course-intro {
-  max-height: 200px; /* 设置最大高度 */
+  .course-intro {
+    max-height: 200px; /* 设置最大高度 */
   overflow-y: auto; /* 添加垂直滚动条 */
 }
 
-.header-flex {
+  .header-flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.button-group {
+  .button-group {
   display: flex;
   gap: 10px;
   padding: 8px;

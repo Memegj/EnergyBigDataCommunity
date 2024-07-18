@@ -134,6 +134,11 @@ const router = createRouter({
       component: () => import( '@/pages/admin/views/VideoDetail.vue'),
     },
     {
+      path: '/admin/video_detail1/:videoId',
+      name: 'videoDetail1',
+      component: () => import( '@/pages/admin/views/VideoDetail1.vue'),
+    },
+    {
       path: '/admin/videocontentedit/:videocontentId',
       name: 'videocontentedit',
       component: () => import('@/pages/admin/views/Videocontentedit.vue'),

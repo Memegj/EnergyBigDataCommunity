@@ -224,7 +224,7 @@ public class VideoManagement {
                     Collect collect = new Collect();
                     collect.setVideoId(collectAddParam.getVideoId());
                     collect.setUserId(userToken.getUserId());
-                    collect.setCollectType("视频");
+                    collect.setCollectType("教学视频");
                     if (collectService.add_collect(collect)) {
                         Result result = new ResultGenerator().genSuccessResult();
                         result.setData(true);

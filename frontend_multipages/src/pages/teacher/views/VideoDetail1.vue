@@ -97,7 +97,6 @@
             </el-menu>
           </el-card>
         </div>
-
         <div class="info-blocks">
           <!-- 授课教师 -->
           <el-card class="video-card teacher-info">
@@ -225,9 +224,9 @@ const handleSelectionChange = (val) => {
 
 const goBack = () => {
   if (fromPage === 'videoManage') {
-    router.push('/admin/video_manage');
+    router.push('/teacher/video_manage');
   } else {
-    router.push('/admin/video');
+    router.push('/teacher/video');
   }
 };
 const handleDelete = () => {
@@ -280,7 +279,7 @@ const handleCollect = async () => {
 
 const handleAdd = () => {
   router.push({
-    path: '/admin/videocontentupload',
+    path: '/teacher/videocontentupload',
     query: { videoId: videoId.value }
   });
 };
@@ -302,7 +301,6 @@ onMounted(() => {
   getDetail(videoId.value);
 });
 </script>
-
 <style scoped>
 .references-container {
   width: 100%;
