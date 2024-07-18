@@ -143,9 +143,15 @@ const router = createRouter({
     },
     {
       path: '/student/video_detail/:videoId',
-      name: 'videoDetaile',
+      name: 'videoDetail',
       component: () => import( '@/pages/student/views/VideoDetail.vue')
     },
+    {
+      path: '/student/video_detail1/:videoId',
+      name: 'videoDetail1',
+      component: () => import( '@/pages/student/views/VideoDetail1.vue')
+    },
+
   ],
 })
 

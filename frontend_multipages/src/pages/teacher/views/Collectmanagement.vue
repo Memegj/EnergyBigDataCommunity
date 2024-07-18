@@ -53,7 +53,6 @@
           @selection-change="handleSelectionChange"
           @row-click="handleRowClick"
       >
-
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="dataName" label="名称" width="300" header-align="center" align="center"></el-table-column>
         <el-table-column prop="collectType" label="类别" width="200" header-align="center" align="center"></el-table-column>
@@ -90,6 +89,7 @@
 <script setup>
 import { onMounted, reactive, ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 import axios from '@/utils/axios.js'
 
 const searchQuery = ref('')
@@ -103,6 +103,8 @@ const state = reactive({
   filteredData: [], // 根据条件过滤后的数据
   multipleSelection: [] // 选择项
 })
+
+const router = useRouter()
 
 onMounted(() => {
   getReferences()
@@ -178,7 +180,7 @@ const handleRowClick = (row, column, event) => {
         }
       });
       break;
-    case '视频':
+    case '教学视频':
       router.push({
         name: 'videoDetail',
         params: {
@@ -256,7 +258,6 @@ const changePage = (val) => {
   state.currentPage = val;
   filterData(); // 分页时重新过滤数据
 }
-
 </script>
 
 <style scoped>

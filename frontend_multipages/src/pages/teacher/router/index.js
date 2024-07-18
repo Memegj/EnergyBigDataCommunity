@@ -138,6 +138,12 @@ const router = createRouter({
       name: 'videoDetail',
       component: () => import( '@/pages/teacher/views/VideoDetail.vue'),
     },
+
+    {
+      path: '/teacher/video_detail1/:videoId',
+      name: 'videoDetail1',
+      component: () => import( '@/pages/teacher/views/VideoDetail1.vue'),
+    },
     {
       path: '/teacher/videocontentedit/:videocontentId',
       name: 'videocontentedit',
